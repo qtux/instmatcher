@@ -1,6 +1,9 @@
 instmatcher
 ===========
-A tool to match an affiliation string to a known institute.
+A tool to match an affiliation string to a list of known institutes originally querried from `Wikidata`_.
+
+.. _Wikidata: https://www.wikidata.org
+.. image:: https://raw.githubusercontent.com/qtux/instmatcher/master/wikidata_stamp.png
 
 License
 -------
