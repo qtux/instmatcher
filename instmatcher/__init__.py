@@ -14,6 +14,7 @@
 
 import csv
 import os, os.path
+import re
 
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED
 from whoosh import index
@@ -46,6 +47,15 @@ def createIndex():
 	writer.commit()
 
 def query(searchString):
+	with open('data/abbreviations.csv') as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			searchString = re.sub(
+				r"\b(?i){}\b".format(row['short']),
+				row['long'],
+				searchString,
+			)
+	
 	fields = ['name', 'alias',]
 	ix = index.open_dir('index')
 	with ix.searcher() as searcher:
