@@ -46,21 +46,25 @@ def createIndex():
 			)
 	writer.commit()
 
-def query(searchString):
-	with open('data/abbreviations.csv') as csvfile:
-		reader = csv.DictReader(csvfile)
-		for row in reader:
-			searchString = re.sub(
-				r"\b(?i){}\b".format(row['short']),
-				row['long'],
-				searchString,
-			)
-	
+def query(text):
+	expandedText = expandAbbreviations(text)
 	fields = ['name', 'alias',]
 	ix = index.open_dir('index')
 	with ix.searcher() as searcher:
-		query = MultifieldParser(fields, ix.schema).parse(searchString)
+		query = MultifieldParser(fields, ix.schema).parse(expandedText)
 		results = searcher.search(query, terms=True)
 		print(results)
 		for hit in results:
 			print(hit)
+
+def expandAbbreviations(text):
+	result = text
+	with open('data/abbreviations.csv') as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			result = re.sub(
+				r"\b(?i){}\b".format(row['short']),
+				row['long'],
+				result,
+			)
+	return result
