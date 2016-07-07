@@ -12,59 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import csv
-import os, os.path
-import re
+from .core import query
 
-from whoosh.fields import Schema, TEXT, NUMERIC, STORED
-from whoosh import index
-from whoosh.qparser import MultifieldParser
-
-def createIndex():
-	schema = Schema(
-		name=TEXT(stored=True),
-		alias=TEXT,
-		lat=NUMERIC(numtype=float, stored=True),
-		lon=NUMERIC(numtype=float, stored=True),
-		isni=STORED,
-	)
-	
-	if not os.path.exists('index'):
-		os.mkdir('index')
-	ix = index.create_in('index', schema)
-	writer = ix.writer()
-	
-	with open('data/institutes.csv') as csvfile:
-		reader = csv.DictReader(csvfile)
-		for row in reader:
-			writer.add_document(
-				name=row['name'],
-				alias=row['alias'],
-				lat=row['lat'],
-				lon=row['lon'],
-				isni=row['isni'],
-			)
-	writer.commit()
-
-def query(text):
-	expandedText = expandAbbreviations(text)
-	fields = ['name', 'alias',]
-	ix = index.open_dir('index')
-	with ix.searcher() as searcher:
-		query = MultifieldParser(fields, ix.schema).parse(expandedText)
-		results = searcher.search(query, terms=True)
-		print(results)
-		for hit in results:
-			print(hit)
-
-def expandAbbreviations(text):
-	result = text
-	with open('data/abbreviations.csv') as csvfile:
-		reader = csv.DictReader(csvfile)
-		for row in reader:
-			result = re.sub(
-				r"\b(?i){}\b".format(row['short']),
-				row['long'],
-				result,
-			)
-	return result
+def match(affiliation, parse=None):
+	if not parse:
+		def parse(affiliation):
+			return {
+				'institute': affiliation,
+				'department': None,
+				'country': None,
+				'city': None,
+			}
+	parsedAffiliation = parse(affiliation)
+	query(parsedAffiliation['institute'])
