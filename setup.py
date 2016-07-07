@@ -28,6 +28,7 @@ setup(
 	url='https://github.com/qtux/instmatcher',
 	license='Apache License 2.0',
 	packages=['instmatcher',],
+	package_data={'instmatcher': ['data/*.csv']},
 	install_requires=['Whoosh>=2.7.4',],
 	include_package_data=True,
 	zip_safe=False,

@@ -14,6 +14,7 @@
 
 import csv
 import os, os.path
+from pkg_resources import resource_filename
 import re
 
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED
@@ -34,7 +35,8 @@ def createIndex():
 	ix = index.create_in('index', schema)
 	writer = ix.writer()
 	
-	with open('data/institutes.csv') as csvfile:
+	institutes = resource_filename(__name__, 'data/institutes.csv')
+	with open(institutes) as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			writer.add_document(
@@ -59,7 +61,8 @@ def query(text):
 
 def expandAbbreviations(text):
 	result = text
-	with open('data/abbreviations.csv') as csvfile:
+	abbreviations = resource_filename(__name__, 'data/abbreviations.csv')
+	with open(abbreviations) as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			result = re.sub(
