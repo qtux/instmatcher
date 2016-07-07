@@ -30,6 +30,9 @@ setup(
 	packages=['instmatcher',],
 	package_data={'instmatcher': ['data/*.csv']},
 	install_requires=['Whoosh>=2.7.4',],
+	extras_require = {
+		'grobidParse':['requests>=2.10.0', 'pycountry>=1.20',],
+	},
 	include_package_data=True,
 	zip_safe=False,
 	keywords='institute matching',

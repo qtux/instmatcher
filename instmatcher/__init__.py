@@ -13,15 +13,8 @@
 # limitations under the License.
 
 from .core import query, createIndex
+from .parser import defaultParse
 
-def match(affiliation, parse=None):
-	if not parse:
-		def parse(affiliation):
-			return {
-				'institute': affiliation,
-				'department': None,
-				'country': None,
-				'city': None,
-			}
+def match(affiliation, parse=defaultParse):
 	parsedAffiliation = parse(affiliation)
 	query(parsedAffiliation['institute'])
