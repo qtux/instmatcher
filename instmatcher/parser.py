@@ -27,6 +27,7 @@ def defaultParse(affiliation):
 		'institute': affiliation,
 		'department': None,
 		'country': None,
+		'cc': None,
 		'city': None,
 	}
 
@@ -57,12 +58,13 @@ def grobidParse(affiliation):
 			break
 	try:
 		countryKey = root.find('./address/country').get('key')
+		result['cc'] = countryKey
 		result['country'] = pycountry.countries.get(alpha2=countryKey).name
 	except (AttributeError, KeyError):
+		result['cc'] = None
 		result['country'] = None
 	try:
 		result['city'] = root.find('./address/settlement').text
 	except AttributeError:
 		result['city'] = None
-	print(result)
 	return result
