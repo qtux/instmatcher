@@ -32,6 +32,7 @@ setup(
 	install_requires=['Whoosh>=2.7.4',],
 	extras_require = {
 		'grobidParse':['requests>=2.10.0', 'pycountry>=1.20',],
+		'citycoordArea':['citycoord>=0.1.0',],
 	},
 	include_package_data=True,
 	zip_safe=False,
