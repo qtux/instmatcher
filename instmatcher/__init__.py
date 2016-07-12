@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .core import query, createIndex
+from .core import query
 from .parser import defaultParse
+from .geo import defaultArea
 
-def match(affiliation, parse=defaultParse):
+def match(affiliation, parse=defaultParse, defArea=defaultArea):
 	parsedAffiliation = parse(affiliation)
-	query(parsedAffiliation['institute'])
+	area = defArea(parsedAffiliation['city'], parsedAffiliation['cc'])
+	return query(parsedAffiliation['institute'], area)

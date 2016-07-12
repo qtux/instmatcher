@@ -17,11 +17,12 @@ import os, os.path
 from pkg_resources import resource_filename
 import re
 
+from whoosh import index, qparser
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED
-from whoosh import index
 from whoosh.qparser import MultifieldParser
 
-def createIndex():
+def _createIndex():
+	print('creating the index - this may take some time')
 	schema = Schema(
 		name=TEXT(stored=True),
 		alias=TEXT,
@@ -29,9 +30,6 @@ def createIndex():
 		lon=NUMERIC(numtype=float, stored=True),
 		isni=STORED,
 	)
-	
-	if not os.path.exists('index'):
-		os.mkdir('index')
 	ix = index.create_in('index', schema)
 	writer = ix.writer()
 	
@@ -48,16 +46,35 @@ def createIndex():
 			)
 	writer.commit()
 
-def query(text):
-	expandedText = expandAbbreviations(text)
-	fields = ['name', 'alias',]
+def query(inst, area, forceInit=False):
+	if not os.path.exists('index'):
+		os.mkdir('index')
+		_createIndex()
+	elif forceInit:
+		_createIndex()
+	
 	ix = index.open_dir('index')
+	
+	instParser = MultifieldParser(['name', 'alias',], ix.schema)
+	queryInst = expandAbbreviations(inst)
+	instQuery = instParser.parse(queryInst)
+	
+	coordParser = MultifieldParser(['lat', 'lon'], ix.schema)
+	latQueryText = 'lat:[{min} to {max}]'.format(**area['lat'])
+	lonQueryText = 'lon:[{min} to {max}]'.format(**area['lon'])
+	coordQuery = coordParser.parse(latQueryText + lonQueryText)
+	
 	with ix.searcher() as searcher:
-		query = MultifieldParser(fields, ix.schema).parse(expandedText)
-		results = searcher.search(query, terms=True)
-		print(results)
-		for hit in results:
-			print(hit)
+		instResults = searcher.search(instQuery, terms=True)
+		coordResults = searcher.search(coordQuery, limit=None)
+		instResults.upgrade(coordResults)
+		for hit in instResults:
+			return {
+				'name': hit['name'],
+				'isni': hit['isni'],
+				'lat': hit['lat'],
+				'lon': hit['lon'],
+			}
 
 def expandAbbreviations(text):
 	result = text
