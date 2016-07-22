@@ -21,8 +21,10 @@ from whoosh import index, qparser
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED
 from whoosh.qparser import MultifieldParser
 
-def _createIndex():
+def createIndex():
 	print('creating the index - this may take some time')
+	if not os.path.exists('index'):
+		os.mkdir('index')
 	schema = Schema(
 		name=TEXT(stored=True),
 		alias=TEXT,
@@ -50,13 +52,7 @@ def _createIndex():
 			)
 	writer.commit()
 
-def query(inst, area, forceInit=False):
-	if not os.path.exists('index'):
-		os.mkdir('index')
-		_createIndex()
-	elif forceInit:
-		_createIndex()
-	
+def query(inst, area):
 	ix = index.open_dir('index')
 	
 	instParser = MultifieldParser(['name', 'alias',], ix.schema)
@@ -69,7 +65,7 @@ def query(inst, area, forceInit=False):
 	coordQuery = coordParser.parse(latQueryText + lonQueryText)
 	
 	with ix.searcher() as searcher:
-		instResults = searcher.search(instQuery, terms=True)
+		instResults = searcher.search(instQuery)
 		coordResults = searcher.search(coordQuery, limit=None)
 		instResults.upgrade(coordResults)
 		for hit in instResults:
