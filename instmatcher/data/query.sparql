@@ -1,0 +1,28 @@
+SELECT
+  ?item
+  (SAMPLE(?name) AS ?name)
+  (GROUP_CONCAT(DISTINCT(?altLabel); separator = '; ') AS ?alias)
+  (SAMPLE(?lat) AS ?lat)
+  (SAMPLE(?lon) AS ?lon)
+  (SAMPLE(?insi) AS ?isni)
+  (SAMPLE(?nation) as ?country)
+WHERE {
+  ?item (wdt:P31/wdt:P279*) wd:Q3918.
+  ?item rdfs:label ?name FILTER (lang(?name) = 'en')
+  OPTIONAL {
+    ?item skos:altLabel ?altLabel
+  }
+  ?item p:P625 ?coordinate .
+  ?coordinate psv:P625 ?coordinate_node .
+  ?coordinate_node wikibase:geoLatitude ?lat .
+  ?coordinate_node wikibase:geoLongitude ?lon .
+  OPTIONAL {
+    ?item wdt:P213 ?insi.
+  }
+  OPTIONAL {
+    ?item wdt:P17 ?country.
+    ?country rdfs:label ?nation FILTER (lang(?nation) = 'en')
+  }
+}
+GROUP BY ?item
+ORDER BY ASC(?name)

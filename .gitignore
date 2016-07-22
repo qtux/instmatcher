@@ -3,3 +3,14 @@ __pycache__/
 
 index/
 geoindex/
+/instmatcher/data/*.cpg
+/instmatcher/data/*.dbf
+/instmatcher/data/*.prj
+/instmatcher/data/*.shp
+/instmatcher/data/*.shx
+/instmatcher/data/*.log
+/instmatcher/data/*.README.html
+/instmatcher/data/*.VERSION.txt
+/instmatcher/data/*.zip
+/instmatcher/data/query.csv
+

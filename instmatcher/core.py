@@ -29,6 +29,8 @@ def _createIndex():
 		lat=NUMERIC(numtype=float, stored=True),
 		lon=NUMERIC(numtype=float, stored=True),
 		isni=STORED,
+		country=STORED,
+		alpha2=STORED,
 	)
 	ix = index.create_in('index', schema)
 	writer = ix.writer()
@@ -43,6 +45,8 @@ def _createIndex():
 				lat=row['lat'],
 				lon=row['lon'],
 				isni=row['isni'],
+				country=row['country'],
+				alpha2=row['alpha2'],
 			)
 	writer.commit()
 
@@ -74,6 +78,8 @@ def query(inst, area, forceInit=False):
 				'isni': hit['isni'],
 				'lat': hit['lat'],
 				'lon': hit['lon'],
+				'country': hit['country'],
+				'alpha2': hit['alpha2'],
 			}
 
 def expandAbbreviations(text):
