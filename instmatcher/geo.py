@@ -19,17 +19,8 @@ try:
 except ImportError:
 	pass
 
-def defaultArea(city, cc, radius=float('inf')):
-	return {
-		'lat': {
-			'min': float('-inf'),
-			'max': float('inf'),
-		},
-		'lon': {
-			'min': float('-inf'),
-			'max': float('inf'),
-		},
-	}
+def defaultArea(city, cc, radius=None):
+	return None
 
 def citycoordArea(city, cc, radius=111):
 	for pkg in _required:
@@ -50,4 +41,4 @@ def citycoordArea(city, cc, radius=111):
 				'max': lon + offset,
 			},
 		}
-	return defaultArea(None, None, radius)
+	return None

@@ -17,14 +17,21 @@ import os, os.path
 from pkg_resources import resource_filename
 import re
 
-from whoosh import index, qparser
+from whoosh import index
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED
 from whoosh.qparser import MultifieldParser
 
-def createIndex():
-	print('creating the index - this may take some time')
+_abbreviations = None
+_ix = None
+_instParser = None
+_coordParser = None
+
+def createIndex(force=False):
 	if not os.path.exists('index'):
 		os.mkdir('index')
+	elif not force:
+		return
+	print('creating the index - this may take some time')
 	schema = Schema(
 		name=TEXT(stored=True),
 		alias=TEXT,
@@ -52,22 +59,37 @@ def createIndex():
 			)
 	writer.commit()
 
+def init():
+	global _abbreviations
+	_abbreviations = {}
+	source = resource_filename(__name__, 'data/abbreviations.csv')
+	with open(source) as csvfile:
+		reader = csv.reader(csvfile)
+		for row in reader:
+			_abbreviations[row[0]] = row[1]
+	
+	createIndex()
+	
+	global _ix, _instParser, _coordParser
+	_ix = index.open_dir('index')
+	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
+	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
+
 def query(inst, area):
-	ix = index.open_dir('index')
-	
-	instParser = MultifieldParser(['name', 'alias',], ix.schema)
-	queryInst = expandAbbreviations(inst)
-	instQuery = instParser.parse(queryInst)
-	
-	coordParser = MultifieldParser(['lat', 'lon'], ix.schema)
-	latQueryText = 'lat:[{min} to {max}]'.format(**area['lat'])
-	lonQueryText = 'lon:[{min} to {max}]'.format(**area['lon'])
-	coordQuery = coordParser.parse(latQueryText + lonQueryText)
-	
-	with ix.searcher() as searcher:
-		instResults = searcher.search(instQuery)
-		coordResults = searcher.search(coordQuery, limit=None)
-		instResults.upgrade(coordResults)
+	with _ix.searcher() as searcher:
+		# search for the given institute
+		instQuery = _instParser.parse(inst)
+		instResults = searcher.search(instQuery, limit=None)
+		# try to enhance the search results boosting ones in the given area
+		try:
+			latQueryText = 'lat:[{min} to {max}]'.format(**area['lat'])
+			lonQueryText = 'lon:[{min} to {max}]'.format(**area['lon'])
+			coordQuery = _coordParser.parse(latQueryText + lonQueryText)
+			coordResults = searcher.search(coordQuery, limit=None)
+			instResults.upgrade(coordResults)
+		except TypeError:
+			pass
+		# return the best hit
 		for hit in instResults:
 			return {
 				'name': hit['name'],
@@ -79,14 +101,6 @@ def query(inst, area):
 			}
 
 def expandAbbreviations(text):
-	result = text
-	abbreviations = resource_filename(__name__, 'data/abbreviations.csv')
-	with open(abbreviations) as csvfile:
-		reader = csv.DictReader(csvfile)
-		for row in reader:
-			result = re.sub(
-				r"\b(?i){}\b".format(row['short']),
-				row['long'],
-				result,
-			)
-	return result
+	for abbrev, expansion in _abbreviations.items():
+		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
+	return text
