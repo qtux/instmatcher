@@ -23,6 +23,8 @@ def defaultArea(city, cc, radius=None):
 	return None
 
 def citycoordArea(city, cc, radius=111):
+	if not city:
+		return None
 	for pkg in _required:
 		raise ImportError('{} is required to use citycoordArea'.format(pkg))
 	results = citycoord.geocode(city, cc)
