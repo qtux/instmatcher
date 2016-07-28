@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from .core import query
-from .parser import defaultParse
-from .geo import defaultArea
+from .parser import grobidParse
+from .geo import defaultArea, citycoordArea
 
-def match(affiliation, parse=defaultParse, defArea=defaultArea):
+def match(affiliation, parse, defArea=defaultArea):
 	parsedAffiliation = parse(affiliation)
 	area = defArea(parsedAffiliation['city'], parsedAffiliation['cc'])
 	return query(parsedAffiliation['institute'], area)
+

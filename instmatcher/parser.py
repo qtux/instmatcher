@@ -22,49 +22,36 @@ try:
 except ImportError:
 	pass
 
-def defaultParse(affiliation):
-	return {
-		'institute': affiliation,
-		'department': None,
-		'country': None,
-		'cc': None,
-		'city': None,
-	}
-
-def grobidParse(affiliation):
+def grobidParse(affiliation, url = 'http://localhost:8080'):
 	for pkg in _required:
 		raise ImportError('{} is required to use grobid'.format(pkg))
 	
 	cmd = 'affiliations=' + affiliation
-	url = 'http://localhost:8080/processAffiliations'
-	r = requests.post(url, data=cmd)
+	r = requests.post(url + '/processAffiliations', data=cmd)
 	xml = r.content.decode('UTF-8')
 	
 	try:
-		root = et.fromstring(xml)
+		root = et.fromstring('<results>' + xml + '</results>')
 	except et.ParseError:
-		print('Could not parse: "{}"\n{}'.format(affiliation, xml))
-		return defaultParse(affiliation)
+		return None
 	
-	result = {'institute': '', 'department': '',}
-	organisations = root.findall('./orgName')
-	for org in organisations:
-		if org.get('type') == 'institution':
-			result['institute'] = org.text
-			break
-	for org in organisations:
-		if org.get('type') == 'department':
-			result['department'] = org.text
-			break
+	result = {}
 	try:
-		countryKey = root.find('./address/country').get('key')
+		countryKey = root.find('./affiliation/address/country').get('key')
 		result['cc'] = countryKey
 		result['country'] = pycountry.countries.get(alpha2=countryKey).name
 	except (AttributeError, KeyError):
 		result['cc'] = None
 		result['country'] = None
+	
 	try:
-		result['city'] = root.find('./address/settlement').text
+		result['city'] = root.find('./affiliation/address/settlement').text
 	except AttributeError:
 		result['city'] = None
-	return result
+	
+	organisations = root.findall('./affiliation/orgName')
+	for org in organisations:
+		if org.get('type') == 'institution':
+			result['institute'] = org.text
+			return result
+	return None
