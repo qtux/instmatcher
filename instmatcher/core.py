@@ -26,64 +26,60 @@ _ix = None
 _instParser = None
 _coordParser = None
 
-def createIndex(force=False):
-	if not os.path.exists('index'):
-		os.mkdir('index')
-	elif not force:
-		return
-	print('creating the index - this may take some time')
-	schema = Schema(
-		name=TEXT(stored=True),
-		alias=TEXT,
-		lat=NUMERIC(numtype=float, stored=True),
-		lon=NUMERIC(numtype=float, stored=True),
-		isni=STORED,
-		country=STORED,
-		alpha2=STORED,
-	)
-	ix = index.create_in('index', schema)
-	writer = ix.writer()
+def init(procs=1, multisegment=False, ixName='index', force=False):
+	if not os.path.exists(ixName):
+		os.mkdir(ixName)
+		force = True
+	if force:
+		print('creating the index - this may take some time')
+		schema = Schema(
+			name=TEXT(stored=True),
+			alias=TEXT,
+			lat=NUMERIC(numtype=float, stored=True),
+			lon=NUMERIC(numtype=float, stored=True),
+			isni=STORED,
+			country=STORED,
+			alpha2=STORED,
+		)
+		ix = index.create_in(ixName, schema)
+		writer = ix.writer(procs=os.cpu_count(), multisegment=True)
+		
+		institutes = resource_filename(__name__, 'data/institutes.csv')
+		with open(institutes) as csvfile:
+			reader = csv.DictReader(csvfile)
+			for row in reader:
+				writer.add_document(
+					name=row['name'],
+					alias=row['alias'],
+					lat=row['lat'],
+					lon=row['lon'],
+					isni=row['isni'],
+					country=row['country'],
+					alpha2=row['alpha2'],
+				)
+		writer.commit()
 	
-	institutes = resource_filename(__name__, 'data/institutes.csv')
-	with open(institutes) as csvfile:
-		reader = csv.DictReader(csvfile)
-		for row in reader:
-			writer.add_document(
-				name=row['name'],
-				alias=row['alias'],
-				lat=row['lat'],
-				lon=row['lon'],
-				isni=row['isni'],
-				country=row['country'],
-				alpha2=row['alpha2'],
-			)
-	writer.commit()
-
-def init():
-	global _abbreviations
+	global _abbreviations, _ix, _instParser, _coordParser
 	_abbreviations = {}
 	source = resource_filename(__name__, 'data/abbreviations.csv')
 	with open(source) as csvfile:
 		reader = csv.reader(csvfile)
 		for row in reader:
 			_abbreviations[row[0]] = row[1]
-	
-	createIndex()
-	
-	global _ix, _instParser, _coordParser
-	_ix = index.open_dir('index')
+	_ix = index.open_dir(ixName)
 	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
 
-def query(inst, area):
+def query(inst, lat, lon, offset=1):
 	with _ix.searcher() as searcher:
 		# search for the given institute
 		instQuery = _instParser.parse(inst)
 		instResults = searcher.search(instQuery, limit=None)
-		# try to enhance the search results boosting ones in the given area
+		# try to enhance the search boosting results in the vicinity of lat/lon
 		try:
-			latQueryText = 'lat:[{min} to {max}]'.format(**area['lat'])
-			lonQueryText = 'lon:[{min} to {max}]'.format(**area['lon'])
+			# one degree of arc corresponds to about 111 km
+			latQueryText = 'lat:[{} to {}]'.format(lat - offset, lat + offset)
+			lonQueryText = 'lon:[{} to {}]'.format(lon - offset, lon + offset)
 			coordQuery = _coordParser.parse(latQueryText + lonQueryText)
 			coordResults = searcher.search(coordQuery, limit=None)
 			instResults.upgrade(coordResults)
@@ -104,3 +100,14 @@ def expandAbbreviations(text):
 	for abbrev, expansion in _abbreviations.items():
 		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
 	return text
+
+def match(affiliation, parse, geocode):
+	parsedAffiliation = parse(affiliation)
+	# search for a match if parsing succeeded
+	try:
+		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['cc'])
+		inst = expandAbbreviations(parsedAffiliation['institute'])
+		return query(inst, lat, lon)
+	# otherwise return None
+	except TypeError:
+		return None

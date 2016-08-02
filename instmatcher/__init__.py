@@ -12,20 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .core import query, init, expandAbbreviations
-from .parser import grobid
-from .geo import defaultArea, citycoordArea
+from .core import match
 
-init()
-
-def match(affiliation, parse, defArea=defaultArea):
-	parsedAffiliation = parse(affiliation)
-	# search for a match if parsing succeeded
-	try:
-		area = defArea(parsedAffiliation['city'], parsedAffiliation['cc'])
-		inst = expandAbbreviations(parsedAffiliation['institute'])
-		return query(inst, area)
-	# otherwise return None
-	except TypeError:
-		return None
-
+from . import core
+from . import geo
+from . import parser
