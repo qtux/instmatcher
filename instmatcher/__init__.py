@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .core import query, init, expandAbbreviations
-from .parser import grobidParse
+from .parser import grobid
 from .geo import defaultArea, citycoordArea
 
 init()

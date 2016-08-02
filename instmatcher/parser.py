@@ -22,7 +22,7 @@ try:
 except ImportError:
 	pass
 
-def grobidParse(affiliation, url = 'http://localhost:8080'):
+def grobid(affiliation, url = 'http://localhost:8080'):
 	for pkg in _required:
 		raise ImportError('{} is required to use grobid'.format(pkg))
 	
