@@ -70,5 +70,5 @@ def geocode(city, cc):
 	with _ix.searcher() as searcher:
 		results = searcher.search(query, limit=None)
 		for hit in results:
-			return hit['lat'], hit['lon']
+			return float(hit['lat']), float(hit['lon'])
 	return None, None
