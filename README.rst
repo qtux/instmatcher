@@ -1,16 +1,46 @@
 instmatcher
 ===========
-A tool to match an affiliation string to a list of known institutes originally queried from `Wikidata`_ and upgraded using the country shapes provided by `Natural Earth`_.
-The cities dataset taken from `GeoNames`_ (available under a `Creative Commons Attribution 3.0 License`_.) is used to enhance the search results.
+A tool to match an affiliation string to a list of known institutes.
 
-.. _Creative Commons Attribution 3.0 License: http://creativecommons.org/licenses/by/3.0/
-.. _Wikidata: https://www.wikidata.org
-.. _Natural Earth: http://www.naturalearthdata.com/
-.. _GeoNames: http://download.geonames.org/export/dump/
+Installation
+============
+To install instmatcher simply clone the git repository and install it using pip: ::
+
+  git clone https://github.com/qtux/instmatcher.git
+  cd instmatcher
+  pip install .
+
+Run Tests
+=========
+In order to run the test execute: ::
+
+  python setup.py test
+
+Attribution
+===========
+1. The list of `institutes`_ is queried from `Wikidata`_ (available under `CC0`_).
+2. The list of `institutes`_ is enhanced using the country shapes from `Natural Earth`_ (in public domain).
+3. The list of `cities`_ to upgrade search results is taken from `GeoNames`_  (available under `CC BY 3.0`_).
+
 .. image:: https://raw.githubusercontent.com/qtux/instmatcher/master/attribution.png
 
 License
--------
+=======
 This software is licensed under the `Apache License, Version 2.0`_.
 
+.. LICENSES
 .. _Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0.html
+.. _CC0: https://creativecommons.org/publicdomain/zero/1.0/
+.. _CC BY 3.0: http://creativecommons.org/licenses/by/3.0/
+
+.. DATASETS
+.. _cities: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/cities1000.txt
+.. _institutes: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/institutes.csv
+
+.. DATASOURCES:
+.. _Wikidata: https://www.wikidata.org
+.. _Natural Earth: http://www.naturalearthdata.com/
+.. _GeoNames: http://download.geonames.org/export/dump/
+
+.. OTHER
+.. _grobid: https://github.com/kermitt2/grobid
