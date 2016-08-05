@@ -22,12 +22,17 @@ try:
 except ImportError:
 	pass
 
-def grobid(affiliation, url = 'http://localhost:8080'):
+_url = None
+
+def init(url = 'http://localhost:8080'):
 	for pkg in _required:
 		raise ImportError('{} is required to use grobid'.format(pkg))
-	
+	global _url
+	_url = url
+
+def grobid(affiliation):
 	cmd = 'affiliations=' + affiliation
-	r = requests.post(url + '/processAffiliations', data=cmd)
+	r = requests.post(_url + '/processAffiliations', data=cmd)
 	xml = r.content.decode('UTF-8')
 	
 	try:

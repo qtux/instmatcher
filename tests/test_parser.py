@@ -22,7 +22,7 @@ import string
 import random
 
 import unittest
-from instmatcher.parser import grobid
+from instmatcher.parser import grobid, init
 
 grobidAnswers = {}
 tests = {}
@@ -92,8 +92,9 @@ class test_geo(unittest.TestCase):
 	
 	def test(self):
 		url = 'http://' + self.host + ':' + str(self.port)
+		init(url)
 		for affiliation, result in tests.items():
-			self.assertEqual(grobid(affiliation, url), result)
+			self.assertEqual(grobid(affiliation), result)
 	
 	def tearDown(self):
 		self.server.shutdown()
