@@ -31,7 +31,10 @@ setup(
 	package_data={'test': ['tests/*.xml']},
 	data_files={'instmatcher': ['data/*.csv', 'data/*.txt']},
 	install_requires=['Whoosh>=2.7.4',],
-	extras_require = {'grobidParse':['requests>=2.10.0', 'pycountry>=1.20',]},
+	extras_require = {
+		'grobid':['requests>=2.10.0', 'pycountry>=1.20',],
+		'data':['fiona>=1.7.0', 'shapely>=1.5.16', 'pycountry>=1.20',],
+	},
 	include_package_data=True,
 	zip_safe=False,
 	keywords='institute matching',
