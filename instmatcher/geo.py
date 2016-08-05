@@ -23,9 +23,10 @@ from whoosh.qparser import MultifieldParser
 _ix = None
 _parser = None
 
-def init(procs=1, multisegment=False, ixName='geoindex', force=False):
-	if not os.path.exists(ixName):
-		os.mkdir(ixName)
+def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
+	# create the geoindex if it does not exist or force is enabled
+	if not os.path.exists(ixPath):
+		os.mkdir(ixPath)
 		force = True
 	if force:
 		print('creating the geoindex - this may take some time')
@@ -37,7 +38,7 @@ def init(procs=1, multisegment=False, ixName='geoindex', force=False):
 			lon=STORED,
 			cc=ID,
 		)
-		ix = index.create_in(ixName, schema)
+		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=procs, multisegment=multisegment)
 		cities = resource_filename(__name__, 'data/cities1000.txt')
 		with open(cities) as f:
@@ -56,8 +57,9 @@ def init(procs=1, multisegment=False, ixName='geoindex', force=False):
 				)
 		writer.commit()
 	
+	# load the index and create the city/cc query parser
 	global _ix, _parser
-	_ix = index.open_dir(ixName)
+	_ix = index.open_dir(ixPath)
 	_parser =  MultifieldParser(['name', 'asci', 'alias', 'cc',], _ix.schema)
 
 def geocode(city, cc):

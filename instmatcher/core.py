@@ -26,9 +26,10 @@ _ix = None
 _instParser = None
 _coordParser = None
 
-def init(procs=1, multisegment=False, ixName='index', force=False):
-	if not os.path.exists(ixName):
-		os.mkdir(ixName)
+def init(procs=1, multisegment=False, ixPath='index', force=False):
+	# create the index if it does not exist or force is enabled
+	if not os.path.exists(ixPath):
+		os.mkdir(ixPath)
 		force = True
 	if force:
 		print('creating the index - this may take some time')
@@ -41,7 +42,7 @@ def init(procs=1, multisegment=False, ixName='index', force=False):
 			country=STORED,
 			alpha2=STORED,
 		)
-		ix = index.create_in(ixName, schema)
+		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=os.cpu_count(), multisegment=True)
 		
 		institutes = resource_filename(__name__, 'data/institutes.csv')
@@ -59,6 +60,7 @@ def init(procs=1, multisegment=False, ixName='index', force=False):
 				)
 		writer.commit()
 	
+	# load the available abbreviations from 'data/abbreviations.csv'
 	global _abbreviations, _ix, _instParser, _coordParser
 	_abbreviations = {}
 	source = resource_filename(__name__, 'data/abbreviations.csv')
@@ -66,7 +68,9 @@ def init(procs=1, multisegment=False, ixName='index', force=False):
 		reader = csv.reader(csvfile)
 		for row in reader:
 			_abbreviations[row[0]] = row[1]
-	_ix = index.open_dir(ixName)
+	
+	# load the index and create the institute and coordinate query parsers
+	_ix = index.open_dir(ixPath)
 	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
 
