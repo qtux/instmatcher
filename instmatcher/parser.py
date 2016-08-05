@@ -12,21 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-try:
-	_required = ['requests', 'pycountry',]
-	import requests
-	_required.remove('requests')
-	import pycountry
-	_required.remove('pycountry')
-	import xml.etree.ElementTree as et
-except ImportError:
-	pass
+import requests
+import pycountry
+import xml.etree.ElementTree as et
 
 _url = None
 
 def init(url = 'http://localhost:8080'):
-	for pkg in _required:
-		raise ImportError('{} is required to use grobid'.format(pkg))
 	global _url
 	_url = url
 
