@@ -16,6 +16,24 @@ In order to run the test execute: ::
 
   python setup.py test
 
+Query and Enhance Institute List
+================================
+Install the optional dependencies required to run the Python script: ::
+
+  pip install .[data]
+
+To update the institute list execute ::
+
+  make
+
+in the data folder inside the Python module to query institutes from `Wikidata`_ and complete it with the country name and ISO 3166-1 alpha 2 code.
+This process yields two lists:
+
+1. **institutes.csv** which contains the successfully enhanced data
+2. **failures.csv** which contains the data missing information
+
+The data from the second list has to be manually supplied with the missing information and added to the first list.
+
 Attribution
 ===========
 1. The list of `institutes`_ is queried from `Wikidata`_ (available under `CC0`_).
