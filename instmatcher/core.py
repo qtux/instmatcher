@@ -109,7 +109,7 @@ def match(affiliation, parse, geocode):
 	parsedAffiliation = parse(affiliation)
 	# search for a match if parsing succeeded
 	try:
-		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['cc'])
+		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['alpha2'])
 		inst = expandAbbreviations(parsedAffiliation['institute'])
 		return query(inst, lat, lon)
 	# otherwise return None

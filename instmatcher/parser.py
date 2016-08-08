@@ -35,10 +35,10 @@ def grobid(affiliation):
 	result = {}
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
-		result['cc'] = countryKey
+		result['alpha2'] = countryKey
 		result['country'] = pycountry.countries.get(alpha2=countryKey).name
 	except (AttributeError, KeyError):
-		result['cc'] = None
+		result['alpha2'] = None
 		result['country'] = None
 	
 	try:

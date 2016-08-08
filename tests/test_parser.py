@@ -68,7 +68,7 @@ class test_geo(unittest.TestCase):
 			result = {}
 			try:
 				result['institute'] = resultTag.find('./institute').text
-				result['cc'] = resultTag.find('./cc').text
+				result['alpha2'] = resultTag.find('./alpha2').text
 				result['country'] = resultTag.find('./country').text
 				result['city'] = resultTag.find('./city').text
 			except AttributeError:

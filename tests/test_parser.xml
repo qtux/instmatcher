@@ -37,7 +37,7 @@
 		</affiliation>
 		<result>
 			<institute>instit1</institute>
-			<cc>AQ</cc>
+			<alpha2>AQ</alpha2>
 			<country>Antarctica</country>
 			<city>settlement</city>
 		</result>
@@ -57,7 +57,7 @@
 		</affiliation>
 		<result>
 			<institute>institA</institute>
-			<cc>AQ</cc>
+			<alpha2>AQ</alpha2>
 			<country>Antarctica</country>
 			<city>settlement</city>
 		</result>
@@ -91,7 +91,7 @@
 		</affiliation>
 		<result>
 			<institute>institB</institute>
-			<cc></cc>
+			<alpha2></alpha2>
 			<country></country>
 			<city>settlement</city>
 		</result>
@@ -106,7 +106,7 @@
 		</affiliation>
 		<result>
 			<institute>institC</institute>
-			<cc>AQ</cc>
+			<alpha2>AQ</alpha2>
 			<country>Antarctica</country>
 			<city>settlement</city>
 		</result>
@@ -121,7 +121,7 @@
 		</affiliation>
 		<result>
 			<institute>institD</institute>
-			<cc></cc>
+			<alpha2></alpha2>
 			<country></country>
 			<city>settlement</city>
 		</result>
@@ -135,7 +135,7 @@
 		</affiliation>
 		<result>
 			<institute>institE</institute>
-			<cc></cc>
+			<alpha2></alpha2>
 			<country></country>
 			<city>settlement</city>
 		</result>
@@ -149,7 +149,7 @@
 		</affiliation>
 		<result>
 			<institute>institF</institute>
-			<cc>AQ</cc>
+			<alpha2>AQ</alpha2>
 			<country>Antarctica</country>
 			<city></city>
 		</result>
