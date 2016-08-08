@@ -16,6 +16,91 @@ In order to run the test execute: ::
 
   python setup.py test
 
+Usage Example
+=============
+This example assumes that a `grobid`_ instance is running at **http://localhost:8080**.
+Additionally, the example shows on how to use every available CPU core to reduce the time
+for initialising the indices in the ``core`` and especially in the ``geo`` module.
+
+.. code:: python
+
+    from instmatcher import core, geo, parser
+    import os
+
+    # init desired modules using every core available
+    core.init(os.cpu_count(), True)
+    geo.init(os.cpu_count(), True)
+    parser.init('http://localhost:8080')
+
+    # match an affiliation using a grobid instance and the integrated geocoder
+    affiliation = 'TU Berlin, Berlin, Germany'
+    institute = core.match(affiliation, parse=parser.grobid, geocode=geo.geocode)
+    print(institute)
+
+This might (it depends on the parser result) print the following: ::
+
+    {
+        'name': 'Technical University of Berlin',
+        'isni': '0000 0001 2195 9817',
+        'lat': '52.511944444444',
+        'lon': '13.326388888889',
+        'country': 'Germany',
+        'alpha2': 'DE'
+    }
+
+Advanced Usage Example
+======================
+It is possible to supply self-defined parsing and geocoding functions instead of using ``parser.grobid`` and ``geo.geocode``.
+
+The parser function takes an affiliation string and returns a dictionary consisting of the
+
+- institute name
+- city name
+- country name
+- ISO 3166-1 alpha 2 code
+
+or ``None`` if the string is not parseable.
+
+The geocoding function takes a city name and the ISO 3166-1 alpha 2 code and returns the corresponding coordinates or ``None, None`` if the city could not be found.
+
+.. code:: python
+
+    from instmatcher import core
+
+    def dummyParse(affiliation):
+        if affiliation.startswith('TU Berlin'):
+            return {
+                'institute': 'TU Berlin',
+                'city': 'Berlin',
+                'country': 'Germany',
+                'cc': 'DE',
+        }
+        return None
+
+    def dummyGeocode(city, cc):
+        if city == 'Berlin' and cc == 'DE':
+            return 52.52437, 13.41053
+        return None, None
+
+    # init index and internal variables
+    core.init()
+
+    # match the affiliation to a known institute
+    affiliation = 'TU Berlin, Berlin, Germany'
+    institute = core.match(affiliation, dummyParse, dummyGeocode)
+    print(institute)
+
+In this specific case this will print the same as before: ::
+
+    {
+        'name': 'Technical University of Berlin',
+        'isni': '0000 0001 2195 9817',
+        'lat': '52.511944444444',
+        'lon': '13.326388888889',
+        'country': 'Germany',
+        'alpha2': 'DE'
+    }
+
 Query and Enhance Institute List
 ================================
 Install the optional dependencies required to run the Python script: ::
