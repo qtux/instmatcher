@@ -36,7 +36,7 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 			alias=IDLIST(expression=r"[^,]+"),
 			lat=STORED,
 			lon=STORED,
-			cc=ID,
+			alpha2=ID,
 		)
 		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=procs, multisegment=multisegment)
@@ -52,30 +52,30 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 					alias=row[3],
 					lat=row[4],
 					lon=row[5],
-					cc=row[8],
+					alpha2=row[8],
 					_boost=boost,
 				)
 		writer.commit()
 	
-	# load the index and create the city/cc query parser
+	# load the index and create the city/alpha2 query parser
 	global _ix, _parser
 	_ix = index.open_dir(ixPath)
-	_parser =  MultifieldParser(['name', 'asci', 'alias', 'cc',], _ix.schema)
+	_parser = MultifieldParser(['name', 'asci', 'alias', 'alpha2',], _ix.schema)
 
-def geocodeAll(city, cc):
+def geocodeAll(city, alpha2):
 	if not city:
 		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
-	if cc:
-		text = '(' + text + ') AND cc:{key}'.format(key=cc)
+	if alpha2:
+		text = '(' + text + ') AND alpha2:{key}'.format(key=alpha2)
 	query = _parser.parse(text)
 	with _ix.searcher() as searcher:
 		results = searcher.search(query, limit=None)
 		for hit in results:
 			yield float(hit['lat']), float(hit['lon'])
 
-def geocode(city, cc):
+def geocode(city, alpha2):
 	try:
-		return next(geocodeAll(city, cc))
+		return next(geocodeAll(city, alpha2))
 	except StopIteration:
 		return None, None
