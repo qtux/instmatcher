@@ -77,7 +77,10 @@ def init(procs=1, multisegment=False, ixPath='index', force=False):
 def query(inst, lat, lon, offset=1):
 	with _ix.searcher() as searcher:
 		# search for the given institute
-		instQuery = _instParser.parse(inst)
+		try:
+			instQuery = _instParser.parse(inst)
+		except AttributeError:
+			return None
 		instResults = searcher.search(instQuery, limit=None)
 		# try to enhance the search boosting results in the vicinity of lat/lon
 		try:
