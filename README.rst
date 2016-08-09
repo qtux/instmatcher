@@ -12,9 +12,23 @@ To install instmatcher simply clone the git repository and install it using pip:
 
 Run Tests
 =========
-In order to run the test execute: ::
+Install the required packages using ::
+
+  pip install .[test]
+
+and run ::
 
   python setup.py test
+
+to execute the tests.
+
+Build Documentation
+===================
+Install the required packages using ::
+
+  pip install .[doc]
+
+and use the Makefile in the docs folder to build a documentation.
 
 Usage Example
 =============

@@ -33,6 +33,7 @@ setup(
 	install_requires=['Whoosh>=2.7.4', 'requests>=2.10.0', 'pycountry>=1.20',],
 	extras_require = {
 		'data':['fiona>=1.7.0', 'shapely>=1.5.16',],
+		'doc':['Sphinx>=1.4.5', 'sphinx_rtd_theme>=0.1.10a0']
 	},
 	include_package_data=True,
 	zip_safe=False,

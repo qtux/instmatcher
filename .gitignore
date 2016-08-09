@@ -1,8 +1,12 @@
+# python packaging
 /*.egg-info
 __pycache__/
 
+# indices
 index/
 geoindex/
+
+# unused data
 /instmatcher/data/*.cpg
 /instmatcher/data/*.dbf
 /instmatcher/data/*.prj
@@ -14,3 +18,5 @@ geoindex/
 /instmatcher/data/*.zip
 /instmatcher/data/query.csv
 
+# docs
+/docs/_build
