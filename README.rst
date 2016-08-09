@@ -12,11 +12,7 @@ To install instmatcher simply clone the git repository and install it using pip:
 
 Run Tests
 =========
-Install the required packages using ::
-
-  pip install .[test]
-
-and run ::
+Run ::
 
   python setup.py test
 
