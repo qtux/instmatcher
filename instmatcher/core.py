@@ -18,7 +18,7 @@ from pkg_resources import resource_filename
 import re
 
 from whoosh import index
-from whoosh.fields import Schema, TEXT, NUMERIC, STORED
+from whoosh.fields import Schema, TEXT, NUMERIC, STORED, ID
 from whoosh.qparser import MultifieldParser
 
 _abbreviations = None
@@ -40,7 +40,7 @@ def init(procs=1, multisegment=False, ixPath='index', force=False):
 			lon=NUMERIC(numtype=float, stored=True),
 			isni=STORED,
 			country=STORED,
-			alpha2=STORED,
+			alpha2=ID(stored=True),
 		)
 		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=os.cpu_count(), multisegment=True)
@@ -71,15 +71,18 @@ def init(procs=1, multisegment=False, ixPath='index', force=False):
 	
 	# load the index and create the institute and coordinate query parsers
 	_ix = index.open_dir(ixPath)
-	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
+	_instParser = MultifieldParser(['name', 'alias'], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
 
 
-def queryAll(inst, lat, lon, offset):
+def queryAll(inst, alpha2, lat, lon, offset):
 	with _ix.searcher() as searcher:
 		# search for the given institute
 		try:
-			instQuery = _instParser.parse(inst)
+			text = 'name:"{key}" OR alias:"{key}")'.format(key=inst)
+			if alpha2:
+				text = '(' + text + ') AND alpha2:{key}'.format(key=alpha2)
+			instQuery = _instParser.parse(text)
 		except AttributeError:
 			return
 		instResults = searcher.search(instQuery, limit=None)
@@ -103,9 +106,9 @@ def queryAll(inst, lat, lon, offset):
 				'alpha2': hit['alpha2'],
 			}
 
-def query(inst, lat, lon, offset):
+def query(inst, alpha2, lat, lon, offset):
 	try:
-		return next(queryAll(inst, lat, lon, offset))
+		return next(queryAll(inst, alpha2, lat, lon, offset))
 	except StopIteration:
 		return None
 
