@@ -107,14 +107,3 @@ def expandAbbreviations(text):
 	for abbrev, expansion in _abbreviations.items():
 		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
 	return text
-
-def match(affiliation, parse, geocode):
-	parsedAffiliation = parse(affiliation)
-	# search for a match if parsing succeeded
-	try:
-		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['alpha2'])
-		inst = expandAbbreviations(parsedAffiliation['institute'])
-		return query(inst, lat, lon)
-	# otherwise return None
-	except TypeError:
-		return None

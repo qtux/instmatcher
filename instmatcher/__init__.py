@@ -12,8 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .core import match
-
 from . import core
 from . import geo
 from . import parser
+
+def match(affiliation, parse, geocode):
+	parsedAffiliation = parse(affiliation)
+	# search for a match if parsing succeeded
+	try:
+		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['alpha2'])
+		inst = core.expandAbbreviations(parsedAffiliation['institute'])
+		return core.query(inst, lat, lon)
+	# otherwise return None
+	except TypeError:
+		return None
