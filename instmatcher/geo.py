@@ -62,9 +62,9 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 	_ix = index.open_dir(ixPath)
 	_parser =  MultifieldParser(['name', 'asci', 'alias', 'cc',], _ix.schema)
 
-def geocode(city, cc):
+def geocodeAll(city, cc):
 	if not city:
-		return None, None
+		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
 	if cc:
 		text = '(' + text + ') AND cc:{key}'.format(key=cc)
@@ -72,5 +72,10 @@ def geocode(city, cc):
 	with _ix.searcher() as searcher:
 		results = searcher.search(query, limit=None)
 		for hit in results:
-			return float(hit['lat']), float(hit['lon'])
-	return None, None
+			yield float(hit['lat']), float(hit['lon'])
+
+def geocode(city, cc):
+	try:
+		return next(geocodeAll(city, cc))
+	except StopIteration:
+		return None, None

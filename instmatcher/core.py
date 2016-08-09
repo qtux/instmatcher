@@ -74,17 +74,17 @@ def init(procs=1, multisegment=False, ixPath='index', force=False):
 	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
 
-def query(inst, lat, lon, offset=1):
+
+def queryAll(inst, lat, lon, offset):
 	with _ix.searcher() as searcher:
 		# search for the given institute
 		try:
 			instQuery = _instParser.parse(inst)
 		except AttributeError:
-			return None
+			return
 		instResults = searcher.search(instQuery, limit=None)
 		# try to enhance the search boosting results in the vicinity of lat/lon
 		try:
-			# one degree of arc corresponds to about 111 km
 			latQueryText = 'lat:[{} to {}]'.format(lat - offset, lat + offset)
 			lonQueryText = 'lon:[{} to {}]'.format(lon - offset, lon + offset)
 			coordQuery = _coordParser.parse(latQueryText + lonQueryText)
@@ -92,9 +92,9 @@ def query(inst, lat, lon, offset=1):
 			instResults.upgrade(coordResults)
 		except TypeError:
 			pass
-		# return the best hit
+		# yield hits
 		for hit in instResults:
-			return {
+			yield {
 				'name': hit['name'],
 				'isni': hit['isni'],
 				'lat': hit['lat'],
@@ -102,6 +102,12 @@ def query(inst, lat, lon, offset=1):
 				'country': hit['country'],
 				'alpha2': hit['alpha2'],
 			}
+
+def query(inst, lat, lon, offset):
+	try:
+		return next(queryAll(inst, lat, lon, offset))
+	except StopIteration:
+		return None
 
 def expandAbbreviations(text):
 	for abbrev, expansion in _abbreviations.items():

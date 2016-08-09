@@ -27,13 +27,12 @@ class test_core(unittest.TestCase):
 	def test_query(self):
 		cases = {
 			# some bad input parameters
-			('Whasington', None, None): None,
-			('Beijing', 1000, 2000): 'Beijing Foreign Studies University',
-			('Rome', None, float('inf')): 'American University of Rome',
-			('University Sofia', '9000', None): 'Technical University of Sofia',
-			('Geneva', '120', 0): 'University of Geneva',
+			('Whasington', None, None, 1): None,
+			('Beijing', 1000, 2000, 1): 'Beijing Foreign Studies University',
+			('Rome', None, float('inf'), 1): 'American University of Rome',
+			('University Sofia', '9000', None, 1): 'Technical University of Sofia',
+			('Geneva', '120', 0, 1): 'University of Geneva',
 			# some None permutations
-			(None, None, None): None,
 			(None, 30, 40, 1): None,
 			(None, 30, 40, None): None,
 			(None, 30, None, 1): None,
@@ -43,25 +42,24 @@ class test_core(unittest.TestCase):
 			(None, None, None, 1): None,
 			(None, None, None, None): None,
 			# Berlin universities
-			('Berlin', None, None): 'Free University of Berlin',
-			('TU Berlin', None, None): 'Technical University of Berlin',
-			('FU Berlin', None, None): 'Free University of Berlin',
+			('Berlin', None, None, 1): 'Free University of Berlin',
+			('TU Berlin', None, None, 1): 'Technical University of Berlin',
+			('FU Berlin', None, None, 1): 'Free University of Berlin',
 			# different London universities
-			('London', None, None): 'University of London',
-			('London', 42.9881,-81.3318): 'University of Western Ontario',
+			('London', None, None, 1): 'University of London',
+			('London', 42.9881,-81.3318, 1): 'University of Western Ontario',
 			# one Boston University independent on coordinates
-			('Boston', None, None): 'Boston University',
-			('Boston', 42.358056, -71.063611): 'Boston University',
-			('Boston', 7.8689, 126.3734): 'Boston University',
-			('Boston', 52.974, -0.0214): 'Boston University',
+			('Boston', None, None, 1): 'Boston University',
+			('Boston', 42.358056, -71.063611, 1): 'Boston University',
+			('Boston', 7.8689, 126.3734, 1): 'Boston University',
+			('Boston', 52.974, -0.0214, 1): 'Boston University',
 			# different Washington universities
-			('Washington', None, None): 'Washington University in St. Louis',
+			('Washington', None, None, 1): 'Washington University in St. Louis',
 			('Washington', 38.9169, -77.0430, 0): 'Washington University in St. Louis',
 			('Washington', 38.9169, -77.0430, 100): 'Washington University in St. Louis',
 			('Washington', 38.9169, -77.0430, 1): 'University of Mary Washington',
-			('Washington', 38.9169, -77.0430, 1): 'University of Mary Washington',
-			('Washington University in St. Louis', None, None): 'Washington University in St. Louis',
-			('Washington University', None, None): 'Washington University in St. Louis',
+			('Washington University in St. Louis', None, None, 1): 'Washington University in St. Louis',
+			('Washington University', None, None, 1): 'Washington University in St. Louis',
 		}
 		for args, result in cases.items():
 			institute = core.query(*args)
