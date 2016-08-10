@@ -28,12 +28,28 @@ setup(
 	url='https://github.com/qtux/instmatcher',
 	license='Apache License 2.0',
 	packages=['instmatcher',],
-	package_data={'test': ['tests/*.xml']},
-	data_files={'instmatcher': ['data/*.csv', 'data/*.txt']},
-	install_requires=['Whoosh>=2.7.4', 'requests>=2.10.0', 'pycountry>=1.20',],
+	package_data={
+		'test': ['tests/test_parser.xml'],
+		'instmatcher': [
+			'data/institutes.csv',
+			'data/abbreviations.csv',
+			'data/cities1000.txt',
+		]
+	},
+	install_requires=[
+		'Whoosh>=2.7.4',
+		'requests>=2.10.0',
+		'pycountry>=1.20',
+	],
 	extras_require = {
-		'data':['fiona>=1.7.0', 'shapely>=1.5.16',],
-		'doc':['Sphinx>=1.4.5', 'sphinx_rtd_theme>=0.1.10a0']
+		'data':[
+			'fiona>=1.7.0',
+			'shapely>=1.5.16',
+		],
+		'doc':[
+			'Sphinx>=1.4.5',
+			'sphinx_rtd_theme>=0.1.10a0',
+		]
 	},
 	include_package_data=True,
 	zip_safe=False,
