@@ -372,7 +372,7 @@ if __name__ == '__main__':
 	}
 	for name, item in dicts.items():
 		print(name + ' = {')
-		for args, targets in item.items():
+		for args in item.keys():
 			institutes = core.queryAll(*args)
 			print('\t', args,': [', sep='')
 			for result in institutes:
