@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import requests
-import pycountry
+from .patch import pycountry
 import xml.etree.ElementTree as et
 
 _url = None
