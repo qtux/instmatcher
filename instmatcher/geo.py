@@ -15,6 +15,7 @@
 import csv
 import os, os.path
 import math
+from .patch import pycountry
 from pkg_resources import resource_filename
 from whoosh.fields import Schema, STORED, ID, IDLIST
 from whoosh import index
@@ -36,7 +37,8 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 			alias=IDLIST(expression=r"[^,]+"),
 			lat=STORED,
 			lon=STORED,
-			alpha2=ID,
+			alpha2=ID(stored=True),
+			country=ID(stored=True)
 		)
 		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=procs, multisegment=multisegment)
@@ -53,6 +55,7 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 					lat=row[4],
 					lon=row[5],
 					alpha2=row[8],
+					country=pycountry.countries.get(alpha2=row[8]).name,
 					_boost=boost,
 				)
 		writer.commit()
@@ -72,10 +75,15 @@ def geocodeAll(city, alpha2):
 	with _ix.searcher() as searcher:
 		results = searcher.search(query, limit=None)
 		for hit in results:
-			yield float(hit['lat']), float(hit['lon'])
+			yield {
+				'lat': float(hit['lat']),
+				'lon': float(hit['lon']),
+				'alpha2': hit['alpha2'],
+				'country': hit['country'],
+			}
 
 def geocode(city, alpha2):
 	try:
 		return next(geocodeAll(city, alpha2))
 	except StopIteration:
-		return None, None
+		return None

@@ -23,39 +23,57 @@ cases = {
 	('x', None): [],
 	('Turyan', None): [],
 	('Klin Geriatr, Hamburg', 'DE'): [],
-	('Sao Paulo',	None): [(-23.5475, -46.63611)],
-	('São Paulo',	None): [(-23.5475, -46.63611)],
-	('São Paulo',	'BR'): [(-23.5475, -46.63611)],
-	('Sao Paulo',	'BR'): [(-23.5475, -46.63611)],
-	('Xian', None): [(34.25833, 108.92861)],
-	('Xian', 'CN'): [(34.25833, 108.92861)],
-	('Gutao', None): [(37.2025, 112.17806)],
-	('Gutao', 'CN'): [(37.2025, 112.17806)],
+	('Sao Paulo',	None): [
+		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+	],
+	('São Paulo',	None): [
+		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+	],
+	('São Paulo',	'BR'): [
+		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+	],
+	('Sao Paulo',	'BR'): [
+		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+	],
+	('Xian', None): [
+		{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
+	],
+	('Xian', 'CN'): [
+		{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
+	],
+	('Gutao', None): [
+		{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
+	],
+	('Gutao', 'CN'): [
+		{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
+	],
 	('Boston', None): [
-		(42.35843, -71.05977),
-		(52.97633, -0.02664),
-		(7.87111, 126.36417),
-		(30.79186, -83.78989),
+		{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 52.97633, 'lon': -0.02664, 'alpha2': 'GB', 'country': 'United Kingdom'},
+		{'lat': 7.87111, 'lon': 126.36417, 'alpha2': 'PH', 'country': 'Philippines'},
+		{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
 	],
 	('Boston', 'US'): [
-		(42.35843, -71.05977),
-		(30.79186, -83.78989),
+		{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
 	],
 	('London', None): [
-		(51.50853, -0.12574),
-		(42.98339, -81.23304),
-		(37.12898, -84.08326),
-		(39.88645, -83.44825),
-		(51.51279, -0.09184),
-		(36.47606, -119.44318),
-		(35.32897, -93.25296),
-		(1.98487, -157.47502),
+		{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
+		{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
+		{'lat': 37.12898, 'lon': -84.08326, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 39.88645, 'lon': -83.44825, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
+		{'lat': 36.47606, 'lon': -119.44318, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 35.32897, 'lon': -93.25296, 'alpha2': 'US', 'country': 'United States'},
+		{'lat': 1.98487, 'lon': -157.47502, 'alpha2': 'KI', 'country': 'Kiribati'},
 	],
 	('London', 'GB'): [
-		(51.50853, -0.12574),
-		(51.51279, -0.09184),
+		{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
+		{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
 	],
-	('London', 'CA'): [(42.98339, -81.23304)],
+	('London', 'CA'): [
+		{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
+	],
 }
 
 class test_geo(unittest.TestCase):
@@ -70,7 +88,7 @@ class test_geo(unittest.TestCase):
 				self.assertEqual(coords, target, msg=args)
 				break
 			else:
-				self.assertEqual(coords, (None, None), msg=args)
+				self.assertEqual(coords, None, msg=args)
 	
 	def test_geocodeAll(self):
 		for args, targets in cases.items():
@@ -80,9 +98,9 @@ class test_geo(unittest.TestCase):
 
 if __name__ == '__main__':
 	init(procs=os.cpu_count(), multisegment=True)
-	for query, coords in cases.items():
-		coords = geocodeAll(*query)
+	for query in cases.keys():
+		positions = geocodeAll(*query)
 		print('', query,': [', sep='')
-		for latlon in coords:
-			print('\t', latlon, ',', sep='')
+		for pos in positions:
+			print('\t', pos, ',', sep='')
 		print('],')
