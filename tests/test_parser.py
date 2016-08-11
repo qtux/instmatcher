@@ -52,7 +52,7 @@ class GrobidProxy(BaseHTTPRequestHandler):
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	pass
 
-class test_geo(unittest.TestCase):
+class test_parser(unittest.TestCase):
 	
 	def setUp(self):
 		tree = et.parse(resource_filename(__name__, 'test_parser.xml'))
