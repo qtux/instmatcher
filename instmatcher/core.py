@@ -95,7 +95,7 @@ def queryAll(inst, alpha2, lat, lon, offset):
 			instResults.upgrade(coordResults)
 		except TypeError:
 			pass
-		# yield hits
+		# yield hits along with the score
 		for hit in instResults:
 			yield {
 				'name': hit['name'],
@@ -104,11 +104,12 @@ def queryAll(inst, alpha2, lat, lon, offset):
 				'lon': hit['lon'],
 				'country': hit['country'],
 				'alpha2': hit['alpha2'],
-			}
+			}, hit.score
 
 def query(inst, alpha2, lat, lon, offset):
 	try:
-		return next(queryAll(inst, alpha2, lat, lon, offset))
+		result = next(queryAll(inst, alpha2, lat, lon, offset))
+		return result[0]
 	except StopIteration:
 		return None
 
