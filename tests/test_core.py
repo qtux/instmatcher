@@ -317,33 +317,48 @@ none_perm = {
 	(None,       None, None, None, None): [],
 }
 
-cases =  {
-	**boston,
-	**washington,
-	**berlin,
-	**london,
-	**bad_param,
-	**none_perm
-}
-
 class test_core(unittest.TestCase):
 	def setUp(self):
 		core.init(procs=os.cpu_count(), multisegment=True)
 	
-	def test_queryAll(self):
-		for args, targets in cases.items():
-			institutes = core.queryAll(*args)
-			for result, target in zip_longest(institutes, targets):
-				self.assertEqual(result['name'], target, msg=args)
-	
-	def test_query(self):
-		for args, targets in cases.items():
+	def run_query(self, tests):
+		for args, targets in tests.items():
 			institute = core.query(*args)
 			for target in targets:
 				self.assertEqual(institute['name'], target, msg=args)
 				break
 			else:
 				self.assertEqual(institute, None, msg=args)
+	
+	def run_queryAll(self, tests):
+		for args, targets in tests.items():
+			institutes = core.queryAll(*args)
+			for result, target in zip_longest(institutes, targets):
+				self.assertEqual(result['name'], target, msg=args)
+	
+	def test_bad_param(self):
+		self.run_queryAll(bad_param)
+		self.run_query(bad_param)
+	
+	def test_none_perm(self):
+		self.run_queryAll(none_perm)
+		self.run_query(none_perm)
+		
+	def test_london(self):
+		self.run_queryAll(london)
+		self.run_query(london)
+		
+	def test_berlin(self):
+		self.run_queryAll(berlin)
+		self.run_query(berlin)
+		
+	def test_washington(self):
+		self.run_queryAll(washington)
+		self.run_query(washington)
+		
+	def test_boston(self):
+		self.run_queryAll(boston)
+		self.run_query(boston)
 	
 	def test_expandAbbreviations(self):
 		source = resource_filename(core.__name__, 'data/abbreviations.csv')
