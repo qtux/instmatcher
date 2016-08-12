@@ -74,7 +74,12 @@
 				<settlement>settlement</settlement>
 			</address>
 		</affiliation>
-		<result />
+		<result>
+			<institute></institute>
+			<alpha2></alpha2>
+			<country></country>
+			<city></city>
+		</result>
 	</testcase>
 	<testcase>
 		<affiliation>
@@ -161,6 +166,11 @@
 				<settlement>settlement</settlement>
 			</address>
 		</affiliation>
-		<result />
+		<result>
+			<institute></institute>
+			<alpha2></alpha2>
+			<country></country>
+			<city></city>
+		</result>
 	</testcase>
 </tests>

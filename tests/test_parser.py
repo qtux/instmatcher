@@ -37,13 +37,10 @@ class test_parser(unittest.TestCase):
 			
 			resultTag = testcase.find('./result')
 			result = {}
-			try:
-				result['institute'] = resultTag.find('./institute').text
-				result['alpha2'] = resultTag.find('./alpha2').text
-				result['country'] = resultTag.find('./country').text
-				result['city'] = resultTag.find('./city').text
-			except AttributeError:
-				result = None
+			result['institute'] = resultTag.find('./institute').text
+			result['alpha2'] = resultTag.find('./alpha2').text
+			result['country'] = resultTag.find('./country').text
+			result['city'] = resultTag.find('./city').text
 			
 			while True:
 				size = random.randrange(1, 42)

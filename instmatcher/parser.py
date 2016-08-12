@@ -18,7 +18,7 @@ import xml.etree.ElementTree as et
 
 _url = None
 
-def init(url = 'http://localhost:8080'):
+def init(url):
 	global _url
 	_url = url
 
@@ -26,13 +26,25 @@ def grobid(affiliation):
 	cmd = 'affiliations=' + affiliation
 	r = requests.post(_url + '/processAffiliations', data=cmd)
 	xml = r.content.decode('UTF-8')
+	result = dict.fromkeys(['institute', 'city', 'alpha2', 'country',])
 	
+	# return if the returned string is not parseable
 	try:
 		root = et.fromstring('<results>' + xml + '</results>')
 	except et.ParseError:
-		return None
+		return result
 	
-	result = {}
+	# try to find an organisation (consider only the first one)
+	organisations = root.findall('./affiliation/orgName')
+	for org in organisations:
+		if org.get('type') == 'institution':
+			result['institute'] = org.text
+			break
+	# return immediately if none was found
+	else:
+		return result
+	
+	# try to find the alpha2 code and retrieve the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
@@ -41,14 +53,10 @@ def grobid(affiliation):
 		result['alpha2'] = None
 		result['country'] = None
 	
+	# try to find the city name
 	try:
 		result['city'] = root.find('./affiliation/address/settlement').text
 	except AttributeError:
 		result['city'] = None
 	
-	organisations = root.findall('./affiliation/orgName')
-	for org in organisations:
-		if org.get('type') == 'institution':
-			result['institute'] = org.text
-			return result
-	return None
+	return result
