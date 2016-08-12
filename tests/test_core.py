@@ -21,7 +21,6 @@ from pkg_resources import resource_filename
 import csv
 from itertools import zip_longest
 
-
 default_boston = [
 	("Boston University", 21.856071646733387),
 	("University of Massachusetts Boston", 20.61416140861746),
@@ -261,20 +260,11 @@ none_perm = {
 
 class test_core(unittest.TestCase):
 	def setUp(self):
-		core.init(procs=os.cpu_count(), multisegment=True)
+		core.init(procs=os.cpu_count(), multisegment=True, ixPath='./index')
 	
 	def run_query(self, tests):
 		for args, targets in tests.items():
-			institute = core.query(*args)
-			for target in targets:
-				self.assertEqual(institute['name'], target[0], msg=args)
-				break
-			else:
-				self.assertEqual(institute, None, msg=args)
-	
-	def run_queryAll(self, tests):
-		for args, targets in tests.items():
-			institutes = core.queryAll(*args)
+			institutes = core.query(*args)
 			post_check = []
 			for result, target in zip_longest(institutes, targets):
 				# if the names do not match but the score does:
@@ -289,27 +279,21 @@ class test_core(unittest.TestCase):
 				self.assertTrue(item in targets, msg=args)
 	
 	def test_bad_param(self):
-		self.run_queryAll(bad_param)
 		self.run_query(bad_param)
 	
 	def test_none_perm(self):
-		self.run_queryAll(none_perm)
 		self.run_query(none_perm)
 		
 	def test_london(self):
-		self.run_queryAll(london)
 		self.run_query(london)
 		
 	def test_berlin(self):
-		self.run_queryAll(berlin)
 		self.run_query(berlin)
 		
 	def test_washington(self):
-		self.run_queryAll(washington)
 		self.run_query(washington)
 		
 	def test_boston(self):
-		self.run_queryAll(boston)
 		self.run_query(boston)
 	
 	def test_expandAbbreviations(self):
@@ -329,7 +313,7 @@ class test_core(unittest.TestCase):
 					self.assertEqual(core.expandAbbreviations(test), test)
 
 if __name__ == '__main__':
-	core.init(procs=os.cpu_count(), multisegment=True)
+	core.init(procs=os.cpu_count(), multisegment=True, ixPath='./index')
 	dicts = {
 		'boston': boston,
 		'washington': washington,
@@ -340,7 +324,7 @@ if __name__ == '__main__':
 	for name, item in dicts.items():
 		print(name + ' = {')
 		for args in item.keys():
-			institutes = core.queryAll(*args)
+			institutes = core.query(*args)
 			print('\t', args,': [', sep='')
 			for result in institutes:
 				pair = '("' + result[0]['name'] + '", ' + str(result[1]) + ')'

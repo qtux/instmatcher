@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from instmatcher.geo import init, geocode, geocodeAll
+from instmatcher.geo import init, geocode
 
 import os
 from itertools import zip_longest
@@ -79,27 +79,18 @@ cases = {
 class test_geo(unittest.TestCase):
 	
 	def setUp(self):
-		init(procs=os.cpu_count(), multisegment=True)
+		init(procs=os.cpu_count(), multisegment=True, ixPath='./geoindex')
 	
 	def test_geocode(self):
 		for args, targets in cases.items():
 			coords = geocode(*args)
-			for target in targets:
-				self.assertEqual(coords, target, msg=args)
-				break
-			else:
-				self.assertEqual(coords, None, msg=args)
-	
-	def test_geocodeAll(self):
-		for args, targets in cases.items():
-			coords = geocodeAll(*args)
 			for result, target in zip_longest(coords, targets):
 				self.assertEqual(result, target, msg=args)
 
 if __name__ == '__main__':
 	init(procs=os.cpu_count(), multisegment=True)
 	for query in cases.keys():
-		positions = geocodeAll(*query)
+		positions = geocode(*query)
 		print('', query,': [', sep='')
 		for pos in positions:
 			print('\t', pos, ',', sep='')

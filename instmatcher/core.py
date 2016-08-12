@@ -26,7 +26,7 @@ _ix = None
 _instParser = None
 _coordParser = None
 
-def init(procs=1, multisegment=False, ixPath='index', force=False):
+def init(procs, multisegment, ixPath, force=False):
 	# create the index if it does not exist or force is enabled
 	if not os.path.exists(ixPath):
 		os.mkdir(ixPath)
@@ -75,7 +75,7 @@ def init(procs=1, multisegment=False, ixPath='index', force=False):
 	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
 
 
-def queryAll(inst, alpha2, lat, lon, offset):
+def query(inst, alpha2, lat, lon, offset):
 	with _ix.searcher() as searcher:
 		# search for the given institute
 		try:
@@ -105,13 +105,6 @@ def queryAll(inst, alpha2, lat, lon, offset):
 				'country': hit['country'],
 				'alpha2': hit['alpha2'],
 			}, hit.score
-
-def query(inst, alpha2, lat, lon, offset):
-	try:
-		result = next(queryAll(inst, alpha2, lat, lon, offset))
-		return result[0]
-	except StopIteration:
-		return None
 
 def expandAbbreviations(text):
 	for abbrev, expansion in _abbreviations.items():

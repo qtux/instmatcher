@@ -24,7 +24,7 @@ from whoosh.qparser import MultifieldParser
 _ix = None
 _parser = None
 
-def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
+def init(procs, multisegment, ixPath, force=False):
 	# create the geoindex if it does not exist or force is enabled
 	if not os.path.exists(ixPath):
 		os.mkdir(ixPath)
@@ -65,7 +65,7 @@ def init(procs=1, multisegment=False, ixPath='geoindex', force=False):
 	_ix = index.open_dir(ixPath)
 	_parser = MultifieldParser(['name', 'asci', 'alias', 'alpha2',], _ix.schema)
 
-def geocodeAll(city, alpha2):
+def geocode(city, alpha2, **ignore):
 	if not city:
 		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
@@ -81,9 +81,3 @@ def geocodeAll(city, alpha2):
 				'alpha2': hit['alpha2'],
 				'country': hit['country'],
 			}
-
-def geocode(city, alpha2):
-	try:
-		return next(geocodeAll(city, alpha2))
-	except StopIteration:
-		return None
