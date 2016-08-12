@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import ThreadingMixIn
-import threading
-
+from .util import GrobidServer
 from pkg_resources import resource_filename
 import xml.etree.ElementTree as et
 import string
@@ -24,34 +21,6 @@ import random
 import unittest
 from instmatcher.parser import grobid, init
 
-grobidAnswers = {}
-tests = {}
-
-class GrobidProxy(BaseHTTPRequestHandler):
-	
-	def provideResponses(self, responses):
-		self.responses = responses
-	
-	def do_POST(self):
-		self.send_response(200)
-		self.send_header('Content-type', 'text/plain')
-		self.end_headers()
-		
-		if self.path == '/processAffiliations':
-			length = int(self.headers['Content-Length'])
-			data = self.rfile.read(length).decode('utf-8')
-			_, _, tail = data.partition('affiliations=')
-			response = grobidAnswers.get(tail, '')
-		else:
-			response = ''
-		self.wfile.write(bytes(response, 'utf-8'))
-	
-	def log_message(self, format, *args):
-		return
-
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-	pass
-
 class test_parser(unittest.TestCase):
 	
 	def setUp(self):
@@ -59,6 +28,8 @@ class test_parser(unittest.TestCase):
 		root = tree.getroot()
 		uniqueKeys = set()
 		chars = string.ascii_letters + string.digits
+		grobidResponses = {}
+		self.tests = {}
 		for testcase in root:
 			affiTag = testcase.find('./affiliation')
 			affiString = et.tostring(affiTag, encoding='unicode')
@@ -80,22 +51,19 @@ class test_parser(unittest.TestCase):
 				if key not in uniqueKeys:
 					uniqueKeys.add(key)
 					break
-			grobidAnswers[key] = affiString
-			tests[key] = result
+			grobidResponses[key] = affiString
+			self.tests[key] = result
 		
 		self.host = 'localhost'
 		self.port = 8081
-		self.server = ThreadedHTTPServer((self.host, self.port), GrobidProxy)
-		thread = threading.Thread(target=self.server.serve_forever)
-		thread.daemon = True
-		thread.start()
+		self.server = GrobidServer(self.host, self.port, grobidResponses)
+		self.server.start()
 	
 	def test(self):
 		url = 'http://' + self.host + ':' + str(self.port)
 		init(url)
-		for affiliation, result in tests.items():
+		for affiliation, result in self.tests.items():
 			self.assertEqual(grobid(affiliation), result)
 	
 	def tearDown(self):
-		self.server.shutdown()
-		self.server.server_close()
+		self.server.stop()
