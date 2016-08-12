@@ -20,7 +20,7 @@ def readme():
 
 setup(
 	name='instmatcher',
-	version='0.1.0',
+	version='0.2.0',
 	description='A tool to match an affiliation string to a known institute',
 	long_description=readme(),
 	author='Matthias Gazzari',

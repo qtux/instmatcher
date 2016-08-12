@@ -16,13 +16,36 @@ from . import core
 from . import geo
 from . import parser
 
-def match(affiliation, parse, geocode):
-	parsedAffiliation = parse(affiliation)
-	# search for a match if parsing succeeded
+def init(procs=1, initGeo=False, grobidUrl='http://localhost:8080'):
+	multisegment = procs > 1
+	core.init(procs, multisegment, './index')
+	parser.init(grobidUrl)
+	if initGeo:
+		geo.init(procs, multisegment, './geoindex')
+
+def findAll(institute, alpha2=None, lat=None, lon=None, offset=1, **ignore):
+	if not institute:
+		return
+	fullName = core.expandAbbreviations(institute)
+	for result in core.query(fullName, alpha2, lat, lon, offset):
+		yield result[0]
+
+def find(institute, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 	try:
-		lat, lon = geocode(parsedAffiliation['city'], parsedAffiliation['alpha2'])
-		inst = core.expandAbbreviations(parsedAffiliation['institute'])
-		return core.query(inst, lat, lon)
-	# otherwise return None
-	except TypeError:
+		return next(findAll(institute, alpha2, lat, lon, offset))
+	except StopIteration:
 		return None
+
+def extractAll(string, parse=parser.grobid, geocode=geo.geocode):
+	affiDict = parse(string)
+	emptyGenerator = True
+	for position in geocode(**affiDict):
+		emptyGenerator = False
+		result = affiDict.copy()
+		result.update(position)
+		yield result
+	if emptyGenerator:
+		yield affiDict
+
+def extract(string, parse=parser.grobid, geocode=geo.geocode):
+	return next(extractAll(string, parse, geocode))
