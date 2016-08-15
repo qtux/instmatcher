@@ -20,6 +20,7 @@ import re
 from whoosh import index
 from whoosh.fields import Schema, TEXT, NUMERIC, STORED, ID
 from whoosh.qparser import MultifieldParser
+from whoosh.query import Term
 
 _abbreviations = None
 _ix = None
@@ -71,21 +72,17 @@ def init(procs, multisegment, ixPath, force=False):
 	
 	# load the index and create the institute and coordinate query parsers
 	_ix = index.open_dir(ixPath)
-	_instParser = MultifieldParser(['name', 'alias'], _ix.schema)
-	_coordParser = MultifieldParser(['lat', 'lon'], _ix.schema)
-
+	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
+	_coordParser = MultifieldParser(['lat', 'lon',], _ix.schema)
 
 def query(inst, alpha2, lat, lon, offset):
+	if not inst:
+		return
 	with _ix.searcher() as searcher:
 		# search for the given institute
-		try:
-			text = 'name:"{key}" OR alias:"{key}")'.format(key=inst)
-			if alpha2:
-				text = '(' + text + ') AND alpha2:{key}'.format(key=alpha2)
-			instQuery = _instParser.parse(text)
-		except AttributeError:
-			return
-		instResults = searcher.search(instQuery, limit=None)
+		instQuery = _instParser.parse(inst)
+		filterTerm = Term('alpha2', alpha2) if alpha2 else None
+		instResults = searcher.search(instQuery, limit=None, filter=filterTerm)
 		# try to enhance the search boosting results in the vicinity of lat/lon
 		try:
 			latQueryText = 'lat:[{} to {}]'.format(lat - offset, lat + offset)
