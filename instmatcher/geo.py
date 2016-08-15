@@ -20,6 +20,7 @@ from pkg_resources import resource_filename
 from whoosh.fields import Schema, STORED, ID, IDLIST
 from whoosh import index
 from whoosh.qparser import MultifieldParser
+from whoosh.query import Term
 
 _ix = None
 _parser = None
@@ -63,17 +64,16 @@ def init(procs, multisegment, ixPath, force=False):
 	# load the index and create the city/alpha2 query parser
 	global _ix, _parser
 	_ix = index.open_dir(ixPath)
-	_parser = MultifieldParser(['name', 'asci', 'alias', 'alpha2',], _ix.schema)
+	_parser = MultifieldParser(['name', 'asci', 'alias',], _ix.schema)
 
 def geocode(city, alpha2, **ignore):
 	if not city:
 		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
-	if alpha2:
-		text = '(' + text + ') AND alpha2:{key}'.format(key=alpha2)
 	query = _parser.parse(text)
+	filterTerm = Term('alpha2', alpha2) if alpha2 else None
 	with _ix.searcher() as searcher:
-		results = searcher.search(query, limit=None)
+		results = searcher.search(query, limit=None, filter=filterTerm)
 		for hit in results:
 			yield {
 				'lat': float(hit['lat']),

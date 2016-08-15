@@ -74,6 +74,7 @@ cases = {
 	('London', 'CA'): [
 		{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
 	],
+	('London', 'IT'): [],
 }
 
 class test_geo(unittest.TestCase):
@@ -88,7 +89,7 @@ class test_geo(unittest.TestCase):
 				self.assertEqual(result, target, msg=args)
 
 if __name__ == '__main__':
-	init(procs=os.cpu_count(), multisegment=True)
+	init(procs=os.cpu_count(), multisegment=True, ixPath='./geoindex')
 	for query in cases.keys():
 		positions = geocode(*query)
 		print('', query,': [', sep='')
