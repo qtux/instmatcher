@@ -36,80 +36,6 @@ boston = {
 	('Boston', None, None, None, 1): default_boston,
 }
 
-default_washington = [
-		("Washington University in St. Louis", 19.322445604370078),
-		("Western Washington University", 18.739033600113743),
-		("University of Mary Washington", 18.32768188955521),
-		("George Washington University", 17.39741765208082),
-		("Washington and Lee University", 17.100261142716654),
-		("Trinity Washington University", 6.790551240068012),
-		("Central Washington University", 6.790551240068012),
-		("Eastern Washington University", 6.790551240068012),
-		("Washington Adventist University", 6.790551240068012),
-		("Washington College of Law", 6.790551240068012),
-		("Washington Female Seminary", 6.790551240068012),
-		("Washington State University", 6.790551240068012),
-		("Washington State University Spokane", 6.006170328659464),
-		("University of Washington School of Law", 6.006170328659464),
-		("George Washington University Law School", 5.384234017909727),
-		("George Washington University School of Nursing", 5.384234017909727),
-		("Washington State University Tri-Cities", 5.384234017909727),
-		("Washington and Lee University School of Law", 5.384234017909727),
-		("University of Washington School of Social Work", 5.384234017909727),
-		("Washington State University College of Veterinary Medicine", 4.879014228384662),
-	]
-
-washington = {
-	('Washington University', None, None, None, 1): [
-		("Washington University in St. Louis", 23.417664233009845),
-		("George Washington University", 22.118305839924034),
-		("Washington and Lee University", 20.76426156148767),
-		("Western Washington University", 20.01984950724819),
-		("University of Mary Washington", 19.608497796689655),
-		("Trinity Washington University", 8.071367147202459),
-		("Central Washington University", 8.071367147202459),
-		("Eastern Washington University", 8.071367147202459),
-		("Washington Adventist University", 8.071367147202459),
-		("Washington State University", 8.071367147202459),
-		("Washington State University Spokane", 7.13903837220123),
-		("University of Washington School of Law", 7.13903837220123),
-		("George Washington University Law School", 6.399794070999632),
-		("George Washington University School of Nursing", 6.399794070999632),
-		("Washington State University Tri-Cities", 6.399794070999632),
-		("Washington and Lee University School of Law", 6.399794070999632),
-		("University of Washington School of Social Work", 6.399794070999632),
-		("Washington State University College of Veterinary Medicine", 5.799281054143535),
-	],
-	('Washington University in St. Louis', None, None, None, 1): [
-		("Washington University in St. Louis", 19.170150612542795),
-	],
-	('Washington', None, 38.9169, -77.043, 0): default_washington,
-	('Washington', None, 38.9169, -77.043, 100): default_washington,
-	('Washington', None, None, None, 1): default_washington,
-	('Washington', None, 38.9169, -77.043, 1): [
-		("University of Mary Washington", 18.32768188955521),
-		("George Washington University", 17.39741765208082),
-		("Washington Adventist University", 6.790551240068012),
-		("Washington College of Law", 6.790551240068012),
-		("Trinity Washington University", 6.790551240068012),
-		("George Washington University Law School", 5.384234017909727),
-		("George Washington University School of Nursing", 5.384234017909727),
-		("Washington University in St. Louis", 19.322445604370078),
-		("Western Washington University", 18.739033600113743),
-		("Washington and Lee University", 17.100261142716654),
-		("Washington Female Seminary", 6.790551240068012),
-		("Washington State University", 6.790551240068012),
-		("Central Washington University", 6.790551240068012),
-		("Eastern Washington University", 6.790551240068012),
-		("Washington State University Spokane", 6.006170328659464),
-		("University of Washington School of Law", 6.006170328659464),
-		("Washington State University Tri-Cities", 5.384234017909727),
-		("Washington and Lee University School of Law", 5.384234017909727),
-		("University of Washington School of Social Work", 5.384234017909727),
-		("Washington State University College of Veterinary Medicine", 4.879014228384662),
-	],
-}
-
 berlin = {
 	('TU Berlin', None, None, None, 1): [
 		("Technical University of Berlin", 17.772187737824495),
@@ -123,91 +49,6 @@ berlin = {
 	],
 	('FU Berlin', None, None, None, 1): [
 		("Free University of Berlin", 22.304592901557243),
-	],
-}
-
-london = {
-	('London', None, None, None, 1): [
-		("University of London", 20.33170234005281),
-		("University of the Arts London", 19.117796794729102),
-		("City University London", 18.107920424214367),
-		("London Metropolitan University", 17.95981968297066),
-		("University of East London", 17.831483684058934),
-		("King's College London", 16.914452863800445),
-		("University of North London", 16.11513142638017),
-		("London School of Economics", 15.473918972566295),
-		("Queen Mary, University of London", 14.228938893630183),
-		("Royal Holloway, University of London", 12.311298499762149),
-		("Imperial College London", 11.738845580537337),
-		("University of London Institute in Paris", 11.122885450338657),
-		("London Guildhall University", 6.653109699166122),
-		("SOAS, University of London", 6.653109699166122),
-		("Birkbeck, University of London", 6.653109699166122),
-		("Goldsmiths, University of London", 6.653109699166122),
-		("University of West London", 6.653109699166122),
-		("Diplomatic Academy of London", 6.653109699166122),
-		("London South Bank University", 5.884604747942058),
-		("University of London International Programmes", 5.884604747942058),
-		("Richmond, The American International University in London", 5.275256499909219),
-		("University of East London School of Law and Social Sciences", 4.370193291769139),
-		("Centre for History in Public Health, London School of Hygiene and Tropical Medicine", 3.7302100307592894),
-		("University of Western Ontario", 2.556488732010612),
-	],
-	('London', None, 42.9881, -81.3318, 1): [
-		("University of Western Ontario", 2.556488732010612),
-		("University of London", 20.33170234005281),
-		("University of the Arts London", 19.117796794729102),
-		("City University London", 18.107920424214367),
-		("London Metropolitan University", 17.95981968297066),
-		("University of East London", 17.831483684058934),
-		("King's College London", 16.914452863800445),
-		("University of North London", 16.11513142638017),
-		("London School of Economics", 15.473918972566295),
-		("Queen Mary, University of London", 14.228938893630183),
-		("Royal Holloway, University of London", 12.311298499762149),
-		("Imperial College London", 11.738845580537337),
-		("University of London Institute in Paris", 11.122885450338657),
-		("London Guildhall University", 6.653109699166122),
-		("SOAS, University of London", 6.653109699166122),
-		("Birkbeck, University of London", 6.653109699166122),
-		("Goldsmiths, University of London", 6.653109699166122),
-		("University of West London", 6.653109699166122),
-		("Diplomatic Academy of London", 6.653109699166122),
-		("London South Bank University", 5.884604747942058),
-		("University of London International Programmes", 5.884604747942058),
-		("Richmond, The American International University in London", 5.275256499909219),
-		("University of East London School of Law and Social Sciences", 4.370193291769139),
-		("Centre for History in Public Health, London School of Hygiene and Tropical Medicine", 3.7302100307592894),
-	],
-	('London', 'CA', 42.9881, -81.3318, 1):[
-		("University of Western Ontario", 3.556488732010612),
-	],
-	('London', 'CA', None, None, 1):[
-		("University of Western Ontario", 3.556488732010612),
-	],
-	('London', 'GB', 42.9881, -81.3318, 1): [
-		("University of London", 20.33170234005281),
-		("University of the Arts London", 19.117796794729102),
-		("City University London", 18.107920424214367),
-		("London Metropolitan University", 17.95981968297066),
-		("University of East London", 17.831483684058934),
-		("King's College London", 16.914452863800445),
-		("University of North London", 16.11513142638017),
-		("London School of Economics", 15.473918972566295),
-		("Queen Mary, University of London", 14.228938893630183),
-		("Royal Holloway, University of London", 12.311298499762149),
-		("Imperial College London", 11.738845580537337),
-		("Diplomatic Academy of London", 6.653109699166122),
-		("Goldsmiths, University of London", 6.653109699166122),
-		("London Guildhall University", 6.653109699166122),
-		("SOAS, University of London", 6.653109699166122),
-		("Birkbeck, University of London", 6.653109699166122),
-		("University of West London", 6.653109699166122),
-		("London South Bank University", 5.884604747942058),
-		("University of London International Programmes", 5.884604747942058),
-		("Richmond, The American International University in London", 5.275256499909219),
-		("University of East London School of Law and Social Sciences", 4.370193291769139),
-		("Centre for History in Public Health, London School of Hygiene and Tropical Medicine", 3.7302100307592894),
 	],
 }
 
@@ -298,14 +139,8 @@ class test_core(unittest.TestCase):
 	def test_none_perm(self):
 		self.run_query(none_perm)
 		
-	def test_london(self):
-		self.run_query(london)
-		
 	def test_berlin(self):
 		self.run_query(berlin)
-		
-	def test_washington(self):
-		self.run_query(washington)
 		
 	def test_boston(self):
 		self.run_query(boston)
@@ -330,9 +165,7 @@ if __name__ == '__main__':
 	core.init(procs=os.cpu_count(), multisegment=True, ixPath='./index')
 	dicts = {
 		'boston': boston,
-		'washington': washington,
 		'berlin': berlin,
-		'london': london,
 		'bad_param': bad_param,
 	}
 	for name, item in dicts.items():
