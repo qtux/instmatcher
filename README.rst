@@ -46,10 +46,10 @@ Executing the code above will print the dictionary below. ::
 
 The ``find`` function has optional parameters to constrain the search to a given country and to prefer results inside a box described by a geographical point and an offset:
 
-- ``instmatcher.find('TU Berlin', alpha2='US')`` yields ``None``
-- ``instmatcher.find('TU Berlin', alpha2='DE')`` yields the result above
-- ``instmatcher.find('TU Berlin', alpha2='DE', lat=0, lon=0, offset=0)`` still yields the result above although the box has no area
-- ``instmatcher.find('TU Berlin', alpha2='US', lat=52, lon=13, offset=100)`` yields ``None`` although the university is certainly inside the defined box
+- ``instmatcher.find('TU Berlin', alpha2='US')`` returns ``None``
+- ``instmatcher.find('TU Berlin', alpha2='DE')`` returns the result above
+- ``instmatcher.find('TU Berlin', alpha2='DE', lat=0, lon=0, offset=0)`` still returns the result above although the box has no area
+- ``instmatcher.find('TU Berlin', alpha2='US', lat=52, lon=13, offset=100)`` returns ``None`` although the university is certainly inside the defined box
 
 Additionally, using the ``findAll`` function allows to retrieve a generator of all the matching institutes sorted by their relevance.
 Its parameter are identical to the ones of ``find``.
