@@ -21,7 +21,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`
