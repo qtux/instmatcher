@@ -1,7 +1,14 @@
+===========
 instmatcher
 ===========
-A tool to match an affiliation string to a list of known institutes.
+This library provides means to search for an institute by its name in a list based on data provided by `Wikidata`_ and `Natural Earth`_.
 
+Optionally, it provides two mechanisms to extract information from affiliation strings (for example strings consisting of an organisation name, subdivision, an address or similar information):
+
+1. Parsing the given string using `grobid`_ to retrieve the name and the address of an organisation.
+2. Geocoding the parsed information to enhance the previously gained data with geographical coordinates and country information based on the data provided by `GeoNames`_.
+
+============
 Installation
 ============
 To install instmatcher simply clone the git repository and install it using pip: ::
@@ -10,12 +17,13 @@ To install instmatcher simply clone the git repository and install it using pip:
   cd instmatcher
   pip install .
 
+===================
 Basic Usage Example
 ===================
-This library must be initialised with the ``init`` function before using any other functions.
-This will create an index if it does not exist yet and initialise internal variables.
+Note that instmatcher must be initialised with the ``init`` function before calling any other function.
+Calling ``init`` will create an index if it does not already exist and will initialise internal variables.
 
-The ``find`` function can be used to find an institute searching for a given name:
+The ``find`` function can be used to search for an institute by its name.
 
 .. code:: python
 
@@ -25,7 +33,7 @@ The ``find`` function can be used to find an institute searching for a given nam
     institute = instmatcher.find('TU Berlin')
     print(institute)
 
-Executing the code above will print the following dictionary: ::
+Executing the code above will print the dictionary below. ::
 
     {
         'name': 'Technical University of Berlin',
@@ -36,11 +44,20 @@ Executing the code above will print the following dictionary: ::
         'alpha2': 'DE'
     }
 
-Note that using the ``findAll`` function instead allows to retrieve a generator of all the matching institutes sorted by their score.
+The ``find`` function has optional parameters to constrain the search to a given country and to prefer results inside a box described by a geographical point and an offset:
 
+- ``instmatcher.find('TU Berlin', alpha2='US')`` yields ``None``
+- ``instmatcher.find('TU Berlin', alpha2='DE')`` yields the result above
+- ``instmatcher.find('TU Berlin', alpha2='DE', lat=0, lon=0, offset=0)`` still yields the result above although the box has no area
+- ``instmatcher.find('TU Berlin', alpha2='US', lat=52, lon=13, offset=100)`` yields ``None`` although the university is certainly inside the defined box
+
+Additionally, using the ``findAll`` function allows to retrieve a generator of all the matching institutes sorted by their relevance.
+Its parameter are identical to the ones of ``find``.
+
+======================
 Advanced Usage Example
 ======================
-It is also possible to search for an institute supplying an affiliation string, a string containing the organisation name, subdivision and/or the full address.
+It is also possible to search for an institute supplying an affiliation string.
 The library provides the ``extract`` function which tries to return a dictionary retrieving the
 
 - institute
@@ -74,6 +91,7 @@ for initialising the main index and especially the index for the geographical co
 Additionally, there is also an ``extractAll`` function which provides a generator of all possible geographic locations sorted by their likelihood.
 Note that the library has a bias towards cities with a higher population in order to retrieve the matching geographical coordinate.
 
+=========================================
 Using self-defined parser and/or geocoder
 =========================================
 It is also possible to supply self-defined parsing and geocoding functions to the ``extract`` and ``extractAll`` functions
@@ -124,41 +142,39 @@ The geocoding function takes a city name and the ISO 3166-1 alpha 2 code and ret
 
 In this specific case this will print the same as in the examples above.
 
+=========
 Run Tests
 =========
-Run ::
+In order to run the tests execute::
 
   python setup.py test
 
-to execute the tests.
-
+===================
 Build Documentation
 ===================
 Install the required packages using ::
 
   pip install .[doc]
 
-and use the Makefile in the docs folder to build a documentation.
+and use the Makefile in the **docs** folder to build a documentation.
 
+================================
 Query and Enhance Institute List
 ================================
 Install the optional dependencies required to run the Python script: ::
 
   pip install .[data]
 
-and use the Makefile in the 
-To update the institute list execute ::
+and use the Makefile in the **data** folder inside the Python module to query institutes from `Wikidata`_ and complete it with the country name and ISO 3166-1 alpha 2 code.
 
-  make
-
-in the data folder inside the Python module to query institutes from `Wikidata`_ and complete it with the country name and ISO 3166-1 alpha 2 code.
-This process yields two lists:
+This process will yield two lists:
 
 1. **institutes.csv** which contains the successfully enhanced data
 2. **failures.csv** which contains the data missing information
 
 The data from the second list has to be manually supplied with the missing information and added to the first list.
 
+===========
 Attribution
 ===========
 1. The list of `institutes`_ is queried from `Wikidata`_ (available under `CC0`_).
@@ -167,6 +183,7 @@ Attribution
 
 .. image:: https://raw.githubusercontent.com/qtux/instmatcher/master/attribution.png
 
+=======
 License
 =======
 This software is licensed under the `Apache License, Version 2.0`_.
