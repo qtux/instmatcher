@@ -22,12 +22,12 @@ import csv
 from itertools import zip_longest
 
 default_boston = [
-	("Boston University", 21.856071646733387),
-	("University of Massachusetts Boston", 20.61416140861746),
-	("New England School of Law", 11.309155130404424),
-	("Northeastern University", 10.85321409560593),
-	("Boston College", 9.509569030224858),
-	("Boston College Law School", 7.312656243817379),
+	"Boston University",
+	"University of Massachusetts Boston",
+	"New England School of Law",
+	"Northeastern University",
+	"Boston College",
+	"Boston College Law School",
 ]
 boston = {
 	('Boston', None, 42.358056, -71.063611, 1): default_boston,
@@ -38,43 +38,43 @@ boston = {
 
 berlin = {
 	('TU Berlin', None, None, None, 1): [
-		("Technical University of Berlin", 17.772187737824495),
+		"Technical University of Berlin",
 	],
 	('Berlin', None, None, None, 1): [
-		("Free University of Berlin", 21.277674188171165),
-		("Technical University of Berlin", 20.111968757513647),
-		("Humboldt University of Berlin", 19.27791467983046),
-		("VLB Berlin", 9.29371957936834),
-		("SRH Hochschule Berlin", 8.079998383474871),
+		"Free University of Berlin",
+		"Technical University of Berlin",
+		"Humboldt University of Berlin",
+		"VLB Berlin",
+		"SRH Hochschule Berlin",
 	],
 	('FU Berlin', None, None, None, 1): [
-		("Free University of Berlin", 22.304592901557243),
+		"Free University of Berlin",
 	],
 }
 
 bad_param = {
 	('Pisa', None, None, float('inf'), 1): [
-		("University of Pisa", 24.950498759665194),
+		"University of Pisa",
 	],
 	('Lisbon', None, 1000, 2000, 1): [
-		("University of Lisbon", 9.773747407484867),
-		("Technical University of Lisbon", 8.497336569986855),
-		("ISCTE – Lisbon University Institute", 7.515803794859055),
+		"University of Lisbon",
+		"Technical University of Lisbon",
+		"ISCTE – Lisbon University Institute",
 	],
 	('Whasington', None, None, None, 1): [
 	],
 	('Geneva', None, '120', 0, 1): [
-		("University of Geneva", 13.012221790177914),
-		("International University in Geneva", 8.793442725629246),
-		("University of Edinburgh", 1.160123103124587),
+		"University of Geneva",
+		"International University in Geneva",
+		"University of Edinburgh",
 	],
 	('University Sofia', None, '9000', None, 1): [
-		("Technical University of Sofia", 15.183401999021697),
-		("Sophia University", 11.464829195103638),
-		("University of Forestry, Sofia", 9.7781524771213),
-		("Sofia Medical University", 9.7781524771213),
-		("University of Architecture, Civil Engineering and Geodesy", 7.304763384472515),
-		("University of National and World Economy", 4.637933156639801),
+		"Technical University of Sofia",
+		"Sophia University",
+		"University of Forestry, Sofia",
+		"Sofia Medical University",
+		"University of Architecture, Civil Engineering and Geodesy",
+		"University of National and World Economy",
 	],
 }
 
@@ -121,15 +121,25 @@ class test_core(unittest.TestCase):
 		for args, targets in tests.items():
 			institutes = core.query(*args)
 			post_check = []
+			storedScore = None
 			for result, target in zip_longest(institutes, targets):
-				# if the names do not match but the score does:
-				# --> postpone checking of the current item
-				if result[0]['name'] != target[0] and result[1] == target[1]:
-					post_check.append((result[0]['name'], result[1]))
+				name = result[0]['name']
+				score = result[1]
+				if not storedScore:
+					# if the names do not match:
+					# --> postpone checking of the current item (the next
+					# item might have the same score but a different name)
+					if name != target:
+						post_check.append(name)
+						storedScore = score
+					else:
+						self.assertEqual(name, target, msg=args)
+				# check the score if the names did not match last iteration
 				else:
-					self.assertEqual(result[0]['name'], target[0], msg=args)
-			# check postponed items for beeing inside the target list,
-			# note that the order of elements cannot be checked this way
+					self.assertEqual(storedScore, score, msg=args)
+					self.assertNotEqual(name, target, msg=args)
+					storedScore = None
+			# check postponed names for beeing inside the target list
 			for item in post_check:
 				self.assertTrue(item in targets, msg=args)
 	
@@ -174,7 +184,6 @@ if __name__ == '__main__':
 			institutes = core.query(*args)
 			print('\t', args,': [', sep='')
 			for result in institutes:
-				pair = '("' + result[0]['name'] + '", ' + str(result[1]) + ')'
-				print('\t\t' + pair + ',')
+				print('\t\t"' + result[0]['name'] + '",')
 			print('\t],')
 		print('}')
