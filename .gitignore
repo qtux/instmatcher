@@ -1,6 +1,7 @@
 # python packaging
 /*.egg-info
 __pycache__/
+/dist
 
 # indices
 index/
