@@ -154,7 +154,7 @@ Build Documentation
 ===================
 Install the required packages using ::
 
-  pip install .[doc]
+  pip install .[docs]
 
 and use the Makefile in the **docs** folder to build a documentation.
 

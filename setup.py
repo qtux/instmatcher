@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''A Python library to match an affiliation string to a known institute'''
+
 import os
 from setuptools import setup
 
@@ -25,7 +27,7 @@ with open(os.path.join('instmatcher', 'version.py'), 'rt') as f:
 setup(
 	name='instmatcher',
 	version=__version__,
-	description='A tool to match an affiliation string to a known institute',
+	description=__doc__,
 	long_description=readme(),
 	author='Matthias Gazzari',
 	author_email='matthias.gazzar@cern.ch',
@@ -33,7 +35,6 @@ setup(
 	license='Apache License 2.0',
 	packages=['instmatcher',],
 	package_data={
-		'test': ['tests/test_parser.xml'],
 		'instmatcher': [
 			'data/institutes.csv',
 			'data/abbreviations.csv',
@@ -50,16 +51,17 @@ setup(
 			'fiona>=1.7.0',
 			'shapely>=1.5.16',
 		],
-		'doc':[
+		'docs':[
 			'Sphinx>=1.4.5',
 			'sphinx_rtd_theme>=0.1.10a0',
 		]
 	},
 	include_package_data=True,
 	zip_safe=False,
-	keywords='institute matching',
+	keywords='institute affiliation organisation search match',
+	platform='any',
 	classifiers=[
-		'Development Status :: 1 - Planning',
+		'Development Status :: 2 - Pre-Alpha',
 		'License :: OSI Approved :: Apache Software License',
 		'Intended Audience :: Developers',
 		'Programming Language :: Python :: 3.5',
