@@ -13,8 +13,10 @@
 # limitations under the License.
 
 import requests
-from .patch import pycountry
 import xml.etree.ElementTree as et
+import pycountry
+from .patch import patchGet
+patchGet(pycountry)
 
 _url = None
 

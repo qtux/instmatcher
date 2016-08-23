@@ -15,12 +15,14 @@
 import csv
 import os, os.path
 import math
-from .patch import pycountry
 from pkg_resources import resource_filename
 from whoosh.fields import Schema, STORED, ID, IDLIST
 from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
+import pycountry
+from .patch import patchGet
+patchGet(pycountry)
 
 _ix = None
 _parser = None

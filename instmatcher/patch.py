@@ -12,9 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pycountry
+'''Module to patch the pycountry module adding Kosovo.'''
 
-def patch_getter():
+def patchGet(pycountry):
+	'''
+	Patch the pycountry.countries.get function adding Kosovo.
+	
+	Kosovo is represented using the alpha2 "XK", the alpha3 "UNK" and
+	the official name "Republic of Kosovo".
+	
+	:param pycountry: the name of the pycountry module
+	'''
 	old_getter = pycountry.countries.get
 	if old_getter.__name__ == 'new_getter':
 		return
@@ -38,5 +46,3 @@ def patch_getter():
 					return data_class(None, **kosovo_dict)
 			raise error
 	pycountry.countries.get = new_getter
-
-patch_getter()
