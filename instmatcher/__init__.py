@@ -15,6 +15,7 @@
 from . import core
 from . import geo
 from . import parser
+from .version import __version__
 
 def init(procs=1, initGeo=False, grobidUrl='http://localhost:8080'):
 	multisegment = procs > 1

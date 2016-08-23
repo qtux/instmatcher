@@ -12,15 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from setuptools import setup
 
 def readme():
 	with open('README.rst') as f:
 		return f.read()
 
+with open(os.path.join('instmatcher', 'version.py'), 'rt') as f:
+	exec(f.read())
+
 setup(
 	name='instmatcher',
-	version='0.3.0',
+	version=__version__,
 	description='A tool to match an affiliation string to a known institute',
 	long_description=readme(),
 	author='Matthias Gazzari',
