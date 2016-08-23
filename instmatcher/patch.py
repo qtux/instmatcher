@@ -23,26 +23,26 @@ def patchGet(pycountry):
 	
 	:param pycountry: the name of the pycountry module
 	'''
-	old_getter = pycountry.countries.get
-	if old_getter.__name__ == 'new_getter':
+	oldGet = pycountry.countries.get
+	if oldGet.__name__ == 'newGet':
 		return
-	data_class = type(
+	dataClass = type(
 		pycountry.ExistingCountries.data_class_name,
 		(pycountry.db.Data,),
 		{}
 	)
-	kosovo_dict = {
+	kosovo = {
 		'alpha2': 'XK',
 		'alpha3': 'UNK',
 		'name': 'Kosovo',
 		'official_name': 'Republic of Kosovo',
 	}
-	def new_getter(*args, **kw):
+	def newGet(*args, **kwargs):
 		try:
-			return old_getter(*args, **kw)
+			return oldGet(*args, **kwargs)
 		except KeyError as error:
-			for key, value in kw.items():
-				if (key, value) in kosovo_dict.items():
-					return data_class(None, **kosovo_dict)
+			for key, value in kwargs.items():
+				if (key, value) in kosovo.items():
+					return dataClass(None, **kosovo)
 			raise error
-	pycountry.countries.get = new_getter
+	pycountry.countries.get = newGet
