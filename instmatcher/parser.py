@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''Module to parse an affiliation string using grobid.'''
+
 import requests
 import xml.etree.ElementTree as et
 from . import countries
@@ -19,10 +21,21 @@ from . import countries
 _url = None
 
 def init(url):
+	'''
+	Initialise the grobid url
+	
+	:param url: the URL to the grobid service
+	'''
 	global _url
 	_url = url
 
 def grobid(affiliation):
+	'''
+	Parse the given affiliation string using grobid.
+	
+	:param affiliation: the affiliation string to be parsed
+	'''
+	# let grobid process the given affiliation string
 	cmd = 'affiliations=' + affiliation
 	r = requests.post(_url + '/processAffiliations', data=cmd)
 	xml = r.content.decode('UTF-8')
