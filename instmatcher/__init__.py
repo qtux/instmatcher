@@ -51,10 +51,5 @@ def extractAll(string, parse=parser.grobid, geocode=geo.geocode):
 def extract(string, parse=parser.grobid, geocode=geo.geocode):
 	return next(extractAll(string, parse, geocode))
 
-def matchAll(string, parse=parser.grobid, geocode=geo.geocode, offset=1):
-	for affiDict in extractAll(string, parse, geocode):
-		for institute in findAll(**affiDict, offset=offset):
-			yield institute
-
 def match(string, parse=parser.grobid, geocode=geo.geocode, offset=1):
 	return find(**extract(string, parse, geocode), offset=offest)
