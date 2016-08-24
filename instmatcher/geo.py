@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''Module to retrieve coordinates of a given city'''
+
 import csv
 import os, os.path
 import math
@@ -26,6 +28,17 @@ _ix = None
 _parser = None
 
 def init(procs, multisegment, ixPath, force=False):
+	'''
+	Initialise the index and global variables
+	
+	Create the index if it does not exist or force is set to True and
+	load it along with the parser required for the coordinate search.
+	
+	:param procs: maximum number of processes for index creation
+	:param multisegment: split index into at least #procs segments
+	:param ixPath: path to the index
+	:param force: recreate the index
+	'''
 	# create the geoindex if it does not exist or force is enabled
 	if not os.path.exists(ixPath):
 		os.mkdir(ixPath)
@@ -67,6 +80,14 @@ def init(procs, multisegment, ixPath, force=False):
 	_parser = MultifieldParser(['name', 'asci', 'alias',], _ix.schema)
 
 def geocode(city, alpha2, **ignore):
+	'''
+	Search for geographical coordinates of a given city name, optionally
+	restricting search results to a specified country.
+	
+	:param city: the city name to search for
+	:param alpha2: the country to restrict search results to
+	:param ignore: ignored keyword arguments
+	'''
 	if not city:
 		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
