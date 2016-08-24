@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''Module to search for a country wrapping pycountry.'''
+
 import pycountry
 
 dataClass = type(pycountry.countries.get(alpha2='CR'))
@@ -24,6 +26,18 @@ kosovo = {
 kosovoObj = dataClass(None, **kosovo)
 
 def get(*args, **kwargs):
+	'''
+	This function wraps the pycountry.countries.get function and adds
+	Kosovo to the list of retrievable countries using the temporary
+	alpha-2 code "XK" and the "UNK" as the temporary alpha-3 code.
+	
+	It accepts the same arguments as the wrapped function from
+	pycountry: Exactly one keyword argument must be supplied to retrieve
+	a country specifying a single feature like its name.
+	
+	:param args: positional arguments (ignored)
+	:param kwargs: keyword arguments (exactly one must be supplied)
+	'''
 	try:
 		return pycountry.countries.get(*args, **kwargs)
 	except KeyError as error:
