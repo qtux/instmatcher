@@ -34,7 +34,7 @@ def init(procs, multisegment, ixPath, force=False):
 	Create the index if it does not exist or force is set to True and
 	load it along with the parser required for the coordinate search.
 	
-	:param procs: maximum number of processes for index creation
+	:param procs: maximum number of processes for the index creation
 	:param multisegment: split index into at least #procs segments
 	:param ixPath: path to the index
 	:param force: recreate the index
