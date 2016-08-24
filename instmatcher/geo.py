@@ -29,7 +29,7 @@ _parser = None
 
 def init(procs, multisegment, ixPath, force=False):
 	'''
-	Initialise the index and global variables
+	Initialise the index and global variables.
 	
 	Create the index if it does not exist or force is set to True and
 	load it along with the parser required for the coordinate search.
