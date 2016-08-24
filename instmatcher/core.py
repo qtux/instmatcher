@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''Module to search for known institutes.'''
+
 import csv
 import os, os.path
 from pkg_resources import resource_filename
@@ -28,6 +30,19 @@ _instParser = None
 _coordParser = None
 
 def init(procs, multisegment, ixPath, force=False):
+	'''
+	Initialise the index and global variables.
+
+	Create the index if it does not exist or *force* is set to True,
+	load the available abbreviations from 'data/abbreviations.csv' and
+	load the index along with the parsers required for the institute and
+	coordinate searches.
+
+	:param procs: maximum number of processes for the index creation
+	:param multisegment: split index into at least #procs segments
+	:param ixPath: path to the index
+	:param force: recreate the index
+	'''
 	# create the index if it does not exist or force is enabled
 	if not os.path.exists(ixPath):
 		os.mkdir(ixPath)
@@ -75,12 +90,29 @@ def init(procs, multisegment, ixPath, force=False):
 	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon',], _ix.schema)
 
-def query(inst, alpha2, lat, lon, offset):
-	if not inst:
+def query(institute, alpha2, lat, lon, offset):
+	'''
+	Search for institutes compatible to the search parameters sorted in
+	descending order starting with the most accurate search result.
+	
+	Applying the ISO 3166-1 alpha-2 country code will restrict the
+	search results to the given country.
+	The latitude, longitude and offset (in degree of arcs) parameters
+	describe a geographical box in which results are preferred. Note that
+	an offset of one degree of arc corresponds to about 111 km: Using an
+	offset of 1 results into a box with a width of approximately 222 km.
+	
+	:param institute: the institute name to search for
+	:param alpha2: the country to restrict search results to
+	:param lat: the latitude describing the middle of the preferred box
+	:param lon: the longitude describing the middle of preferred box
+	:param offset: the half-width of the preferred box in degree of arcs
+	'''
+	if not institute:
 		return
 	with _ix.searcher() as searcher:
 		# search for the given institute
-		instQuery = _instParser.parse(inst)
+		instQuery = _instParser.parse(institute)
 		filterTerm = Term('alpha2', alpha2) if alpha2 else None
 		instResults = searcher.search(instQuery, limit=None, filter=filterTerm)
 		# try to enhance the search boosting results in the vicinity of lat/lon
@@ -104,6 +136,12 @@ def query(inst, alpha2, lat, lon, offset):
 			}, hit.score
 
 def expandAbbreviations(text):
+	'''
+	Expand known abbreviations in the supplied string.
+	Known abbreviations may be found in data/abbreviations.csv.
+	
+	:param text: the text in which abbreviations should be expanded
+	'''
 	for abbrev, expansion in _abbreviations.items():
 		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
 	return text
