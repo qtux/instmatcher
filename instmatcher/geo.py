@@ -20,9 +20,7 @@ from whoosh.fields import Schema, STORED, ID, IDLIST
 from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
-import pycountry
-from .patch import patchGet
-patchGet(pycountry)
+from . import countries
 
 _ix = None
 _parser = None
@@ -58,7 +56,7 @@ def init(procs, multisegment, ixPath, force=False):
 					lat=row[4],
 					lon=row[5],
 					alpha2=row[8],
-					country=pycountry.countries.get(alpha2=row[8]).name,
+					country=countries.get(alpha2=row[8]).name,
 					_boost=boost,
 				)
 		writer.commit()

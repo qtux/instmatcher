@@ -14,9 +14,7 @@
 
 import requests
 import xml.etree.ElementTree as et
-import pycountry
-from .patch import patchGet
-patchGet(pycountry)
+from . import countries
 
 _url = None
 
@@ -50,7 +48,7 @@ def grobid(affiliation):
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = pycountry.countries.get(alpha2=countryKey).name
+		result['country'] = countries.get(alpha2=countryKey).name
 	except (AttributeError, KeyError):
 		result['alpha2'] = None
 		result['country'] = None
