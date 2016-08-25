@@ -33,7 +33,7 @@ def _appendDoc(docstring):
 
 ################################ init function ################################
 
-def init(procs=1, initGeo=False, grobidUrl='http://localhost:8080'):
+def init(procs=1, initGeo=True, grobidUrl='http://localhost:8080'):
 	'''
 	Initialise the requested modules.
 	
