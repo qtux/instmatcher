@@ -51,14 +51,15 @@ class test_parser(unittest.TestCase):
 			grobidResponses[key] = affiString
 			self.tests[key] = result
 		
-		self.host = 'localhost'
-		self.port = 8081
-		self.server = GrobidServer(self.host, self.port, grobidResponses)
+		host = 'localhost'
+		port = 8081
+		url = 'http://' + host + ':' + str(port)
+		init(url)
+		self.server = GrobidServer(host, port, grobidResponses)
 		self.server.start()
 	
 	def test(self):
-		url = 'http://' + self.host + ':' + str(self.port)
-		init(url)
+		
 		for affiliation, result in self.tests.items():
 			self.assertEqual(grobid(affiliation), result)
 	
