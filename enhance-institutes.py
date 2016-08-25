@@ -15,22 +15,22 @@
 import csv
 import fiona
 from shapely import geometry
-import pycountry
+from instmatcher import countries
 import argparse
 
 def getCountry(lat, lon, hint=None):
 	# try to find the hint as a country name (pycountry data)
 	try:
-		alpha2 = pycountry.countries.get(name=hint).alpha2
-		country = pycountry.countries.get(alpha2=alpha2).name
+		alpha2 = countries.get(name=hint).alpha2
+		country = countries.get(alpha2=alpha2).name
 		return country, alpha2
 	except KeyError:
 		pass
 	
 	# try to find the hint as an official country name (pycountry data)
 	try:
-		alpha2 = pycountry.countries.get(official_name=hint).alpha2
-		country = pycountry.countries.get(alpha2=alpha2).name
+		alpha2 = countries.get(official_name=hint).alpha2
+		country = countries.get(alpha2=alpha2).name
 		return country, alpha2
 	except KeyError:
 		pass
@@ -43,7 +43,7 @@ def getCountry(lat, lon, hint=None):
 			if name == hint or longName == hint:
 				alpha2 = record['properties']['ISO_A2']
 				try:
-					country = pycountry.countries.get(alpha2=alpha2).name
+					country = countries.get(alpha2=alpha2).name
 				except KeyError:
 					alpha2 = None
 					country = record['properties']['NAME_LONG']
@@ -57,7 +57,7 @@ def getCountry(lat, lon, hint=None):
 			if shape.contains(point):
 				alpha2 = record['properties']['ISO_A2']
 				try:
-					country = pycountry.countries.get(alpha2=alpha2).name
+					country = countries.get(alpha2=alpha2).name
 				except KeyError:
 					alpha2 = None
 					country = record['properties']['NAME_LONG']
