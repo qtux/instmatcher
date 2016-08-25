@@ -22,8 +22,9 @@ SHAPE_PREFIX	:=	ne_10m_admin_0_countries
 SHAPE_ZIP		:=	$(addprefix $(SHAPE_PREFIX), .zip)
 SHAPE_FILES		:=	$(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
-TARGET_FILE		:= institutes.csv
+TARGET_FILE		:= instmatcher/data/institutes.csv
 QUERIED_FILE	:= query.csv
+FAILURE_FILE	:= failures.csv
 QUERY			:= query.sparql
 
 all: $(TARGET_FILE)
@@ -35,7 +36,7 @@ $(SHAPE_ZIP):
 	unzip -u $<
 
 $(TARGET_FILE): $(QUERIED_FILE) $(SHAPE_FILES)
-	python3 enhance-institutes.py -src $< -dest $@
+	python3 enhance-institutes.py -src $< -dest $@ -fail $(FAILURE_FILE)
 
 $(QUERIED_FILE): $(QUERY)
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@

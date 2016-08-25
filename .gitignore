@@ -7,17 +7,17 @@ __pycache__/
 index/
 geoindex/
 
-# unused data
-/instmatcher/data/*.cpg
-/instmatcher/data/*.dbf
-/instmatcher/data/*.prj
-/instmatcher/data/*.shp
-/instmatcher/data/*.shx
-/instmatcher/data/*.log
-/instmatcher/data/*.README.html
-/instmatcher/data/*.VERSION.txt
-/instmatcher/data/*.zip
-/instmatcher/data/query.csv
+# intermediate data used to generate the list of institutes
+/*.cpg
+/*.dbf
+/*.prj
+/*.shp
+/*.shx
+/*.log
+/*.README.html
+/*.VERSION.txt
+/*.zip
+/*.csv
 
 # docs
 /docs/_build
