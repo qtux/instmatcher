@@ -15,17 +15,17 @@
 .SUFFIXES:
 .PHONY: all clean clean-all
 
-QUERY_URL	:=	https://query.wikidata.org/bigdata/namespace/wdq/sparql
+QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
+QUERY			:= query.sparql
 
-NAT_EARTH_URL	:= 	http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
-SHAPE_PREFIX	:=	ne_10m_admin_0_countries
-SHAPE_ZIP		:=	$(addprefix $(SHAPE_PREFIX), .zip)
-SHAPE_FILES		:=	$(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
+NAT_EARTH_URL	:= http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
+SHAPE_PREFIX	:= ne_10m_admin_0_countries
+SHAPE_ZIP		:= $(addprefix $(SHAPE_PREFIX), .zip)
+SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
 TARGET_FILE		:= instmatcher/data/institutes.csv
 QUERIED_FILE	:= query.csv
 FAILURE_FILE	:= failures.csv
-QUERY			:= query.sparql
 
 all: $(TARGET_FILE)
 
@@ -48,4 +48,4 @@ clean:
 clean-all:
 	rm -rf $(SHAPE_PREFIX).*
 	rm -rf $(QUERIED_FILE)
-	rm -rf $(TARGET_FILE)
+	rm -rf $(FAILURE_FILE)
