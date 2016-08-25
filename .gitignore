@@ -1,11 +1,14 @@
 # python packaging
-/*.egg-info
-__pycache__/
-/dist
+/*.egg-info/
+/dist/
 
-# indices
-index/
-geoindex/
+# python cache
+__pycache__/
+
+# index files
+*.toc
+*.seg
+MAIN_WRITELOCK
 
 # intermediate data used to generate the list of institutes
 /*.cpg
@@ -19,5 +22,5 @@ geoindex/
 /*.zip
 /*.csv
 
-# docs
+# output folder of the documentation
 /docs/_build
