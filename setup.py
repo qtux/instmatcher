@@ -59,7 +59,7 @@ setup(
 	include_package_data=True,
 	zip_safe=False,
 	keywords='institute affiliation organisation search match',
-	platform='any',
+	platforms='any',
 	classifiers=[
 		'Development Status :: 3 - Alpha',
 		'License :: OSI Approved :: Apache Software License',
