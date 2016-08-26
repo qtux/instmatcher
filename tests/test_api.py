@@ -73,6 +73,7 @@ class test_api(unittest.TestCase):
 					'lat': '42.3496',
 					'lon': '-71.0997',
 					'isni': '',
+					'source': 'http://www.wikidata.org/entity/Q49110',
 				},{
 					'name': 'University of Massachusetts Boston',
 					'alpha2': 'US',
@@ -80,6 +81,7 @@ class test_api(unittest.TestCase):
 					'lat': '42.313432',
 					'lon': '-71.038445',
 					'isni': '',
+					'source': 'http://www.wikidata.org/entity/Q15144',
 				},{
 					'name': 'Northeastern University',
 					'alpha2': 'US',
@@ -87,6 +89,7 @@ class test_api(unittest.TestCase):
 					'lat': '42.338888888889',
 					'lon': '-71.090277777778',
 					'isni': '',
+					'source': 'http://www.wikidata.org/entity/Q37548',
 				},
 			],
 			'TU Berlin': [
@@ -97,6 +100,7 @@ class test_api(unittest.TestCase):
 					'lat': '52.511944444444',
 					'lon': '13.326388888889',
 					'isni': '0000 0001 2195 9817',
+					'source': 'http://www.wikidata.org/entity/Q51985',
 				}
 			],
 		}
@@ -219,6 +223,7 @@ class test_api(unittest.TestCase):
 				'lat': '51.7611',
 				'lon': '-1.2534',
 				'isni': '0000 0004 1936 8948',
+				'source': 'http://www.wikidata.org/entity/Q34433',
 			},
 		}
 		for arg, target in cases.items():

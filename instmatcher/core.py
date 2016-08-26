@@ -57,6 +57,7 @@ def init(procs, multisegment, ixPath, force=False):
 			isni=STORED,
 			country=STORED,
 			alpha2=ID(stored=True),
+			source=TEXT(stored=True),
 		)
 		ix = index.create_in(ixPath, schema)
 		writer = ix.writer(procs=os.cpu_count(), multisegment=True)
@@ -73,6 +74,7 @@ def init(procs, multisegment, ixPath, force=False):
 					isni=row['isni'],
 					country=row['country'],
 					alpha2=row['alpha2'],
+					source=row['item'],
 				)
 		writer.commit()
 	
@@ -127,6 +129,7 @@ def query(institute, alpha2, lat, lon, offset):
 		# yield hits along with the score
 		for hit in instResults:
 			yield {
+				'source': hit['source'],
 				'name': hit['name'],
 				'isni': hit['isni'],
 				'lat': hit['lat'],
