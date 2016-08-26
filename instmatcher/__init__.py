@@ -132,4 +132,4 @@ def match(string, parse=parser.grobid, geocode=geo.geocode, offset=1):
 	:param parse: a function to parse the string into a structure
 	:param geocode: a function to retrieve coordinates of a given city
 	'''
-	return find(**extract(string, parse, geocode), offset=offset)
+	return find(offset=offset, **extract(string, parse, geocode))

@@ -65,6 +65,7 @@ setup(
 		'License :: OSI Approved :: Apache Software License',
 		'Intended Audience :: Developers',
 		'Programming Language :: Python :: 3.5',
+		'Programming Language :: Python :: 3.4',
 		'Topic :: Text Processing :: General',
 		'Topic :: Software Development :: Libraries :: Python Modules',
 	],
