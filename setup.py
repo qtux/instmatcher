@@ -61,7 +61,7 @@ setup(
 	keywords='institute affiliation organisation search match',
 	platform='any',
 	classifiers=[
-		'Development Status :: 2 - Pre-Alpha',
+		'Development Status :: 3 - Alpha',
 		'License :: OSI Approved :: Apache Software License',
 		'Intended Audience :: Developers',
 		'Programming Language :: Python :: 3.5',
