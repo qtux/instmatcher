@@ -55,6 +55,7 @@ berlin = {
 bad_param = {
 	('Pisa', None, None, float('inf'), 1): [
 		"University of Pisa",
+		"Scuola Normale Superiore",
 	],
 	('Lisbon', None, 1000, 2000, 1): [
 		"University of Lisbon",
