@@ -59,8 +59,11 @@ def getCountry(lat, lon, hint=None):
 				try:
 					country = countries.get(alpha2=alpha2).name
 				except KeyError:
-					alpha2 = None
 					country = record['properties']['NAME_LONG']
+					try:
+						alpha2 = countries.get(name=country).alpha2
+					except KeyError:
+						alpha2 = None
 				return country, alpha2
 	
 	# return None if no country could be associated
