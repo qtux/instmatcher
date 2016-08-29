@@ -159,7 +159,8 @@ class test_core(unittest.TestCase):
 	def test_expandAbbreviations(self):
 		source = resource_filename(core.__name__, 'data/abbreviations.csv')
 		with open(source) as csvfile:
-			reader = csv.reader(csvfile)
+			data = filter(lambda row: not row[0].startswith('#'), csvfile)
+			reader = csv.reader(data)
 			for row in reader:
 				separators = string.whitespace
 				separators += string.punctuation.replace('_', '')

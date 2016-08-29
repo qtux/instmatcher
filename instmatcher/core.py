@@ -83,7 +83,8 @@ def init(procs, multisegment, ixPath, force=False):
 	_abbreviations = {}
 	source = resource_filename(__name__, 'data/abbreviations.csv')
 	with open(source) as csvfile:
-		reader = csv.reader(csvfile)
+		data = filter(lambda row: not row[0].startswith('#'), csvfile)
+		reader = csv.reader(data)
 		for row in reader:
 			_abbreviations[row[0]] = row[1]
 	

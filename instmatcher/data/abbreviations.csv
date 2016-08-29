@@ -1,12 +1,20 @@
 short,long
+# adjectives
 chem,chemical
-ctr,center
-div,division
-engn,engineering
-ind,industry
-inst,institute
-sch,school
-technol,technology
-univ,university
 politecn,polytechnic
 polyclin,polyclinic
+natl,national
+# type of institute
+univ,university
+sch,school
+inst,institute
+hosp,hospital
+clin,clinic
+acad,academy
+coll,college
+ctr,center
+# description
+sci,science
+engn,engineering
+technol,technology
+ind,industry
