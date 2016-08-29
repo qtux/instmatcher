@@ -60,7 +60,7 @@ def init(procs, multisegment, ixPath, force=False):
 			source=TEXT(stored=True),
 		)
 		ix = index.create_in(ixPath, schema)
-		writer = ix.writer(procs=os.cpu_count(), multisegment=True)
+		writer = ix.writer(procs=procs, multisegment=multisegment)
 		
 		institutes = resource_filename(__name__, 'data/institutes.csv')
 		with open(institutes) as csvfile:
