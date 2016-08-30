@@ -39,6 +39,7 @@ setup(
 			'data/institutes.csv',
 			'data/abbreviations.csv',
 			'data/cities1000.txt',
+			'data/countryInfo.txt',
 		]
 	},
 	install_requires=[

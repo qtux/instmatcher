@@ -53,7 +53,7 @@ Attribution
 ===========
 1. The list of `institutes`_ is queried from `Wikidata`_ (available under `CC0`_).
 2. The list of `institutes`_ is enhanced using the country shapes from `Natural Earth`_ (in public domain).
-3. The list of `cities`_ to upgrade search results is taken from `GeoNames`_  (available under `CC BY 3.0`_).
+3. The list of `cities`_ and the list of `countries`_ are taken from `GeoNames`_  (available under `CC BY 3.0`_).
 
 .. image:: https://raw.githubusercontent.com/qtux/instmatcher/master/attribution.png
 
@@ -69,6 +69,7 @@ This software is licensed under the `Apache License, Version 2.0`_.
 
 .. DATASETS
 .. _cities: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/cities1000.txt
+.. _countries: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/countryInfo.txt
 .. _institutes: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/institutes.csv
 
 .. DATASOURCES:
