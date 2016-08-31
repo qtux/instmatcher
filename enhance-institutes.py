@@ -16,12 +16,15 @@ import csv
 import fiona
 from shapely import geometry
 import argparse
+import logging
+import datetime
 
 def getCountry(lat, lon, codes, countries, hint=None):
 	# try to find the hint as a country name (geonames.org data)
 	try:
 		alpha2 = codes[hint]
 		country = hint
+		logging.info('Found alpha-2 code of {}'.format(hint))
 		return country, alpha2
 	except KeyError:
 		pass
@@ -38,6 +41,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 				except KeyError:
 					alpha2 = None
 					country = longName
+				logging.info('Found country name of: {}'.format(hint))
 				return country, alpha2
 
 	# search for a country using the coordinates (Natural Earth data)
@@ -55,9 +59,11 @@ def getCountry(lat, lon, codes, countries, hint=None):
 						alpha2 = codes[country]
 					except KeyError:
 						alpha2 = None
+				logging.info('Found location of ({}, {})'.format(lat, lon))
 				return country, alpha2
 	
 	# return None if no country could be associated
+	logging.info('Did not find ({}, {}, {})'.format(lat, lon, hint))
 	return None, None
 
 def enhance(src, dest, fail, countryInfo):
@@ -129,6 +135,8 @@ def main():
 		help='the geonames list of country details (default: %(default)s)'
 	)
 	args = parser.parse_args()
+	logging.basicConfig(filename='enhance.log',level=logging.INFO)
+	logging.info('Started enhancing institutes at {}'.format(datetime.datetime.now()))
 	enhance(args.source, args.destination, args.failures, args.country)
 
 if __name__ == '__main__':
