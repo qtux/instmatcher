@@ -22,7 +22,6 @@ from whoosh.fields import Schema, STORED, ID, IDLIST
 from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
-from . import countries
 
 _ix = None
 _parser = None
@@ -45,6 +44,13 @@ def init(procs, multisegment, ixPath, force=False):
 		force = True
 	if force:
 		print('creating the geoindex - this may take some time')
+		codes = {}
+		countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
+		with open(countryInfo) as csvfile:
+			data = filter(lambda row: not row[0].startswith('#'), csvfile)
+			reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
+			for row in reader:
+				codes[row[0]] = row[4]
 		schema = Schema(
 			name=ID(stored=True),
 			asci=ID,
@@ -69,7 +75,7 @@ def init(procs, multisegment, ixPath, force=False):
 					lat=row[4],
 					lon=row[5],
 					alpha2=row[8],
-					country=countries.get(alpha2=row[8]).name,
+					country=codes[row[8]],
 					_boost=boost,
 				)
 		writer.commit()

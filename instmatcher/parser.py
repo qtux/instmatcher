@@ -16,18 +16,27 @@
 
 import requests
 import xml.etree.ElementTree as et
-from . import countries
+import csv
+from pkg_resources import resource_filename
 
 _url = None
+_codes = None
 
 def init(url):
 	'''
-	Initialise the grobid url
+	Initialise the grobid url and the country code dictionary.
 	
 	:param url: the URL to the grobid service
 	'''
-	global _url
+	global _url, _codes
 	_url = url
+	_codes = {}
+	countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
+	with open(countryInfo) as csvfile:
+		data = filter(lambda row: not row[0].startswith('#'), csvfile)
+		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
+		for row in reader:
+			_codes[row[0]] = row[4]
 
 def grobid(affiliation):
 	'''
@@ -61,7 +70,7 @@ def grobid(affiliation):
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = countries.get(alpha2=countryKey).name
+		result['country'] = _codes[countryKey]
 	except (AttributeError, KeyError):
 		result['alpha2'] = None
 		result['country'] = None

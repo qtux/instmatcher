@@ -130,7 +130,7 @@ class test_api(unittest.TestCase):
 					'institute': 'Charles University',
 					'city': 'Prague',
 					'alpha2': 'CZ',
-					'country': 'Czech Republic',
+					'country': 'Czechia',
 					'lat': 50.08804,
 					'lon': 14.42076,
 				},{
