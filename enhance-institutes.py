@@ -15,22 +15,13 @@
 import csv
 import fiona
 from shapely import geometry
-from instmatcher import countries
 import argparse
 
-def getCountry(lat, lon, hint=None):
-	# try to find the hint as a country name (pycountry data)
+def getCountry(lat, lon, codes, countries, hint=None):
+	# try to find the hint as a country name (geonames.org data)
 	try:
-		alpha2 = countries.get(name=hint).alpha2
-		country = countries.get(alpha2=alpha2).name
-		return country, alpha2
-	except KeyError:
-		pass
-	
-	# try to find the hint as an official country name (pycountry data)
-	try:
-		alpha2 = countries.get(official_name=hint).alpha2
-		country = countries.get(alpha2=alpha2).name
+		alpha2 = codes[hint]
+		country = hint
 		return country, alpha2
 	except KeyError:
 		pass
@@ -43,10 +34,10 @@ def getCountry(lat, lon, hint=None):
 			if name == hint or longName == hint:
 				alpha2 = record['properties']['ISO_A2']
 				try:
-					country = countries.get(alpha2=alpha2).name
+					country = countries[alpha2]
 				except KeyError:
 					alpha2 = None
-					country = record['properties']['NAME_LONG']
+					country = longName
 				return country, alpha2
 
 	# search for a country using the coordinates (Natural Earth data)
@@ -57,11 +48,11 @@ def getCountry(lat, lon, hint=None):
 			if shape.contains(point):
 				alpha2 = record['properties']['ISO_A2']
 				try:
-					country = countries.get(alpha2=alpha2).name
+					country = countries[alpha2]
 				except KeyError:
 					country = record['properties']['NAME_LONG']
 					try:
-						alpha2 = countries.get(name=country).alpha2
+						alpha2 = codes[country]
 					except KeyError:
 						alpha2 = None
 				return country, alpha2
@@ -69,7 +60,16 @@ def getCountry(lat, lon, hint=None):
 	# return None if no country could be associated
 	return None, None
 
-def enhance(src, dest, fail):
+def enhance(src, dest, fail, countryInfo):
+	# load country names and the corresponding ISO 3166-1 alpha-2 code
+	codes, countries = {}, {}
+	with open(countryInfo) as csvfile:
+		data = filter(lambda row: not row[0].startswith('#'), csvfile)
+		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
+		for row in reader:
+			countries[row[0]] = row[4]
+			codes[row[4]] = row[0]
+	# enhance the data
 	i = 0
 	with open(src, 'r') as s, open(dest, 'w') as d, open(fail, 'w') as f:
 		source = csv.reader(s)
@@ -88,7 +88,7 @@ def enhance(src, dest, fail):
 			hint = row[index['country']]
 			lat = float(row[index['lat']])
 			lon = float(row[index['lon']])
-			country, alpha2 = getCountry(lat, lon, hint)
+			country, alpha2 = getCountry(lat, lon, codes, countries, hint)
 			if not country:
 				failures.writerow(row)
 				continue
@@ -122,8 +122,14 @@ def main():
 		default='failures.csv',
 		help='a list of failed target (enhanced) list (default: %(default)s)'
 	)
+	parser.add_argument(
+		'-cntr',
+		'--country',
+		default='countryInfo.txt',
+		help='the geonames list of country details (default: %(default)s)'
+	)
 	args = parser.parse_args()
-	enhance(args.source, args.destination, args.failures)
+	enhance(args.source, args.destination, args.failures, args.country)
 
 if __name__ == '__main__':
 	main()

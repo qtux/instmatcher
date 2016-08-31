@@ -24,6 +24,7 @@ SHAPE_ZIP		:= $(addprefix $(SHAPE_PREFIX), .zip)
 SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
 TARGET_FILE		:= instmatcher/data/institutes.csv
+COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 QUERIED_FILE	:= query.csv
 FAILURE_FILE	:= failures.csv
 
@@ -36,7 +37,7 @@ $(SHAPE_ZIP):
 	unzip -u $<
 
 $(TARGET_FILE): $(QUERIED_FILE) $(SHAPE_FILES)
-	python3 enhance-institutes.py -src $< -dest $@ -fail $(FAILURE_FILE)
+	python3 enhance-institutes.py -src $< -dest $@ -fail $(FAILURE_FILE) -cntr $(COUNTRY_INFO)
 
 $(QUERIED_FILE): $(QUERY)
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@
