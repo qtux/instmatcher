@@ -45,9 +45,8 @@ setup(
 	install_requires=[
 		'Whoosh>=2.7.4',
 		'requests>=2.10.0',
-		'pycountry>=1.20',
 	],
-	extras_require = {
+	extras_require={
 		'data':[
 			'fiona>=1.7.0',
 			'shapely>=1.5.16',
