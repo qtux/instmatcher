@@ -16,6 +16,30 @@
 
 import os
 from setuptools import setup
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from setuptools.command.test import test
+
+def create_indices(force):
+	def decorator(command_subclass):
+		orig_run = command_subclass.run
+		def new_run(self):
+			orig_run(self)
+		command_subclass.run = new_run
+		return command_subclass
+	return decorator
+
+@create_indices(force=True)
+class CustomDevelopCommand(develop):
+	pass
+
+@create_indices(force=True)
+class CustomInstallCommand(install):
+	pass
+
+@create_indices(force=False)
+class CustomTestCommand(test):
+	pass
 
 def readme():
 	with open('README.rst') as f:
@@ -25,6 +49,11 @@ with open(os.path.join('instmatcher', 'version.py'), 'rt') as f:
 	exec(f.read())
 
 setup(
+	cmdclass={
+		'install': CustomInstallCommand,
+		'develop': CustomDevelopCommand,
+		'test': CustomTestCommand,
+	},
 	name='instmatcher',
 	version=__version__,
 	description=__doc__,
