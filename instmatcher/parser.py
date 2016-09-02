@@ -44,11 +44,16 @@ def grobid(affiliation):
 	
 	:param affiliation: the affiliation string to be parsed
 	'''
+	# default return value
+	result = dict.fromkeys(['institute', 'city', 'alpha2', 'country',])
+	
 	# let grobid process the given affiliation string
-	cmd = 'affiliations=' + affiliation
+	try:
+		cmd = 'affiliations=' + affiliation
+	except TypeError:
+		return result
 	r = requests.post(_url + '/processAffiliations', data=cmd)
 	xml = r.content.decode('UTF-8')
-	result = dict.fromkeys(['institute', 'city', 'alpha2', 'country',])
 	
 	# return if the returned string is not parseable
 	try:

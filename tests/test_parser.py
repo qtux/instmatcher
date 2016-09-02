@@ -29,6 +29,15 @@ class test_parser(unittest.TestCase):
 	def tearDown(self):
 		self.server.stop()
 	
+	def test_None(self):
+		expected = {
+			'institute': None,
+			'alpha2': None,
+			'country': None,
+			'city': None,
+		}
+		self.assertEqual(parser.grobid(None), expected)
+	
 	def test_empty(self):
 		self.server.setResponse(__name__, '')
 		expected = {
