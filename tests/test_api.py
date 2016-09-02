@@ -33,7 +33,7 @@ class test_api(unittest.TestCase):
 	def assert_find_functions(self, arg, expected):
 		first = expected[0] if expected else None
 		self.assertSequenceEqual(list(instmatcher.findAll(arg)), expected)
-		self.assertEqual(instmatcher.find(arg), first)\
+		self.assertEqual(instmatcher.find(arg), first)
 	
 	def assert_extract_functions(self, arg, expected):
 		first = expected[0] if expected else None
