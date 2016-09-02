@@ -12,56 +12,177 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .util import GrobidServer
-from pkg_resources import resource_filename
-import xml.etree.ElementTree as et
-import string
-import random
-
 import unittest
-from instmatcher.parser import grobid, init
+from .util import GrobidServer
+from instmatcher import parser
 
 class test_parser(unittest.TestCase):
 	
 	def setUp(self):
-		tree = et.parse(resource_filename(__name__, 'test_parser.xml'))
-		root = tree.getroot()
-		uniqueKeys = set()
-		chars = string.ascii_letters + string.digits
-		grobidResponses = {}
-		self.tests = {}
-		for testcase in root:
-			affiTag = testcase.find('./affiliation')
-			affiString = et.tostring(affiTag, encoding='unicode')
-			affiString = affiString.replace('\n', '').replace('\t', '')
-			
-			resultTag = testcase.find('./result')
-			result = {}
-			result['institute'] = resultTag.find('./institute').text
-			result['alpha2'] = resultTag.find('./alpha2').text
-			result['country'] = resultTag.find('./country').text
-			result['city'] = resultTag.find('./city').text
-			
-			while True:
-				size = random.randrange(1, 42)
-				key = ''.join(random.choice(chars) for _ in range(size))
-				if key not in uniqueKeys:
-					uniqueKeys.add(key)
-					break
-			grobidResponses[key] = affiString
-			self.tests[key] = result
-		
 		host = 'localhost'
 		port = 8081
 		url = 'http://' + host + ':' + str(port)
-		init(url)
-		self.server = GrobidServer(host, port, grobidResponses)
+		parser.init(url)
+		self.server = GrobidServer(host, port, {})
 		self.server.start()
-	
-	def test(self):
-		
-		for affiliation, result in self.tests.items():
-			self.assertEqual(grobid(affiliation), result)
 	
 	def tearDown(self):
 		self.server.stop()
+	
+	def test_empty(self):
+		self.server.setResponse(__name__, '')
+		expected = {
+			'institute': None,
+			'alpha2': None,
+			'country': None,
+			'city': None,
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_no_institute(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+			<address>
+				<country key="AQ">Antarctica</country>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': None,
+			'alpha2': None,
+			'country': None,
+			'city': None,
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_no_alpha2(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+			<orgName type="institution">institA</orgName>
+			<address>
+				<country>country</country>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'institA',
+			'alpha2': None,
+			'country': None,
+			'city': 'settlement',
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_no_country(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+			<orgName type="institution">institB</orgName>
+			<address>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'institB',
+			'alpha2': None,
+			'country': None,
+			'city': 'settlement',
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_no_city(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+			<orgName type="institution">institC</orgName>
+			<address>
+				<country key="AQ">Antarctica</country>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'institC',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'city': None,
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_releveant_tags(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+			<orgName type="institution">institD</orgName>
+			<address>
+				<country key="AQ">Antarctica</country>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'institD',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'city': 'settlement',
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_every_tags(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+				<orgName type="laboratory">lab</orgName>
+				<orgName type="department">dep</orgName>
+				<orgName type="institution">institE</orgName>
+				<address>
+					<addrLine>addrLine</addrLine>
+					<country key="AQ">Antarctica</country>
+					<postCode>postCode</postCode>
+					<region>region</region>
+					<settlement>settlement</settlement>
+				</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'institE',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'city': 'settlement',
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_multiple_institutes(self):
+		self.server.setResponse(
+			__name__,
+			'''<affiliation>
+				<orgName type="laboratory" key="lab1">lab1</orgName>
+				<orgName type="laboratory" key="lab2">lab2</orgName>
+				<orgName type="laboratory" key="lab3">lab3</orgName>
+				<orgName type="department" key="dep1">dep1</orgName>
+				<orgName type="department" key="dep2">dep2</orgName>
+				<orgName type="department" key="dep3">dep3</orgName>
+				<orgName type="institution" key="instit1">instit1</orgName>
+				<orgName type="institution" key="instit2">instit2</orgName>
+				<orgName type="institution" key="instit3">instit3</orgName>
+				<address>
+					<addrLine>addrLine1</addrLine>
+					<addrLine>addrLine2</addrLine>
+					<addrLine>addrLine3</addrLine>
+					<country key="AQ">Antarctica</country>
+					<postCode>postCode</postCode>
+					<region>region</region>
+					<settlement>settlement</settlement>
+				</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institute': 'instit1',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'city': 'settlement',
+		}
+		self.assertEqual(parser.grobid(__name__), expected)

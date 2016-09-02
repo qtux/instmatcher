@@ -18,7 +18,11 @@ import threading
 
 def getGrobidProxy(responses):
 	class GrobidProxy(BaseHTTPRequestHandler):
-
+		
+		def __init_(self):
+			super(GrobidProxy, self)
+			self.responses = responses
+		
 		def do_POST(self):
 			self.send_response(200)
 			self.send_header('Content-type', 'text/plain')
@@ -28,7 +32,7 @@ def getGrobidProxy(responses):
 				length = int(self.headers['Content-Length'])
 				data = self.rfile.read(length).decode('utf-8')
 				_, _, tail = data.partition('affiliations=')
-				response = responses.get(tail, '')
+				response = self.responses.get(tail, '')
 			else:
 				response = ''
 			self.wfile.write(bytes(response, 'utf-8'))
@@ -56,7 +60,9 @@ class GrobidServer():
 	def stop(self):
 		self.server.shutdown()
 		self.server.server_close()
-
+	
+	def setResponse(self, question, response):
+		self.proxy.responses[question] = response
 
 
 
