@@ -1,5 +1,5 @@
 SELECT
-  ?item
+  (SAMPLE(?item) AS ?source)
   (SAMPLE(?name) AS ?name)
   (GROUP_CONCAT(DISTINCT(?altLabel); separator = '; ') AS ?alias)
   (SAMPLE(?lat) AS ?lat)

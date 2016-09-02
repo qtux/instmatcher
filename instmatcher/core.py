@@ -74,7 +74,7 @@ def init(procs, multisegment, ixPath, force=False):
 					isni=row['isni'],
 					country=row['country'],
 					alpha2=row['alpha2'],
-					source=row['item'],
+					source=row['source'],
 				)
 		writer.commit()
 	
