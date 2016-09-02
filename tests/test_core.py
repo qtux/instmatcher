@@ -15,7 +15,6 @@
 import unittest
 import instmatcher.core as core
 
-import os
 import string
 from pkg_resources import resource_filename
 import csv
@@ -116,7 +115,7 @@ none_perm = {
 
 class test_core(unittest.TestCase):
 	def setUp(self):
-		core.init(procs=os.cpu_count(), multisegment=True, ixPath='./index')
+		core.init()
 	
 	def run_query(self, tests):
 		for args, targets in tests.items():
@@ -174,7 +173,7 @@ class test_core(unittest.TestCase):
 					self.assertEqual(core.expandAbbreviations(test), test)
 
 if __name__ == '__main__':
-	core.init(procs=os.cpu_count(), multisegment=True, ixPath='./index')
+	core.init()
 	dicts = {
 		'boston': boston,
 		'berlin': berlin,

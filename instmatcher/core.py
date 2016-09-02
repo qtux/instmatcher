@@ -15,12 +15,10 @@
 '''Module to search for known institutes.'''
 
 import csv
-import os, os.path
 from pkg_resources import resource_filename
 import re
 
 from whoosh import index
-from whoosh.fields import Schema, TEXT, NUMERIC, STORED, ID
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
 
@@ -29,54 +27,14 @@ _ix = None
 _instParser = None
 _coordParser = None
 
-def init(procs, multisegment, ixPath, force=False):
+def init():
 	'''
-	Initialise the index and global variables.
+	Initialise the core module.
 
-	Create the index if it does not exist or *force* is set to True,
-	load the available abbreviations from 'data/abbreviations.csv' and
+	Load the available abbreviations from 'data/abbreviations.csv' and
 	load the index along with the parsers required for the institute and
 	coordinate searches.
-
-	:param procs: maximum number of processes for the index creation
-	:param multisegment: split index into at least #procs segments
-	:param ixPath: path to the index
-	:param force: recreate the index
 	'''
-	# create the index if it does not exist or force is enabled
-	if not os.path.exists(ixPath):
-		os.mkdir(ixPath)
-		force = True
-	if force:
-		print('creating the index - this may take some time')
-		schema = Schema(
-			name=TEXT(stored=True),
-			alias=TEXT,
-			lat=NUMERIC(numtype=float, stored=True),
-			lon=NUMERIC(numtype=float, stored=True),
-			isni=STORED,
-			country=STORED,
-			alpha2=ID(stored=True),
-			source=TEXT(stored=True),
-		)
-		ix = index.create_in(ixPath, schema)
-		writer = ix.writer(procs=procs, multisegment=multisegment)
-		
-		institutes = resource_filename(__name__, 'data/institutes.csv')
-		with open(institutes) as csvfile:
-			reader = csv.DictReader(csvfile)
-			for row in reader:
-				writer.add_document(
-					name=row['name'],
-					alias=row['alias'],
-					lat=row['lat'],
-					lon=row['lon'],
-					isni=row['isni'],
-					country=row['country'],
-					alpha2=row['alpha2'],
-					source=row['source'],
-				)
-		writer.commit()
 	
 	# load the available abbreviations from 'data/abbreviations.csv'
 	global _abbreviations, _ix, _instParser, _coordParser
@@ -89,6 +47,7 @@ def init(procs, multisegment, ixPath, force=False):
 			_abbreviations[row[0]] = row[1]
 	
 	# load the index and create the institute and coordinate query parsers
+	ixPath = resource_filename(__name__, 'data/index')
 	_ix = index.open_dir(ixPath)
 	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
 	_coordParser = MultifieldParser(['lat', 'lon',], _ix.schema)

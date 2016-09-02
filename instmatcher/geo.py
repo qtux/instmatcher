@@ -14,11 +14,8 @@
 
 '''Module to retrieve coordinates of a given city'''
 
-import csv
-import os, os.path
-import math
 from pkg_resources import resource_filename
-from whoosh.fields import Schema, STORED, ID, IDLIST
+
 from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
@@ -26,62 +23,17 @@ from whoosh.query import Term
 _ix = None
 _parser = None
 
-def init(procs, multisegment, ixPath, force=False):
+def init():
 	'''
-	Initialise the index and global variables.
+	Initialise the geo module.
 	
 	Create the index if it does not exist or force is set to True and
 	load it along with the parser required for the coordinate search.
 	
-	:param procs: maximum number of processes for the index creation
-	:param multisegment: split index into at least #procs segments
-	:param ixPath: path to the index
-	:param force: recreate the index
 	'''
-	# create the geoindex if it does not exist or force is enabled
-	if not os.path.exists(ixPath):
-		os.mkdir(ixPath)
-		force = True
-	if force:
-		print('creating the geoindex - this may take some time')
-		codes = {}
-		countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
-		with open(countryInfo) as csvfile:
-			data = filter(lambda row: not row[0].startswith('#'), csvfile)
-			reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
-			for row in reader:
-				codes[row[0]] = row[4]
-		schema = Schema(
-			name=ID(stored=True),
-			asci=ID,
-			alias=IDLIST(expression=r"[^,]+"),
-			lat=STORED,
-			lon=STORED,
-			alpha2=ID(stored=True),
-			country=ID(stored=True)
-		)
-		ix = index.create_in(ixPath, schema)
-		writer = ix.writer(procs=procs, multisegment=multisegment)
-		cities = resource_filename(__name__, 'data/cities1000.txt')
-		with open(cities) as f:
-			reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE)
-			for row in reader:
-				population = int(row[14])
-				boost = math.log(max(math.e, population))
-				writer.add_document(
-					name=row[1],
-					asci=row[2],
-					alias=row[3],
-					lat=row[4],
-					lon=row[5],
-					alpha2=row[8],
-					country=codes[row[8]],
-					_boost=boost,
-				)
-		writer.commit()
-	
 	# load the index and create the city/alpha2 query parser
 	global _ix, _parser
+	ixPath = resource_filename(__name__, 'data/geoindex')
 	_ix = index.open_dir(ixPath)
 	_parser = MultifieldParser(['name', 'asci', 'alias',], _ix.schema)
 

@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from .util import GrobidServer
-import os
 
 import unittest
 import instmatcher
@@ -57,7 +56,7 @@ class test_api(unittest.TestCase):
 		host = 'localhost'
 		port = 8081
 		url = 'http://' + host + ':' + str(port)
-		instmatcher.init(procs=os.cpu_count(), initGeo=True, grobidUrl=url)
+		instmatcher.init(grobidUrl=url)
 		self.server = GrobidServer(host, port, grobidResponses)
 		self.server.start()
 	

@@ -33,23 +33,19 @@ def _appendDoc(docstring):
 
 ################################ init function ################################
 
-def init(procs=1, initGeo=True, grobidUrl='http://localhost:8080'):
+def init(grobidUrl='http://localhost:8080'):
 	'''
-	Initialise the requested modules.
+	Initialise modules.
 	
 	This will initialise the module required to search for institutes
-	and if requested the module to search for coordinates of cities.
+	and the module to search for coordinates of cities.
 	Additionally, the URL pointing to the grobid service is set.
 	
-	:param procs: maximum number of processes for index creation
-	:param initGeo: whether to create the geographical index
 	:param grobidUrl: the URL to the grobid service
 	'''
-	multisegment = procs > 1
-	core.init(procs, multisegment, './index')
+	core.init()
+	geo.init()
 	parser.init(grobidUrl)
-	if initGeo:
-		geo.init(procs, multisegment, './geoindex')
 
 ############################### find functions ################################
 _find_doc = '''

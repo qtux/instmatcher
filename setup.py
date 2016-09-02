@@ -152,9 +152,7 @@ setup(
 	packages=['instmatcher',],
 	package_data={
 		'instmatcher': [
-			'data/institutes.csv',
 			'data/abbreviations.csv',
-			'data/cities1000.txt',
 			'data/countryInfo.txt',
 			'data/index/*',
 			'data/geoindex/*',
