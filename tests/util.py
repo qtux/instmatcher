@@ -16,40 +16,35 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 import threading
 
-def getGrobidProxy(responses):
-	class GrobidProxy(BaseHTTPRequestHandler):
+class GrobidProxy(BaseHTTPRequestHandler):
+	
+	def do_POST(self):
+		self.send_response(200)
+		self.send_header('Content-type', 'text/plain')
+		self.end_headers()
 		
-		def __init_(self):
-			super(GrobidProxy, self)
-			self.responses = responses
-		
-		def do_POST(self):
-			self.send_response(200)
-			self.send_header('Content-type', 'text/plain')
-			self.end_headers()
-			
-			if self.path == '/processAffiliations':
-				length = int(self.headers['Content-Length'])
-				data = self.rfile.read(length).decode('utf-8')
-				_, _, tail = data.partition('affiliations=')
-				response = self.responses.get(tail, '')
-			else:
-				response = ''
-			self.wfile.write(bytes(response, 'utf-8'))
-		
-		def log_message(self, format, *args):
-			return
-	return GrobidProxy
+		if self.path == '/processAffiliations':
+			length = int(self.headers['Content-Length'])
+			data = self.rfile.read(length).decode('utf-8')
+			_, _, tail = data.partition('affiliations=')
+			response = GrobidProxy.responses.get(tail, '')
+		else:
+			response = ''
+		self.wfile.write(bytes(response, 'utf-8'))
+	
+	def log_message(self, format, *args):
+		return
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	pass
 
 class GrobidServer():
 	
-	def __init__(self, host, port, responses):
+	def __init__(self, host, port):
 		self.host = host
 		self.port = port
-		self.proxy = getGrobidProxy(responses)
+		self.proxy = GrobidProxy
+		self.proxy.response = {}
 		
 	def start(self):
 		self.server = ThreadedHTTPServer((self.host, self.port), self.proxy)

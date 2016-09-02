@@ -23,7 +23,7 @@ class test_parser(unittest.TestCase):
 		port = 8081
 		url = 'http://' + host + ':' + str(port)
 		parser.init(url)
-		self.server = GrobidServer(host, port, {})
+		self.server = GrobidServer(host, port)
 		self.server.start()
 	
 	def tearDown(self):

@@ -24,7 +24,7 @@ class test_api(unittest.TestCase):
 		port = 8081
 		url = 'http://' + host + ':' + str(port)
 		instmatcher.init(grobidUrl=url)
-		self.server = GrobidServer(host, port, {})
+		self.server = GrobidServer(host, port)
 		self.server.start()
 	
 	def tearDown(self):
