@@ -14,83 +14,112 @@
 
 import unittest
 from instmatcher import geo
-from itertools import zip_longest
-
-cases = {
-	(None, None): [],
-	('x', None): [],
-	('Turyan', None): [],
-	('Klin Geriatr, Hamburg', 'DE'): [],
-	('Sao Paulo',	None): [
-		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
-	],
-	('São Paulo',	None): [
-		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
-	],
-	('São Paulo',	'BR'): [
-		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
-	],
-	('Sao Paulo',	'BR'): [
-		{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
-	],
-	('Xian', None): [
-		{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
-	],
-	('Xian', 'CN'): [
-		{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
-	],
-	('Gutao', None): [
-		{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
-	],
-	('Gutao', 'CN'): [
-		{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
-	],
-	('Boston', None): [
-		{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 52.97633, 'lon': -0.02664, 'alpha2': 'GB', 'country': 'United Kingdom'},
-		{'lat': 7.87111, 'lon': 126.36417, 'alpha2': 'PH', 'country': 'Philippines'},
-		{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
-	],
-	('Boston', 'US'): [
-		{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
-	],
-	('London', None): [
-		{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
-		{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
-		{'lat': 37.12898, 'lon': -84.08326, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 39.88645, 'lon': -83.44825, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
-		{'lat': 36.47606, 'lon': -119.44318, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 35.32897, 'lon': -93.25296, 'alpha2': 'US', 'country': 'United States'},
-		{'lat': 1.98487, 'lon': -157.47502, 'alpha2': 'KI', 'country': 'Kiribati'},
-	],
-	('London', 'GB'): [
-		{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
-		{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
-	],
-	('London', 'CA'): [
-		{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
-	],
-	('London', 'IT'): [],
-}
 
 class test_geo(unittest.TestCase):
 	
 	def setUp(self):
 		geo.init()
 	
-	def test_geocode(self):
-		for args, targets in cases.items():
-			coords = geo.geocode(*args)
-			for result, target in zip_longest(coords, targets):
-				self.assertEqual(result, target, msg=args)
-
-if __name__ == '__main__':
-	geo.init()
-	for query in cases.keys():
-		positions = geo.geocode(*query)
-		print('', query,': [', sep='')
-		for pos in positions:
-			print('\t', pos, ',', sep='')
-		print('],')
+	def test_None(self):
+		actual = list(geo.geocode(None, None))
+		expected = []
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Turyan(self):
+		actual = list(geo.geocode('Turyan', None))
+		expected = []
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Sao(self):
+		actual = list(geo.geocode('Sao Paulo', None))
+		expected = [
+			{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Sao_diacritic(self):
+		actual = list(geo.geocode('São Paulo', None))
+		expected = [
+			{'lat': -23.5475, 'lon': -46.63611, 'alpha2': 'BR', 'country': 'Brazil'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Xian_None(self):
+		actual = list(geo.geocode('Xian', None))
+		expected = [
+			{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Xian_CN(self):
+		actual = list(geo.geocode('Xian', 'CN'))
+		expected = [
+			{'lat': 34.25833, 'lon': 108.92861, 'alpha2': 'CN', 'country': 'China'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Gutao_None(self):
+		actual = list(geo.geocode('Gutao', None))
+		expected = [
+			{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Gutao_CN(self):
+		actual = list(geo.geocode('Gutao', 'CN'))
+		expected = [
+			{'lat': 37.2025, 'lon': 112.17806, 'alpha2': 'CN', 'country': 'China'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Boston_None(self):
+		actual = list(geo.geocode('Boston', None))
+		expected = [
+			{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 52.97633, 'lon': -0.02664, 'alpha2': 'GB', 'country': 'United Kingdom'},
+			{'lat': 7.87111, 'lon': 126.36417, 'alpha2': 'PH', 'country': 'Philippines'},
+			{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Boston_None(self):
+		actual = list(geo.geocode('Boston', 'US'))
+		expected = [
+			{'lat': 42.35843, 'lon': -71.05977, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 30.79186, 'lon': -83.78989, 'alpha2': 'US', 'country': 'United States'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_London_None(self):
+		actual = list(geo.geocode('London', None))
+		expected = [
+			{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
+			{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
+			{'lat': 37.12898, 'lon': -84.08326, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 39.88645, 'lon': -83.44825, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
+			{'lat': 36.47606, 'lon': -119.44318, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 35.32897, 'lon': -93.25296, 'alpha2': 'US', 'country': 'United States'},
+			{'lat': 1.98487, 'lon': -157.47502, 'alpha2': 'KI', 'country': 'Kiribati'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_London_GB(self):
+		actual = list(geo.geocode('London', 'GB'))
+		expected = [
+			{'lat': 51.50853, 'lon': -0.12574, 'alpha2': 'GB', 'country': 'United Kingdom'},
+			{'lat': 51.51279, 'lon': -0.09184, 'alpha2': 'GB', 'country': 'United Kingdom'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_London_CA(self):
+		actual = list(geo.geocode('London', 'CA'))
+		expected = [
+			{'lat': 42.98339, 'lon': -81.23304, 'alpha2': 'CA', 'country': 'Canada'},
+		]
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_London_IT(self):
+		actual = list(geo.geocode('London', 'IT'))
+		expected = []
+		self.assertSequenceEqual(actual, expected)
