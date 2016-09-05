@@ -13,178 +13,193 @@
 # limitations under the License.
 
 import unittest
-import instmatcher.core as core
-
-import string
-from pkg_resources import resource_filename
-import csv
-from itertools import zip_longest
-
-default_boston = [
-	"Boston University",
-	"University of Massachusetts Boston",
-	"New England School of Law",
-	"Northeastern University",
-	"Boston College",
-	"Boston College Law School",
-]
-boston = {
-	('Boston', None, 42.358056, -71.063611, 1): default_boston,
-	('Boston', None, 7.8689, 126.3734, 1): default_boston,
-	('Boston', None, 52.974, -0.0214, 1): default_boston,
-	('Boston', None, None, None, 1): default_boston,
-}
-
-berlin = {
-	('TU Berlin', None, None, None, 1): [
-		"Technical University of Berlin",
-	],
-	('Berlin', None, None, None, 1): [
-		"Free University of Berlin",
-		"Technical University of Berlin",
-		"Humboldt University of Berlin",
-		"VLB Berlin",
-		"SRH Hochschule Berlin",
-	],
-	('FU Berlin', None, None, None, 1): [
-		"Free University of Berlin",
-	],
-}
-
-bad_param = {
-	('Pisa', None, None, float('inf'), 1): [
-		"University of Pisa",
-		"Scuola Normale Superiore",
-	],
-	('Lisbon', None, 1000, 2000, 1): [
-		"University of Lisbon",
-		"Technical University of Lisbon",
-		"ISCTE – Lisbon University Institute",
-	],
-	('Whasington', None, None, None, 1): [
-	],
-	('Geneva', None, '120', 0, 1): [
-		"University of Geneva",
-		"International University in Geneva",
-		"University of Edinburgh",
-	],
-	('University Sofia', None, '9000', None, 1): [
-		"Technical University of Sofia",
-		"Sophia University",
-		"University of Forestry, Sofia",
-		"Sofia Medical University",
-		"University of Architecture, Civil Engineering and Geodesy",
-		"University of National and World Economy",
-	],
-}
-
-none_perm = {
-	('Fantasia', 'AQ', 30,   40,   1):    [],
-	('Fantasia', 'AQ', 30,   40,   None): [],
-	('Fantasia', 'AQ', 30,   None, 1):    [],
-	('Fantasia', 'AQ', 30,   None, None): [],
-	('Fantasia', 'AQ', None, 40,   1):    [],
-	('Fantasia', 'AQ', None, 40,   None): [],
-	('Fantasia', 'AQ', None, None, 1):    [],
-	('Fantasia', 'AQ', None, None, None): [],
-	('Fantasia', None, 30,   40,   1):    [],
-	('Fantasia', None, 30,   40,   None): [],
-	('Fantasia', None, 30,   None, 1):    [],
-	('Fantasia', None, 30,   None, None): [],
-	('Fantasia', None, None, 40,   1):    [],
-	('Fantasia', None, None, 40,   None): [],
-	('Fantasia', None, None, None, 1):    [],
-	('Fantasia', None, None, None, None): [],
-	(None,       'AQ', 30,   40,   1):    [],
-	(None,       'AQ', 30,   40,   None): [],
-	(None,       'AQ', 30,   None, 1):    [],
-	(None,       'AQ', 30,   None, None): [],
-	(None,       'AQ', None, 40,   1):    [],
-	(None,       'AQ', None, 40,   None): [],
-	(None,       'AQ', None, None, 1):    [],
-	(None,       'AQ', None, None, None): [],
-	(None,       None, 30,   40,   1):    [],
-	(None,       None, 30,   40,   None): [],
-	(None,       None, 30,   None, 1):    [],
-	(None,       None, 30,   None, None): [],
-	(None,       None, None, 40,   1):    [],
-	(None,       None, None, 40,   None): [],
-	(None,       None, None, None, 1):    [],
-	(None,       None, None, None, None): [],
-}
+from instmatcher import core
+import itertools
 
 class test_core(unittest.TestCase):
+	
 	def setUp(self):
 		core.init()
 	
-	def run_query(self, tests):
-		for args, targets in tests.items():
-			institutes = core.query(*args)
-			post_check = []
-			storedScore = None
-			for result, target in zip_longest(institutes, targets):
-				name = result[0]['name']
-				score = result[1]
-				if not storedScore:
-					# if the names do not match:
-					# --> postpone checking of the current item (the next
-					# item might have the same score but a different name)
-					if name != target:
-						post_check.append(name)
-						storedScore = score
-					else:
-						self.assertEqual(name, target, msg=args)
-				# check the score if the names did not match last iteration
-				else:
-					self.assertEqual(storedScore, score, msg=args)
-					self.assertNotEqual(name, target, msg=args)
-					storedScore = None
-			# check postponed names for beeing inside the target list
-			for item in post_check:
-				self.assertTrue(item in targets, msg=args)
+	def assertNames(self, actual, expectedNames):
+		scores, actualNames = [], []
+		for item in actual:
+			scores.append(item[1])
+			actualNames.append(item[0]['name'])
+		if len(scores) > len(set(scores)):
+			self.assertCountEqual(actualNames, expectedNames)
+		else:
+			self.assertSequenceEqual(actualNames, expectedNames)
 	
-	def test_bad_param(self):
-		self.run_query(bad_param)
+	def test_None_combinations(self):
+		combinations = [
+			['Fantasia', None],
+			['AQ', None],
+			[30, None],
+			[40, None],
+			[1, None],
+		]
+		expected = []
+		for arg in itertools.product(*combinations):
+			actual = list(core.query(*arg))
+			self.assertSequenceEqual(actual, expected)
 	
-	def test_none_perm(self):
-		self.run_query(none_perm)
-		
-	def test_berlin(self):
-		self.run_query(berlin)
-		
-	def test_boston(self):
-		self.run_query(boston)
+	def test_misspelled(self):
+		actual = core.query('Whasington', None, None, None, 1)
+		expected = []
+		self.assertNames(actual, expected)
 	
-	def test_expandAbbreviations(self):
-		source = resource_filename(core.__name__, 'data/abbreviations.csv')
-		with open(source) as csvfile:
-			data = filter(lambda row: not row[0].startswith('#'), csvfile)
-			reader = csv.reader(data)
-			for row in reader:
-				separators = string.whitespace
-				separators += string.punctuation.replace('_', '')
-				for sep in separators:
-					test = sep + row[0] + sep
-					result = sep + row[1] + sep
-					self.assertEqual(core.expandAbbreviations(test), result)
-				links = string.ascii_letters + string.digits + '_'
-				for link in links:
-					test = link + row[0] + link
-					self.assertEqual(core.expandAbbreviations(test), test)
-
-if __name__ == '__main__':
-	core.init()
-	dicts = {
-		'boston': boston,
-		'berlin': berlin,
-		'bad_param': bad_param,
-	}
-	for name, item in dicts.items():
-		print(name + ' = {')
-		for args in item.keys():
-			institutes = core.query(*args)
-			print('\t', args,': [', sep='')
-			for result in institutes:
-				print('\t\t"' + result[0]['name'] + '",')
-			print('\t],')
-		print('}')
+	def test_zero_search_radius(self):
+		actual = core.query('Geneva', None, 0, 0, 0)
+		expected = [
+			"University of Geneva",
+			"International University in Geneva",
+			"University of Edinburgh",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_bad_coord_param(self):
+		actual = core.query('Pisa', None, None, float('inf'), 1)
+		expected = [
+			"University of Pisa",
+			"Scuola Normale Superiore",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_illegal_coord_param(self):
+		actual = core.query('Geneva', None, '120', {'lon':0}, 1)
+		expected = [
+			"University of Geneva",
+			"International University in Geneva",
+			"University of Edinburgh",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_impossible_coord_param(self):
+		actual = core.query('Lisbon', None, 1000, 2000, 1)
+		expected = [
+			"University of Lisbon",
+			"Technical University of Lisbon",
+			"ISCTE – Lisbon University Institute",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_TU_Berlin(self):
+		actual = core.query('TU Berlin', None, None, None, 1)
+		expected = ["Technical University of Berlin",]
+		self.assertNames(actual, expected)
+	
+	def test_Berlin(self):
+		actual = core.query('Berlin', None, None, None, 1)
+		expected = [
+			"Free University of Berlin",
+			"Technical University of Berlin",
+			"Humboldt University of Berlin",
+			"VLB Berlin",
+			"SRH Hochschule Berlin",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_FU_Berlin(self):
+		actual = core.query('FU Berlin', None, None, None, 1)
+		expected = ["Free University of Berlin",]
+		self.assertNames(actual, expected)
+	
+	def test_Boston_no_coords(self):
+		actual = core.query('Boston', None, None, None, 1)
+		expected = [
+			"Boston University",
+			"University of Massachusetts Boston",
+			"New England School of Law",
+			"Northeastern University",
+			"Boston College",
+			"Boston College Law School",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_Boston_USA(self):
+		actual = core.query('Boston', None, 42.358056, -71.063611, 1)
+		expected = [
+			"Boston University",
+			"University of Massachusetts Boston",
+			"New England School of Law",
+			"Northeastern University",
+			"Boston College",
+			"Boston College Law School",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_Boston_Philippines(self):
+		actual = core.query('Boston', None, 7.8689, 126.3734, 1)
+		expected = [
+			"Boston University",
+			"University of Massachusetts Boston",
+			"New England School of Law",
+			"Northeastern University",
+			"Boston College",
+			"Boston College Law School",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_Boston_UK(self):
+		actual = core.query('Boston', None, 52.974, -0.0214, 1)
+		expected = [
+			"Boston University",
+			"University of Massachusetts Boston",
+			"New England School of Law",
+			"Northeastern University",
+			"Boston College",
+			"Boston College Law School",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_London(self):
+		actual = core.query('London', None, None, None, 1)
+		expected = [
+			"University of London",
+			"University of the Arts London",
+			"City University London",
+			"London Metropolitan University",
+			"University of East London",
+			"King's College London",
+			"University of North London",
+			"London School of Economics",
+			"Queen Mary, University of London",
+			"Royal Holloway, University of London",
+			"Imperial College London",
+			"University of London Institute in Paris",
+			"University of West London",
+			"London Guildhall University",
+			"Birkbeck, University of London",
+			"Diplomatic Academy of London",
+			"Goldsmiths, University of London",
+			"SOAS, University of London",
+			"Brunel University London",
+			"London South Bank University",
+			"University of London International Programmes",
+			"Richmond, The American International University in London",
+			"University of East London School of Law and Social Sciences",
+			"Centre for History in Public Health, London School of Hygiene and Tropical Medicine",
+			"University of Western Ontario",
+		]
+		self.assertNames(actual, expected)
+	
+	def test_London_CA(self):
+		actual = core.query('London', 'CA', None, None, 1)
+		expected = ["University of Western Ontario",]
+		self.assertNames(actual, expected)
+	
+	def test_abbreviation_expansion_considering_word_boundaries(self):
+		actual = core.expandAbbreviations('univ Univ univuniv univx xuniv UNIV')
+		expected = 'university university univuniv univx xuniv university'
+		self.assertEqual(actual, expected)
+	
+	def test_some_abbreviations(self):
+		actual = core.expandAbbreviations('chem ACAD of sCI, INST of EngN.')
+		expected = 'chemical academy of science, institute of engineering.'
+		self.assertEqual(actual, expected)
+	
+	def test_abbreviations_no_hits(self):
+		actual = core.expandAbbreviations('UNIV_univ chemacad')
+		expected = 'UNIV_univ chemacad'
+		self.assertEqual(actual, expected)
