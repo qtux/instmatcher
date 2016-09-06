@@ -20,9 +20,9 @@ means to extract information using either the internal geocoder along
 with an external grobid server or by providing self-defined functions.
 '''
 
-from . import core
-from . import geo
-from . import parser
+from .core import query, expandAbbreviations
+from .geo import geocode
+from .parser import grobid
 from .version import __version__
 
 def _appendDoc(docstring):
@@ -66,8 +66,8 @@ def findAll(institute, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 	'''
 	if not institute:
 		return
-	fullName = core.expandAbbreviations(institute)
-	for result in core.query(fullName, alpha2, lat, lon, offset):
+	fullName = expandAbbreviations(institute)
+	for result in query(fullName, alpha2, lat, lon, offset):
 		yield result[0]
 
 @_appendDoc(_find_doc)
@@ -88,7 +88,7 @@ _extract_doc = '''
 '''
 
 @_appendDoc(_extract_doc)
-def extractAll(string, parse=parser.grobid, geocode=geo.geocode):
+def extractAll(string, parse=grobid, geocode=geocode):
 	'''
 	Yield the data extracted from the affiliation string augmented with
 	each compatible geographical location. The generator is sorted in a
@@ -105,7 +105,7 @@ def extractAll(string, parse=parser.grobid, geocode=geo.geocode):
 		yield affiDict
 
 @_appendDoc(_extract_doc)
-def extract(string, parse=parser.grobid, geocode=geo.geocode):
+def extract(string, parse=grobid, geocode=geocode):
 	'''
 	Extract the data from the given affiliation string and augment it
 	with the most likely geographical location.
@@ -114,7 +114,7 @@ def extract(string, parse=parser.grobid, geocode=geo.geocode):
 
 ############################### match function ################################
 
-def match(string, parse=parser.grobid, geocode=geo.geocode, offset=1):
+def match(string, parse=grobid, geocode=geocode, offset=1):
 	'''
 	Find the most accurate institute matching the affiliation string.
 	
