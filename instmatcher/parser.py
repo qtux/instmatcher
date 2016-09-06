@@ -20,23 +20,22 @@ import csv
 from pkg_resources import resource_filename
 
 _url = None
-_codes = None
+codes = {}
+countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
+with open(countryInfo) as csvfile:
+	data = filter(lambda row: not row[0].startswith('#'), csvfile)
+	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
+	for row in reader:
+		codes[row[0]] = row[4]
 
 def init(url):
 	'''
-	Initialise the grobid url and the country code dictionary.
+	Set the URL pointing to the grobid service.
 	
 	:param url: the URL to the grobid service
 	'''
-	global _url, _codes
+	global _url
 	_url = url
-	_codes = {}
-	countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
-	with open(countryInfo) as csvfile:
-		data = filter(lambda row: not row[0].startswith('#'), csvfile)
-		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
-		for row in reader:
-			_codes[row[0]] = row[4]
 
 def grobid(affiliation):
 	'''
@@ -75,7 +74,7 @@ def grobid(affiliation):
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = _codes[countryKey]
+		result['country'] = codes[countryKey]
 	except (AttributeError, KeyError):
 		result['alpha2'] = None
 		result['country'] = None
