@@ -18,9 +18,6 @@ import itertools
 
 class test_core(unittest.TestCase):
 	
-	def setUp(self):
-		core.init()
-	
 	def assertNames(self, actual, expectedNames):
 		scores, actualNames = [], []
 		for item in actual:

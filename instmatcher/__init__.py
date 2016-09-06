@@ -37,13 +37,11 @@ def init(grobidUrl='http://localhost:8080'):
 	'''
 	Initialise modules.
 	
-	This will initialise the module required to search for institutes
-	and the module to search for coordinates of cities.
+	This will initialise the module to search for coordinates of cities.
 	Additionally, the URL pointing to the grobid service is set.
 	
 	:param grobidUrl: the URL to the grobid service
 	'''
-	core.init()
 	geo.init()
 	parser.init(grobidUrl)
 

@@ -22,35 +22,20 @@ from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
 
-_abbreviations = None
-_ix = None
-_instParser = None
-_coordParser = None
+# load the available abbreviations from 'data/abbreviations.csv'
+abbreviations = {}
+source = resource_filename(__name__, 'data/abbreviations.csv')
+with open(source) as csvfile:
+	data = filter(lambda row: not row[0].startswith('#'), csvfile)
+	reader = csv.reader(data)
+	for row in reader:
+		abbreviations[row[0]] = row[1]
 
-def init():
-	'''
-	Initialise the core module.
-
-	Load the available abbreviations from 'data/abbreviations.csv' and
-	load the index along with the parsers required for the institute and
-	coordinate searches.
-	'''
-	
-	# load the available abbreviations from 'data/abbreviations.csv'
-	global _abbreviations, _ix, _instParser, _coordParser
-	_abbreviations = {}
-	source = resource_filename(__name__, 'data/abbreviations.csv')
-	with open(source) as csvfile:
-		data = filter(lambda row: not row[0].startswith('#'), csvfile)
-		reader = csv.reader(data)
-		for row in reader:
-			_abbreviations[row[0]] = row[1]
-	
-	# load the index and create the institute and coordinate query parsers
-	ixPath = resource_filename(__name__, 'data/index')
-	_ix = index.open_dir(ixPath)
-	_instParser = MultifieldParser(['name', 'alias',], _ix.schema)
-	_coordParser = MultifieldParser(['lat', 'lon',], _ix.schema)
+# load the index and create the institute and coordinate query parsers
+ixPath = resource_filename(__name__, 'data/index')
+ix = index.open_dir(ixPath)
+instParser = MultifieldParser(['name', 'alias',], ix.schema)
+coordParser = MultifieldParser(['lat', 'lon',], ix.schema)
 
 def query(institute, alpha2, lat, lon, offset):
 	'''
@@ -72,16 +57,16 @@ def query(institute, alpha2, lat, lon, offset):
 	'''
 	if not institute:
 		return
-	with _ix.searcher() as searcher:
+	with ix.searcher() as searcher:
 		# search for the given institute
-		instQuery = _instParser.parse(institute)
+		instQuery = instParser.parse(institute)
 		filterTerm = Term('alpha2', alpha2) if alpha2 else None
 		instResults = searcher.search(instQuery, limit=None, filter=filterTerm)
 		# try to enhance the search boosting results in the vicinity of lat/lon
 		try:
 			latQueryText = 'lat:[{} to {}]'.format(lat - offset, lat + offset)
 			lonQueryText = 'lon:[{} to {}]'.format(lon - offset, lon + offset)
-			coordQuery = _coordParser.parse(latQueryText + lonQueryText)
+			coordQuery = coordParser.parse(latQueryText + lonQueryText)
 			coordResults = searcher.search(coordQuery, limit=None)
 			instResults.upgrade(coordResults)
 		except TypeError:
@@ -105,6 +90,6 @@ def expandAbbreviations(text):
 	
 	:param text: the text in which abbreviations should be expanded
 	'''
-	for abbrev, expansion in _abbreviations.items():
+	for abbrev, expansion in abbreviations.items():
 		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
 	return text
