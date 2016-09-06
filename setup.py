@@ -177,7 +177,7 @@ setup(
 	keywords='institute affiliation organisation search match',
 	platforms='any',
 	classifiers=[
-		'Development Status :: 3 - Alpha',
+		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: Apache Software License',
 		'Intended Audience :: Developers',
 		'Programming Language :: Python :: 3.5',
