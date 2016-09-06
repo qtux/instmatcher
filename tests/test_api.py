@@ -19,7 +19,6 @@ from .util import GrobidServer
 class test_api(unittest.TestCase):
 	
 	def setUp(self):
-
 		host = 'localhost'
 		port = 8081
 		url = 'http://' + host + ':' + str(port)
