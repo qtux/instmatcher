@@ -17,9 +17,6 @@ from instmatcher import geo
 
 class test_geo(unittest.TestCase):
 	
-	def setUp(self):
-		geo.init()
-	
 	def test_None(self):
 		actual = list(geo.geocode(None, None))
 		expected = []

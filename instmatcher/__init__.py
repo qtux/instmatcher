@@ -35,14 +35,10 @@ def _appendDoc(docstring):
 
 def init(grobidUrl='http://localhost:8080'):
 	'''
-	Initialise modules.
-	
-	This will initialise the module to search for coordinates of cities.
-	Additionally, the URL pointing to the grobid service is set.
+	Set the URL pointing to the grobid service.
 	
 	:param grobidUrl: the URL to the grobid service
 	'''
-	geo.init()
 	parser.init(grobidUrl)
 
 ############################### find functions ################################

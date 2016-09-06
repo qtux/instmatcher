@@ -20,22 +20,10 @@ from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
 
-_ix = None
-_parser = None
-
-def init():
-	'''
-	Initialise the geo module.
-	
-	Create the index if it does not exist or force is set to True and
-	load it along with the parser required for the coordinate search.
-	
-	'''
-	# load the index and create the city/alpha2 query parser
-	global _ix, _parser
-	ixPath = resource_filename(__name__, 'data/geoindex')
-	_ix = index.open_dir(ixPath)
-	_parser = MultifieldParser(['name', 'asci', 'alias',], _ix.schema)
+# load the index and create the city/alpha2 query parser
+ixPath = resource_filename(__name__, 'data/geoindex')
+ix = index.open_dir(ixPath)
+parser = MultifieldParser(['name', 'asci', 'alias',], ix.schema)
 
 def geocode(city, alpha2, **ignore):
 	'''
@@ -49,9 +37,9 @@ def geocode(city, alpha2, **ignore):
 	if not city:
 		return
 	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
-	query = _parser.parse(text)
+	query = parser.parse(text)
 	filterTerm = Term('alpha2', alpha2) if alpha2 else None
-	with _ix.searcher() as searcher:
+	with ix.searcher() as searcher:
 		results = searcher.search(query, limit=None, filter=filterTerm)
 		for hit in results:
 			yield {
