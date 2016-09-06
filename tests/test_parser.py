@@ -195,3 +195,13 @@ class test_parser(unittest.TestCase):
 			'city': 'settlement',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
+	
+	def test_invalid_xml(self):
+		self.server.setResponse(__name__, '<broken tag>')
+		expected = {
+			'institute': None,
+			'alpha2': None,
+			'country': None,
+			'city': None,
+		}
+		self.assertEqual(parser.grobid(__name__), expected)
