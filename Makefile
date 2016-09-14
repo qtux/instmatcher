@@ -37,7 +37,7 @@ $(SHAPE_ZIP):
 	unzip -u $<
 
 $(TARGET_FILE): $(QUERIED_FILE) $(SHAPE_FILES)
-	python3 enhance-institutes.py -src $< -dest $@ -fail $(FAILURE_FILE) -cntr $(COUNTRY_INFO)
+	python3 enhance-institutes.py --src $< --dest $@ --fails $(FAILURE_FILE) --countries $(COUNTRY_INFO)
 
 $(QUERIED_FILE): $(QUERY)
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@

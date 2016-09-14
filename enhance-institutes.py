@@ -111,33 +111,29 @@ def main():
 		description='Enhance institute data using pyCountry and Natural Earth.'
 	)
 	parser.add_argument(
-		'-src',
-		'--source',
+		'--src',
 		default='query.csv',
 		help='the source list (default: %(default)s)'
 	)
 	parser.add_argument(
-		'-dest',
-		'--destination',
+		'--dest',
 		default='institutions.csv',
 		help='the target (enhanced) list (default: %(default)s)'
 	)
 	parser.add_argument(
-		'-fail',
-		'--failures',
+		'--fails',
 		default='failures.csv',
 		help='a list of failed target (enhanced) list (default: %(default)s)'
 	)
 	parser.add_argument(
-		'-cntr',
-		'--country',
+		'--countries',
 		default='countryInfo.txt',
 		help='the geonames list of country details (default: %(default)s)'
 	)
 	args = parser.parse_args()
 	logging.basicConfig(filename='enhance.log',level=logging.INFO)
 	logging.info('Started enhancing institutes at {}'.format(datetime.datetime.now()))
-	enhance(args.source, args.destination, args.failures, args.country)
+	enhance(args.src, args.dest, args.fails, args.countries)
 
 if __name__ == '__main__':
 	main()
