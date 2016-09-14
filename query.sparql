@@ -2,9 +2,10 @@ SELECT
   (SAMPLE(?item) AS ?source)
   (SAMPLE(?name) AS ?name)
   (GROUP_CONCAT(DISTINCT(?altLabel); separator = '; ') AS ?alias)
+  (SAMPLE(?insi) AS ?isni)
+  ('university' as ?type)
   (SAMPLE(?lat) AS ?lat)
   (SAMPLE(?lon) AS ?lon)
-  (SAMPLE(?insi) AS ?isni)
   (SAMPLE(?nation) as ?country)
 WHERE {
   ?item (wdt:P31/wdt:P279*) wd:Q3918.
