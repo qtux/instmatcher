@@ -43,7 +43,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 					country = longName
 				logging.info('Found country name of: {}'.format(hint))
 				return country, alpha2
-
+	
 	# search for a country using the coordinates (Natural Earth data)
 	point = geometry.Point(lon, lat)
 	with fiona.open('ne_10m_admin_0_countries.shp', 'r') as source:
@@ -66,7 +66,14 @@ def getCountry(lat, lon, codes, countries, hint=None):
 	logging.info('Did not find ({}, {}, {})'.format(lat, lon, hint))
 	return None, None
 
-def enhance(src, dest, fail, countryInfo):
+def enhance(src, dest, fail, countryInfo, cacheFile):
+	# load cache
+	cache = {}
+	with open(cacheFile, 'r+') as c:
+		reader = csv.reader(c)
+		for row in reader:
+			cache[(row[0],row[1])] = (row[2], row[3])
+	
 	# load country names and the corresponding ISO 3166-1 alpha-2 code
 	codes, countries = {}, {}
 	with open(countryInfo) as csvfile:
@@ -77,10 +84,11 @@ def enhance(src, dest, fail, countryInfo):
 			codes[row[4]] = row[0]
 	# enhance the data
 	i = 0
-	with open(src, 'r') as s, open(dest, 'w') as d, open(fail, 'w') as f:
+	with open(src, 'r') as s, open(dest, 'w') as d, open(fail, 'w') as f, open(cacheFile, 'a') as c:
 		source = csv.reader(s)
 		destination = csv.writer(d)
 		failures = csv.writer(f)
+		cacheMiss = csv.writer(c)
 		
 		fieldnames = next(source)
 		failures.writerow(fieldnames)
@@ -91,10 +99,14 @@ def enhance(src, dest, fail, countryInfo):
 		destination.writerow(fieldnames)
 		
 		for row in source:
-			hint = row[index['country']]
-			lat = float(row[index['lat']])
-			lon = float(row[index['lon']])
-			country, alpha2 = getCountry(lat, lon, codes, countries, hint)
+			rawLat, rawLon = row[index['lat']], row[index['lon']]
+			try:
+				country, alpha2 = cache[(rawLat, rawLon)]
+			except KeyError:
+				hint = row[index['country']]
+				lat, lon = float(rawLat), float(rawLon)
+				country, alpha2 = getCountry(lat, lon, codes, countries, hint)
+				cacheMiss.writerow([rawLat, rawLon, country, alpha2])
 			if not country:
 				failures.writerow(row)
 				continue
@@ -130,10 +142,15 @@ def main():
 		default='countryInfo.txt',
 		help='the geonames list of country details (default: %(default)s)'
 	)
+	parser.add_argument(
+		'--cache',
+		default='cache.csv',
+		help='the lat/lon to country/alpha2 cache file (default: %(default)s)'
+	)
 	args = parser.parse_args()
 	logging.basicConfig(filename='enhance.log',level=logging.INFO)
 	logging.info('Started enhancing institutes at {}'.format(datetime.datetime.now()))
-	enhance(args.src, args.dest, args.fails, args.countries)
+	enhance(args.src, args.dest, args.fails, args.countries, args.cache)
 
 if __name__ == '__main__':
 	main()
