@@ -155,7 +155,7 @@ class test_core(unittest.TestCase):
 		expected = [
 			"University of London",
 			"University of the Arts London",
-			"City University London",
+			"City, University of London",
 			"London Metropolitan University",
 			"University of East London",
 			"King's College London",
@@ -171,6 +171,7 @@ class test_core(unittest.TestCase):
 			"Diplomatic Academy of London",
 			"Goldsmiths, University of London",
 			"SOAS, University of London",
+			"London School of Theology",
 			"Brunel University London",
 			"London South Bank University",
 			"University of London International Programmes",
