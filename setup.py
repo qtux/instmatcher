@@ -36,6 +36,7 @@ def create_index(procs, multisegment, ixPath):
 		country=STORED,
 		alpha2=ID(stored=True),
 		source=TEXT(stored=True),
+		type=STORED,
 	)
 	ix = index.create_in(ixPath, schema)
 	writer = ix.writer(procs=procs, multisegment=multisegment)
@@ -65,7 +66,7 @@ def create_geoindex(procs, multisegment, ixPath):
 		lat=STORED,
 		lon=STORED,
 		alpha2=ID(stored=True),
-		country=ID(stored=True)
+		country=ID(stored=True),
 	)
 	ix = index.create_in(ixPath, schema)
 	writer = ix.writer(procs=procs, multisegment=multisegment)
