@@ -81,6 +81,7 @@ def query(institute, alpha2, lat, lon, offset):
 				'lon': hit['lon'],
 				'country': hit['country'],
 				'alpha2': hit['alpha2'],
+				'type': hit['type'],
 			}, hit.score
 
 def expandAbbreviations(text):

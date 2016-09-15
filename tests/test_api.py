@@ -65,6 +65,7 @@ class test_api(unittest.TestCase):
 				'lon': '-71.0997',
 				'isni': '',
 				'source': 'http://www.wikidata.org/entity/Q49110',
+				'type': 'university',
 			},{
 				'name': 'University of Massachusetts Boston',
 				'alpha2': 'US',
@@ -73,6 +74,7 @@ class test_api(unittest.TestCase):
 				'lon': '-71.038445',
 				'isni': '',
 				'source': 'http://www.wikidata.org/entity/Q15144',
+				'type': 'university',
 			},{
 				'name': 'Northeastern University',
 				'alpha2': 'US',
@@ -81,6 +83,7 @@ class test_api(unittest.TestCase):
 				'lon': '-71.090277777778',
 				'isni': '',
 				'source': 'http://www.wikidata.org/entity/Q37548',
+				'type': 'university',
 			},
 		]
 		self.assert_find_functions(arg, expected)
@@ -96,6 +99,7 @@ class test_api(unittest.TestCase):
 				'lon': '13.326388888889',
 				'isni': '0000 0001 2195 9817',
 				'source': 'http://www.wikidata.org/entity/Q51985',
+				'type': 'university',
 			}
 		]
 		self.assert_find_functions(arg, expected)
@@ -262,5 +266,6 @@ class test_api(unittest.TestCase):
 			'lon': '-1.2534',
 			'isni': '0000 0004 1936 8948',
 			'source': 'http://www.wikidata.org/entity/Q34433',
+			'type': 'university',
 		}
 		self.assertEqual(instmatcher.match(arg), expected)
