@@ -38,7 +38,7 @@ all: $(TARGET_FILE)
 
 # enhance the queried items adding country information
 $(TARGET_FILE): $(JOINED_RESULT) $(SHAPE_FILES)
-	python3 enhance-institutes.py \
+	python3 query/enhance.py \
 	--src $< \
 	--dest $@ \
 	--fails $(FAILURE_FILE) \
