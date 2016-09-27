@@ -153,6 +153,11 @@ def main():
 		default='cache.csv',
 		help='the lat/lon to country/alpha2 cache file (default: %(default)s)'
 	)
+	parser.add_argument(
+		'--log',
+		default='enhance.log',
+		help='the debug and error message log file (default: %(default)s)'
+	)
 	args = parser.parse_args()
 	
 	# define logging
@@ -165,7 +170,7 @@ def main():
 	stdoutLogger.setFormatter(formatter)
 	root.addHandler(stdoutLogger)
 	# enable logging to a file (debug level)
-	fileLogger=logging.FileHandler('enhance.log', 'w')
+	fileLogger=logging.FileHandler(args.log, 'w')
 	fileLogger.setLevel(logging.DEBUG)
 	fileLogger.setFormatter(formatter)
 	fileLogger.addFilter(logging.Filter('root'))
