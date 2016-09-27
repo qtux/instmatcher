@@ -15,11 +15,13 @@
 .SUFFIXES:
 .PHONY: all clean clean-all
 
+# Wikidata query related variables
 QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
 QUERIES			:= $(wildcard query/*.sparql)
 QUERY_RESULTS	:= $(patsubst %.sparql,%.csv, $(QUERIES))
 JOINED_RESULT	:= query/query.csv
 
+# Natural Earth shapefiles related variables
 NAT_EARTH_URL	:= http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
 SHAPE_PREFIX	:= ne_10m_admin_0_countries
 SHAPE_ZIP		:= $(addprefix $(SHAPE_PREFIX), .zip)
@@ -29,23 +31,29 @@ TARGET_FILE		:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 FAILURE_FILE	:= failures.csv
 
+# create the target file containing a list of organisations
 all: $(TARGET_FILE)
 
-$(SHAPE_ZIP):
-	wget $(NAT_EARTH_URL)/$@
-
-%.cpg %.dbf %.prj %.shp %.shx: %.zip
-	unzip -u $<
-
+# enhance the queried items adding country information
 $(TARGET_FILE): $(JOINED_RESULT) $(SHAPE_FILES)
 	python3 enhance-institutes.py --src $< --dest $@ --fails $(FAILURE_FILE) --countries $(COUNTRY_INFO)
 
+# join the retrieved csv files into a single file
 $(JOINED_RESULT): $(QUERY_RESULTS)
 	head -1 $< > $@
 	tail -n +2 -q $+ >> $@
 
+# retrieve data from WikiData as a csv file
 %.csv: %.sparql
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@
+
+# extract the shapefiles
+%.cpg %.dbf %.prj %.shp %.shx: %.zip
+	unzip -u $<
+
+# download the shapefiles
+$(SHAPE_ZIP):
+	wget $(NAT_EARTH_URL)/$@
 
 clean:
 	rm -rf $(SHAPE_FILES)
