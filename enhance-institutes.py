@@ -17,6 +17,7 @@ import fiona
 from shapely import geometry
 import argparse
 import logging
+import sys
 import datetime
 
 def getCountry(lat, lon, codes, countries, hint=None):
@@ -24,7 +25,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 	try:
 		alpha2 = codes[hint]
 		country = hint
-		logging.info('Found alpha-2 code of {}'.format(hint))
+		logging.debug('Found alpha-2 code of {}'.format(hint))
 		return country, alpha2
 	except KeyError:
 		pass
@@ -41,7 +42,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 				except KeyError:
 					alpha2 = None
 					country = longName
-				logging.info('Found country name of: {}'.format(hint))
+				logging.debug('Found country name of: {}'.format(hint))
 				return country, alpha2
 	
 	# search for a country using the coordinates (Natural Earth data)
@@ -59,11 +60,11 @@ def getCountry(lat, lon, codes, countries, hint=None):
 						alpha2 = codes[country]
 					except KeyError:
 						alpha2 = None
-				logging.info('Found location of ({}, {})'.format(lat, lon))
+				logging.debug('Found location of ({}, {})'.format(lat, lon))
 				return country, alpha2
 	
 	# return None if no country could be associated
-	logging.info('Did not find ({}, {}, {})'.format(lat, lon, hint))
+	logging.debug('Did not find ({}, {}, {})'.format(lat, lon, hint))
 	return None, None
 
 def enhance(src, dest, fail, countryInfo, cacheFile):
@@ -72,7 +73,10 @@ def enhance(src, dest, fail, countryInfo, cacheFile):
 	with open(cacheFile, 'r+') as c:
 		reader = csv.reader(c)
 		for row in reader:
-			cache[(row[0],row[1])] = (row[2], row[3])
+			key = (row[0],row[1])
+			if key in cache:
+				logging.error('Key is not unique: {}'.format(key))
+			cache[key] = (row[2], row[3])
 	
 	# load country names and the corresponding ISO 3166-1 alpha-2 code
 	codes, countries = {}, {}
@@ -117,9 +121,10 @@ def enhance(src, dest, fail, countryInfo, cacheFile):
 			
 			i += 1
 			if i % 100 == 0:
-				print('processed {} rows'.format(i))
+				logging.info('processed {} rows'.format(i))
 
 def main():
+	# parse arguments
 	parser = argparse.ArgumentParser(
 		description='Enhance institute data using pyCountry and Natural Earth.'
 	)
@@ -149,8 +154,24 @@ def main():
 		help='the lat/lon to country/alpha2 cache file (default: %(default)s)'
 	)
 	args = parser.parse_args()
-	logging.basicConfig(filename='enhance.log',level=logging.INFO)
-	logging.info('Started enhancing institutes at {}'.format(datetime.datetime.now()))
+	
+	# define logging
+	root = logging.getLogger()
+	root.setLevel(logging.DEBUG)
+	formatter = logging.Formatter(logging.BASIC_FORMAT)
+	# enable logging to stdout (info level)
+	stdoutLogger=logging.StreamHandler(sys.stdout)
+	stdoutLogger.setLevel(logging.INFO)
+	stdoutLogger.setFormatter(formatter)
+	root.addHandler(stdoutLogger)
+	# enable logging to a file (debug level)
+	fileLogger=logging.FileHandler('enhance.log', 'w')
+	fileLogger.setLevel(logging.DEBUG)
+	fileLogger.setFormatter(formatter)
+	fileLogger.addFilter(logging.Filter('root'))
+	root.addHandler(fileLogger)
+	
+	# start enhancing
 	enhance(args.src, args.dest, args.fails, args.countries, args.cache)
 
 if __name__ == '__main__':
