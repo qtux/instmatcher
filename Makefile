@@ -23,13 +23,13 @@ JOINED_RESULT	:= query/query.csv
 
 # Natural Earth shapefiles related variables
 NAT_EARTH_URL	:= http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
-SHAPE_PREFIX	:= ne_10m_admin_0_countries
+SHAPE_PREFIX	:= query/ne_10m_admin_0_countries
 SHAPE_ZIP		:= $(addprefix $(SHAPE_PREFIX), .zip)
 SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
 TARGET_FILE		:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
-FAILURE_FILE	:= failures.csv
+FAILURE_FILE	:= query/failures.csv
 
 # create the target file containing a list of organisations
 all: $(TARGET_FILE)
@@ -49,11 +49,11 @@ $(JOINED_RESULT): $(QUERY_RESULTS)
 
 # extract the shapefiles
 %.cpg %.dbf %.prj %.shp %.shx: %.zip
-	unzip -u $<
+	unzip -u $< -d $(dir $<)
 
 # download the shapefiles
 $(SHAPE_ZIP):
-	wget $(NAT_EARTH_URL)/$@
+	wget $(NAT_EARTH_URL)/$(notdir $@) -P $(dir $@)
 
 clean:
 	rm -rf $(SHAPE_FILES)

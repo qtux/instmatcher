@@ -30,7 +30,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 		pass
 	
 	# try to find the hint as a country name (Natural Earth data)
-	with fiona.open('ne_10m_admin_0_countries.shp', 'r') as source:
+	with fiona.open('query/ne_10m_admin_0_countries.shp', 'r') as source:
 		for record in source:
 			name = record['properties']['NAME']
 			longName = record['properties']['NAME_LONG']
@@ -46,7 +46,7 @@ def getCountry(lat, lon, codes, countries, hint=None):
 	
 	# search for a country using the coordinates (Natural Earth data)
 	point = geometry.Point(lon, lat)
-	with fiona.open('ne_10m_admin_0_countries.shp', 'r') as source:
+	with fiona.open('query/ne_10m_admin_0_countries.shp', 'r') as source:
 		for record in source:
 			shape = geometry.asShape(record['geometry'])
 			if shape.contains(point):
