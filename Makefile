@@ -16,7 +16,9 @@
 .PHONY: all clean clean-all
 
 QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
-QUERY			:= query.sparql
+QUERIES			:= $(wildcard query/*.sparql)
+QUERY_RESULTS	:= $(patsubst %.sparql,%.csv, $(QUERIES))
+JOINED_RESULT	:= query/query.csv
 
 NAT_EARTH_URL	:= http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
 SHAPE_PREFIX	:= ne_10m_admin_0_countries
@@ -25,7 +27,6 @@ SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
 TARGET_FILE		:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
-QUERIED_FILE	:= query.csv
 FAILURE_FILE	:= failures.csv
 
 all: $(TARGET_FILE)
@@ -36,17 +37,21 @@ $(SHAPE_ZIP):
 %.cpg %.dbf %.prj %.shp %.shx: %.zip
 	unzip -u $<
 
-$(TARGET_FILE): $(QUERIED_FILE) $(SHAPE_FILES)
+$(TARGET_FILE): $(JOINED_RESULT) $(SHAPE_FILES)
 	python3 enhance-institutes.py --src $< --dest $@ --fails $(FAILURE_FILE) --countries $(COUNTRY_INFO)
 
-$(QUERIED_FILE): $(QUERY)
+$(JOINED_RESULT): $(QUERY_RESULTS)
+	head -1 $< > $@
+	tail -n +2 -q $+ >> $@
+
+%.csv: %.sparql
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@
 
 clean:
 	rm -rf $(SHAPE_FILES)
-	rm -rf $(QUERIED_FILE)
+	rm -rf $(QUERY_RESULTS)
 
 clean-all:
 	rm -rf $(SHAPE_PREFIX).*
-	rm -rf $(QUERIED_FILE)
+	rm -rf $(QUERY_RESULTS)
 	rm -rf $(FAILURE_FILE)
