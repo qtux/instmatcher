@@ -13,19 +13,13 @@
 # limitations under the License.
 
 .SUFFIXES:
-.PHONY: all clean clean-all
+.PHONY: all clean
 
 # Wikidata query related variables
 QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
 QUERIES			:= $(wildcard query/*.sparql)
 QUERY_RESULTS	:= $(patsubst %.sparql,%.csv, $(QUERIES))
 JOINED_RESULT	:= query/query.csv
-
-# Natural Earth shapefiles related variables
-NAT_EARTH_URL	:= http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural
-SHAPE_PREFIX	:= query/ne_10m_admin_0_countries
-SHAPE_ZIP		:= $(addprefix $(SHAPE_PREFIX), .zip)
-SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 
 TARGET_FILE		:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
@@ -34,7 +28,7 @@ COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 all: $(TARGET_FILE)
 
 # enhance the queried items adding country information
-$(TARGET_FILE): $(JOINED_RESULT) $(SHAPE_FILES)
+$(TARGET_FILE): $(JOINED_RESULT)
 	python3 query/enhance.py \
 	--src $< \
 	--dest $@ \
@@ -49,18 +43,5 @@ $(JOINED_RESULT): $(QUERY_RESULTS)
 %.csv: %.sparql
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@
 
-# extract the shapefiles
-%.cpg %.dbf %.prj %.shp %.shx: %.zip
-	unzip -u $< -d $(dir $<)
-
-# download the shapefiles
-$(SHAPE_ZIP):
-	wget $(NAT_EARTH_URL)/$(notdir $@) -P $(dir $@)
-
 clean:
-	rm -rf $(SHAPE_FILES)
-	rm -rf $(QUERY_RESULTS)
-
-clean-all:
-	rm -rf $(SHAPE_PREFIX).*
 	rm -rf $(QUERY_RESULTS)

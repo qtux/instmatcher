@@ -11,14 +11,6 @@ __pycache__/
 MAIN_WRITELOCK
 
 # intermediate data used to generate the list of institutes
-/query/*.cpg
-/query/*.dbf
-/query/*.prj
-/query/*.shp
-/query/*.shx
-/query/*.README.html
-/query/*.VERSION.txt
-/query/*.zip
 /query/*.csv
 
 # output folder of the documentation
