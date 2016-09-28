@@ -17,7 +17,7 @@ import argparse
 import sys
 import reverse_geocoder as rg
 
-def enhance(src, dest, fail, countryInfo):
+def enhance(src, dest, countryInfo):
 	# load country names indexed by the corresponding ISO 3166-1 alpha-2 code
 	countries = {}
 	with open(countryInfo) as csvfile:
@@ -68,11 +68,6 @@ def main():
 		help='the target (enhanced) list (default: %(default)s)'
 	)
 	parser.add_argument(
-		'--fails',
-		default='failures.csv',
-		help='a list of failed target (enhanced) list (default: %(default)s)'
-	)
-	parser.add_argument(
 		'--countries',
 		default='countryInfo.txt',
 		help='the geonames list of country details (default: %(default)s)'
@@ -80,7 +75,7 @@ def main():
 	args = parser.parse_args()
 	
 	# start enhancing
-	enhance(args.src, args.dest, args.fails, args.countries)
+	enhance(args.src, args.dest, args.countries)
 
 if __name__ == '__main__':
 	main()
