@@ -19,38 +19,45 @@ import reverse_geocoder as rg
 
 def enhance(src, dest, countryInfo):
 	# load country names indexed by the corresponding ISO 3166-1 alpha-2 code
-	countries = {}
+	countryOf = {}
 	with open(countryInfo) as csvfile:
 		data = filter(lambda row: not row[0].startswith('#'), csvfile)
 		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 		for row in reader:
-			countries[row[0]] = row[4]
+			countryOf[row[0]] = row[4]
 	
-	# enhance the data
-	i = 0
-	with open(src, 'r') as s, open(dest, 'w') as d:
+	# store fieldnames and organisations
+	with open(src, 'r') as s:
 		source = csv.reader(s)
-		destination = csv.writer(d)
-		
 		fieldnames = next(source)
 		fieldnames.append('alpha2')
-		index = {}
-		for field in fieldnames:
-			index[field] = fieldnames.index(field)
+		organisations = list(source)
+	
+	# create the index of the fieldnames
+	index = {}
+	for name in fieldnames:
+		index[name] = fieldnames.index(name)
+	
+	# store the coordinates of every organisation in a separate list
+	coords = []
+	for row in organisations:
+		latLon = float(row[index['lat']]), float(row[index['lon']])
+		coords.append(latLon)
+	
+	# reverse geocode the coordinates and store the ISO 3166-1 alpha-2 code
+	codes = [item['cc'] for item in rg.search(coords)]
+	# retrieve the country name based on the ISO 3166-1 alpha-2 code
+	countries = [countryOf[item] for item in codes]
+	# combine the results
+	for org, country, code in zip(organisations, countries, codes):
+		org[index['country']] = country
+		org.append(code)
+	
+	# write the results
+	with open(dest, 'w') as d:
+		destination = csv.writer(d)
 		destination.writerow(fieldnames)
-		
-		for row in source:
-			lat = float(row[index['lat']])
-			lon = float(row[index['lon']])
-			result = rg.get((lat, lon))
-			alpha2 = result['cc']
-			country = countries[alpha2]
-			row[index['country']] = country
-			row.append(alpha2)
-			destination.writerow(row)
-			i += 1
-			if i % 100 == 0:
-				print('processed {} rows'.format(i))
+		destination.writerows(organisations)
 
 def main():
 	# parse arguments
