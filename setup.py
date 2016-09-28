@@ -165,8 +165,7 @@ setup(
 	],
 	extras_require={
 		'data':[
-			'fiona>=1.7.0',
-			'shapely>=1.5.16',
+			'reverse-geocoder>=1.5.1',
 		],
 		'docs':[
 			'Sphinx>=1.4.5',

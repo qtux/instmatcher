@@ -30,7 +30,6 @@ SHAPE_FILES		:= $(addprefix $(SHAPE_PREFIX), .cpg .dbf .prj .shp .shx)
 TARGET_FILE		:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 FAILURE_FILE	:= query/failures.csv
-CACHE_FILE		:= cache.csv
 LOG_FILE		:= query/enhance.log
 
 # create the target file containing a list of organisations
@@ -43,7 +42,6 @@ $(TARGET_FILE): $(JOINED_RESULT) $(SHAPE_FILES)
 	--dest $@ \
 	--fails $(FAILURE_FILE) \
 	--countries $(COUNTRY_INFO) \
-	--cache $(CACHE_FILE) \
 	--log $(LOG_FILE)
 
 # join the retrieved csv files into a single file

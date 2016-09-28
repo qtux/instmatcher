@@ -13,89 +13,27 @@
 # limitations under the License.
 
 import csv
-import fiona
-from shapely import geometry
 import argparse
 import logging
 import sys
-import datetime
+import reverse_geocoder as rg
 
-def getCountry(lat, lon, codes, countries, hint=None):
-	# try to find the hint as a country name (geonames.org data)
-	try:
-		alpha2 = codes[hint]
-		country = hint
-		logging.debug('Found alpha-2 code of {}'.format(hint))
-		return country, alpha2
-	except KeyError:
-		pass
-	
-	# try to find the hint as a country name (Natural Earth data)
-	with fiona.open('query/ne_10m_admin_0_countries.shp', 'r') as source:
-		for record in source:
-			name = record['properties']['NAME']
-			longName = record['properties']['NAME_LONG']
-			if name == hint or longName == hint:
-				alpha2 = record['properties']['ISO_A2']
-				try:
-					country = countries[alpha2]
-				except KeyError:
-					alpha2 = None
-					country = longName
-				logging.debug('Found country name of: {}'.format(hint))
-				return country, alpha2
-	
-	# search for a country using the coordinates (Natural Earth data)
-	point = geometry.Point(lon, lat)
-	with fiona.open('query/ne_10m_admin_0_countries.shp', 'r') as source:
-		for record in source:
-			shape = geometry.asShape(record['geometry'])
-			if shape.contains(point):
-				alpha2 = record['properties']['ISO_A2']
-				try:
-					country = countries[alpha2]
-				except KeyError:
-					country = record['properties']['NAME_LONG']
-					try:
-						alpha2 = codes[country]
-					except KeyError:
-						alpha2 = None
-				logging.debug('Found location of ({}, {})'.format(lat, lon))
-				return country, alpha2
-	
-	# return None if no country could be associated
-	logging.debug('Did not find ({}, {}, {})'.format(lat, lon, hint))
-	return None, None
-
-def enhance(src, dest, fail, countryInfo, cacheFile):
-	# load cache
-	cache = {}
-	with open(cacheFile, 'r+') as c:
-		reader = csv.reader(c)
-		for row in reader:
-			key = (row[0],row[1])
-			if key in cache:
-				logging.error('Key is not unique: {}'.format(key))
-			cache[key] = (row[2], row[3])
-	
-	# load country names and the corresponding ISO 3166-1 alpha-2 code
-	codes, countries = {}, {}
+def enhance(src, dest, fail, countryInfo):
+	# load country names indexed by the corresponding ISO 3166-1 alpha-2 code
+	countries = {}
 	with open(countryInfo) as csvfile:
 		data = filter(lambda row: not row[0].startswith('#'), csvfile)
 		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 		for row in reader:
 			countries[row[0]] = row[4]
-			codes[row[4]] = row[0]
+	
 	# enhance the data
 	i = 0
-	with open(src, 'r') as s, open(dest, 'w') as d, open(fail, 'w') as f, open(cacheFile, 'a') as c:
+	with open(src, 'r') as s, open(dest, 'w') as d:
 		source = csv.reader(s)
 		destination = csv.writer(d)
-		failures = csv.writer(f)
-		cacheMiss = csv.writer(c)
 		
 		fieldnames = next(source)
-		failures.writerow(fieldnames)
 		fieldnames.append('alpha2')
 		index = {}
 		for field in fieldnames:
@@ -103,23 +41,14 @@ def enhance(src, dest, fail, countryInfo, cacheFile):
 		destination.writerow(fieldnames)
 		
 		for row in source:
-			rawLat, rawLon = row[index['lat']], row[index['lon']]
-			try:
-				country, alpha2 = cache[(rawLat, rawLon)]
-			except KeyError:
-				hint = row[index['country']]
-				lat, lon = float(rawLat), float(rawLon)
-				country, alpha2 = getCountry(lat, lon, codes, countries, hint)
-				if country and alpha2:
-					cacheMiss.writerow([rawLat, rawLon, country, alpha2])
-					cache[(rawLat, rawLon)] = country, alpha2
-			if not country:
-				failures.writerow(row)
-				continue
+			lat = float(row[index['lat']])
+			lon = float(row[index['lon']])
+			result = rg.get((lat, lon))
+			alpha2 = result['cc']
+			country = countries[alpha2]
 			row[index['country']] = country
 			row.append(alpha2)
 			destination.writerow(row)
-			
 			i += 1
 			if i % 100 == 0:
 				logging.info('processed {} rows'.format(i))
@@ -127,7 +56,7 @@ def enhance(src, dest, fail, countryInfo, cacheFile):
 def main():
 	# parse arguments
 	parser = argparse.ArgumentParser(
-		description='Enhance institute data using pyCountry and Natural Earth.'
+		description='Enhance institute data using reverse-geocoder.'
 	)
 	parser.add_argument(
 		'--src',
@@ -148,11 +77,6 @@ def main():
 		'--countries',
 		default='countryInfo.txt',
 		help='the geonames list of country details (default: %(default)s)'
-	)
-	parser.add_argument(
-		'--cache',
-		default='cache.csv',
-		help='the lat/lon to country/alpha2 cache file (default: %(default)s)'
 	)
 	parser.add_argument(
 		'--log',
@@ -178,7 +102,7 @@ def main():
 	root.addHandler(fileLogger)
 	
 	# start enhancing
-	enhance(args.src, args.dest, args.fails, args.countries, args.cache)
+	enhance(args.src, args.dest, args.fails, args.countries)
 
 if __name__ == '__main__':
 	main()
