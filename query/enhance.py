@@ -30,6 +30,7 @@ def enhance(src, dest, countryInfo):
 	with open(src, 'r') as s:
 		source = csv.reader(s)
 		fieldnames = next(source)
+		fieldnames.append('country')
 		fieldnames.append('alpha2')
 		organisations = list(source)
 	
@@ -50,7 +51,7 @@ def enhance(src, dest, countryInfo):
 	countries = [countryOf[item] for item in codes]
 	# combine the results
 	for org, country, code in zip(organisations, countries, codes):
-		org[index['country']] = country
+		org.append(country)
 		org.append(code)
 	
 	# write the results

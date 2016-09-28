@@ -6,7 +6,6 @@ SELECT
   ('research_institute' as ?type)
   (SAMPLE(?lat) AS ?lat)
   (SAMPLE(?lon) AS ?lon)
-  (SAMPLE(?nation) as ?country)
 WHERE {
   ?item (wdt:P31/wdt:P279*) wd:Q31855.
   ?item rdfs:label ?name FILTER (lang(?name) = 'en')
@@ -19,10 +18,6 @@ WHERE {
   ?coordinate_node wikibase:geoLongitude ?lon .
   OPTIONAL {
     ?item wdt:P213 ?insi.
-  }
-  OPTIONAL {
-    ?item wdt:P17 ?country.
-    ?country rdfs:label ?nation FILTER (lang(?nation) = 'en')
   }
 }
 GROUP BY ?item
