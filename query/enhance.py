@@ -112,6 +112,7 @@ def enhance(src, dest, fail, countryInfo, cacheFile):
 				country, alpha2 = getCountry(lat, lon, codes, countries, hint)
 				if country and alpha2:
 					cacheMiss.writerow([rawLat, rawLon, country, alpha2])
+					cache[(rawLat, rawLon)] = country, alpha2
 			if not country:
 				failures.writerow(row)
 				continue
