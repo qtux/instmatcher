@@ -14,7 +14,6 @@
 
 import csv
 import argparse
-import logging
 import sys
 import reverse_geocoder as rg
 
@@ -51,7 +50,7 @@ def enhance(src, dest, fail, countryInfo):
 			destination.writerow(row)
 			i += 1
 			if i % 100 == 0:
-				logging.info('processed {} rows'.format(i))
+				print('processed {} rows'.format(i))
 
 def main():
 	# parse arguments
@@ -78,28 +77,7 @@ def main():
 		default='countryInfo.txt',
 		help='the geonames list of country details (default: %(default)s)'
 	)
-	parser.add_argument(
-		'--log',
-		default='enhance.log',
-		help='the debug and error message log file (default: %(default)s)'
-	)
 	args = parser.parse_args()
-	
-	# define logging
-	root = logging.getLogger()
-	root.setLevel(logging.DEBUG)
-	formatter = logging.Formatter(logging.BASIC_FORMAT)
-	# enable logging to stdout (info level)
-	stdoutLogger=logging.StreamHandler(sys.stdout)
-	stdoutLogger.setLevel(logging.INFO)
-	stdoutLogger.setFormatter(formatter)
-	root.addHandler(stdoutLogger)
-	# enable logging to a file (debug level)
-	fileLogger=logging.FileHandler(args.log, 'w')
-	fileLogger.setLevel(logging.DEBUG)
-	fileLogger.setFormatter(formatter)
-	fileLogger.addFilter(logging.Filter('root'))
-	root.addHandler(fileLogger)
 	
 	# start enhancing
 	enhance(args.src, args.dest, args.fails, args.countries)

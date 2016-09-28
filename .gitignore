@@ -20,7 +20,6 @@ MAIN_WRITELOCK
 /query/*.VERSION.txt
 /query/*.zip
 /query/*.csv
-/query/*.log
 
 # output folder of the documentation
 /docs/_build
