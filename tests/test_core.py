@@ -52,6 +52,7 @@ class test_core(unittest.TestCase):
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
+			"European Organization for Nuclear Research",
 		]
 		self.assertNames(actual, expected)
 	
@@ -69,6 +70,7 @@ class test_core(unittest.TestCase):
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
+			"European Organization for Nuclear Research",
 		]
 		self.assertNames(actual, expected)
 	
@@ -91,9 +93,19 @@ class test_core(unittest.TestCase):
 		expected = [
 			"Free University of Berlin",
 			"Technical University of Berlin",
+			"Social Science Research Center Berlin",
 			"Humboldt University of Berlin",
+			"Charité",
+			"Bethanien (Berlin)",
 			"VLB Berlin",
+			"Institute for Advanced Study",
+			"American Academy in Berlin",
+			"Helmholtz-Zentrum Berlin",
+			"Zuse Institute Berlin",
 			"SRH Hochschule Berlin",
+			"Centre for Historical Research in Berlin",
+			"Ferdinand-Braun-Institut",
+			"Children's follow-up Clinic (Kindernachsorgeklinik) Berlin-Brandenburg",
 		]
 		self.assertNames(actual, expected)
 	
@@ -107,9 +119,12 @@ class test_core(unittest.TestCase):
 		expected = [
 			"Boston University",
 			"University of Massachusetts Boston",
+			"Boston Children's Hospital",
 			"New England School of Law",
 			"Northeastern University",
 			"Boston College",
+			"Boston Psychopathic Hospital",
+			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
 		self.assertNames(actual, expected)
@@ -119,9 +134,12 @@ class test_core(unittest.TestCase):
 		expected = [
 			"Boston University",
 			"University of Massachusetts Boston",
+			"Boston Children's Hospital",
 			"New England School of Law",
 			"Northeastern University",
 			"Boston College",
+			"Boston Psychopathic Hospital",
+			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
 		self.assertNames(actual, expected)
@@ -131,9 +149,12 @@ class test_core(unittest.TestCase):
 		expected = [
 			"Boston University",
 			"University of Massachusetts Boston",
+			"Boston Children's Hospital",
 			"New England School of Law",
 			"Northeastern University",
 			"Boston College",
+			"Boston Psychopathic Hospital",
+			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
 		self.assertNames(actual, expected)
@@ -143,9 +164,12 @@ class test_core(unittest.TestCase):
 		expected = [
 			"Boston University",
 			"University of Massachusetts Boston",
+			"Boston Children's Hospital",
 			"New England School of Law",
 			"Northeastern University",
 			"Boston College",
+			"Boston Psychopathic Hospital",
+			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
 		self.assertNames(actual, expected)
@@ -160,6 +184,7 @@ class test_core(unittest.TestCase):
 			"University of East London",
 			"King's College London",
 			"University of North London",
+			"London School of Hygiene & Tropical Medicine",
 			"London School of Economics",
 			"Queen Mary, University of London",
 			"Royal Holloway, University of London",
@@ -179,6 +204,19 @@ class test_core(unittest.TestCase):
 			"University of East London School of Law and Social Sciences",
 			"Centre for History in Public Health, London School of Hygiene and Tropical Medicine",
 			"University of Western Ontario",
+			"University College Hospital",
+			"London Centre for Nanotechnology",
+			"London Research Institute",
+			"London Chest Hospital",
+			"London Lock Hospital",
+			"Royal London Hospital",
+			"London Bridge Hospital",
+			"Wellington Hospital, London",
+			"St. Mary's Hospital",
+			"London Road Community Hospital",
+			"St. Anthony's Hospital, London",
+			"King George Hospital, London",
+			"Royal London Hospital for Integrated Medicine",
 		]
 		self.assertNames(actual, expected)
 	
