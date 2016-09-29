@@ -13,7 +13,6 @@
 # limitations under the License.
 
 .SUFFIXES:
-.PHONY: organisations clean
 
 # Wikidata query related variables
 QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
@@ -24,14 +23,12 @@ ORGANISATIONS	:= instmatcher/data/institutes.csv
 COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 
 # create the target file containing a list of organisations
+.PHONY: organisations
 organisations: $(ORGANISATIONS)
 
 # enhance the queried items adding country information
 $(ORGANISATIONS): $(JOINED_RESULT)
-	python3 query/enhance.py \
-	--src $< \
-	--dest $@ \
-	--countries $(COUNTRY_INFO)
+	python3 query/enhance.py --src $< --dest $@ --countries $(COUNTRY_INFO)
 
 # join the retrieved csv files into a single file
 $(JOINED_RESULT): $(QUERY_RESULTS)
@@ -42,5 +39,13 @@ $(JOINED_RESULT): $(QUERY_RESULTS)
 %.csv: %.sparql
 	curl -G -H "Accept: text/csv" $(QUERY_URL) --data-urlencode query@$< > $@
 
+# remove intermediately created files
+.PHONY: clean
 clean:
 	rm -rf $(QUERY_RESULTS)
+	rm -rf $(JOINED_RESULT)
+
+# remove every created file
+.PHONY: clean-all
+clean-all: clean
+	rm -rf $(ORGANISATIONS)
