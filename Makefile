@@ -49,3 +49,14 @@ clean:
 .PHONY: clean-all
 clean-all: clean
 	rm -rf $(ORGANISATIONS)
+
+# run the unit tests
+.PHONY: test
+test:
+	python3 setup.py test
+
+# remove old indices before running unit tests --> force index recreation
+.PHONY: test-recreate-indices
+test-recreate-indices:
+	rm -rf $(wildcard instmatcher/data/*index)
+	python3 setup.py test
