@@ -18,16 +18,6 @@ import itertools
 
 class test_core(unittest.TestCase):
 	
-	def assertNames(self, actual, expectedNames):
-		scores, actualNames = [], []
-		for item in actual:
-			scores.append(item[1])
-			actualNames.append(item[0]['name'])
-		if len(scores) > len(set(scores)):
-			self.assertCountEqual(actualNames, expectedNames)
-		else:
-			self.assertSequenceEqual(actualNames, expectedNames)
-	
 	def test_None_combinations(self):
 		combinations = [
 			['Fantasia', None],
@@ -43,54 +33,60 @@ class test_core(unittest.TestCase):
 	
 	def test_misspelled(self):
 		actual = core.query('Whasington', None, None, None, 1)
-		expected = []
-		self.assertNames(actual, expected)
+		expectedNames = []
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_zero_search_radius(self):
 		actual = core.query('Geneva', None, 0, 0, 0)
-		expected = [
+		expectedNames = [
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
 			"European Organization for Nuclear Research",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_bad_coord_param(self):
 		actual = core.query('Pisa', None, None, float('inf'), 1)
-		expected = [
+		expectedNames = [
 			"University of Pisa",
 			"Scuola Normale Superiore",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_illegal_coord_param(self):
 		actual = core.query('Geneva', None, '120', {'lon':0}, 1)
-		expected = [
+		expectedNames = [
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
 			"European Organization for Nuclear Research",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_impossible_coord_param(self):
 		actual = core.query('Lisbon', None, 1000, 2000, 1)
-		expected = [
+		expectedNames = [
 			"University of Lisbon",
 			"Technical University of Lisbon",
 			"ISCTE – Lisbon University Institute",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_TU_Berlin(self):
 		actual = core.query('TU Berlin', None, None, None, 1)
-		expected = ["Technical University of Berlin",]
-		self.assertNames(actual, expected)
+		expectedNames = ["Technical University of Berlin",]
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_Berlin(self):
 		actual = core.query('Berlin', None, None, None, 1)
-		expected = [
+		expectedNames = [
 			"Free University of Berlin",
 			"Technical University of Berlin",
 			"Social Science Research Center Berlin",
@@ -107,16 +103,21 @@ class test_core(unittest.TestCase):
 			"Ferdinand-Braun-Institut",
 			"Children's follow-up Clinic (Kindernachsorgeklinik) Berlin-Brandenburg",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_FU_Berlin(self):
 		actual = core.query('FU Berlin', None, None, None, 1)
-		expected = ["Free University of Berlin",]
-		self.assertNames(actual, expected)
+		expectedNames = ["Free University of Berlin",]
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_Boston_no_coords(self):
 		actual = core.query('Boston', None, None, None, 1)
-		expected = [
+		expectedNames = [
 			"Boston University",
 			"University of Massachusetts Boston",
 			"Boston Children's Hospital",
@@ -127,11 +128,15 @@ class test_core(unittest.TestCase):
 			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_Boston_USA(self):
 		actual = core.query('Boston', None, 42.358056, -71.063611, 1)
-		expected = [
+		expectedNames = [
 			"Boston University",
 			"University of Massachusetts Boston",
 			"Boston Children's Hospital",
@@ -142,11 +147,15 @@ class test_core(unittest.TestCase):
 			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_Boston_Philippines(self):
 		actual = core.query('Boston', None, 7.8689, 126.3734, 1)
-		expected = [
+		expectedNames = [
 			"Boston University",
 			"University of Massachusetts Boston",
 			"Boston Children's Hospital",
@@ -157,11 +166,15 @@ class test_core(unittest.TestCase):
 			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_Boston_UK(self):
 		actual = core.query('Boston', None, 52.974, -0.0214, 1)
-		expected = [
+		expectedNames = [
 			"Boston University",
 			"University of Massachusetts Boston",
 			"Boston Children's Hospital",
@@ -172,11 +185,15 @@ class test_core(unittest.TestCase):
 			"Boston Regional Medical Center",
 			"Boston College Law School",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_London(self):
 		actual = core.query('London', None, None, None, 1)
-		expected = [
+		expectedNames = [
 			"University of London",
 			"University of the Arts London",
 			"City, University of London",
@@ -218,12 +235,17 @@ class test_core(unittest.TestCase):
 			"King George Hospital, London",
 			"Royal London Hospital for Integrated Medicine",
 		]
-		self.assertNames(actual, expected)
+		actualNames = [item[0]['name'] for item in actual]
+		try:
+			self.assertSequenceEqual(actualNames, expectedNames)
+		except AssertionError:
+			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_London_CA(self):
 		actual = core.query('London', 'CA', None, None, 1)
-		expected = ["University of Western Ontario",]
-		self.assertNames(actual, expected)
+		expectedNames = ["University of Western Ontario",]
+		actualNames = [item[0]['name'] for item in actual]
+		self.assertSequenceEqual(actualNames, expectedNames)
 	
 	def test_abbreviation_expansion_considering_word_boundaries(self):
 		actual = core.expandAbbreviations('univ Univ univuniv univx xuniv UNIV')
