@@ -44,7 +44,13 @@ def grobid(affiliation):
 	:param affiliation: the affiliation string to be parsed
 	'''
 	# default return value
-	result = dict.fromkeys(['institution', 'city', 'alpha2', 'country',])
+	result = dict.fromkeys([
+		'institution',
+		'city',
+		'alpha2',
+		'country',
+		'region',
+	])
 	
 	# let grobid process the given affiliation string
 	try:
@@ -85,5 +91,11 @@ def grobid(affiliation):
 		result['city'] = root.find('./affiliation/address/settlement').text
 	except AttributeError:
 		result['city'] = None
+	
+	# try to find the region
+	try:
+		result['region'] = root.find('./affiliation/address/region').text
+	except AttributeError:
+		result['region'] = None
 	
 	return result

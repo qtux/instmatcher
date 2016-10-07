@@ -112,6 +112,7 @@ class test_api(unittest.TestCase):
 				'city': None,
 				'alpha2': None,
 				'country': None,
+				'region': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -124,6 +125,7 @@ class test_api(unittest.TestCase):
 				'city': None,
 				'alpha2': None,
 				'country': None,
+				'region': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -136,6 +138,7 @@ class test_api(unittest.TestCase):
 				<orgName type="institution">Charles University</orgName>
 				<address>
 					<settlement>Prague</settlement>
+					<region>Prague</region>
 				</address>
 			</affiliation>'''
 		)
@@ -147,6 +150,7 @@ class test_api(unittest.TestCase):
 				'country': 'Czechia',
 				'lat': 50.08804,
 				'lon': 14.42076,
+				'region': 'Prague',
 			},{
 				'institution': 'Charles University',
 				'city': 'Prague',
@@ -154,6 +158,7 @@ class test_api(unittest.TestCase):
 				'country': 'United States',
 				'lat': 35.48674,
 				'lon': -96.68502,
+				'region': 'Prague',
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -166,6 +171,7 @@ class test_api(unittest.TestCase):
 				<orgName type="institution">University of London</orgName>
 				<address>
 					<settlement>London</settlement>
+					<region>London</region>
 				</address>
 			</affiliation>'''
 		)
@@ -177,6 +183,7 @@ class test_api(unittest.TestCase):
 				'country': 'United Kingdom',
 				'lat': 51.50853,
 				'lon': -0.12574,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -184,6 +191,7 @@ class test_api(unittest.TestCase):
 				'country': 'Canada',
 				'lat': 42.98339,
 				'lon': -81.23304,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -191,6 +199,7 @@ class test_api(unittest.TestCase):
 				'country': 'United States',
 				'lat': 37.12898,
 				'lon': -84.08326,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -198,6 +207,7 @@ class test_api(unittest.TestCase):
 				'country': 'United States',
 				'lat': 39.88645,
 				'lon': -83.44825,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -205,6 +215,7 @@ class test_api(unittest.TestCase):
 				'country': 'United Kingdom',
 				'lat': 51.51279,
 				'lon': -0.09184,
+				'region': 'London',
 			},{
 				'institution':'University of London',
 				'city': 'London',
@@ -212,6 +223,7 @@ class test_api(unittest.TestCase):
 				'country': 'United States',
 				'lat': 36.47606,
 				'lon': -119.44318,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -219,6 +231,7 @@ class test_api(unittest.TestCase):
 				'country': 'United States',
 				'lat': 35.32897,
 				'lon': -93.25296,
+				'region': 'London',
 			},{
 				'institution': 'University of London',
 				'city': 'London',
@@ -226,6 +239,7 @@ class test_api(unittest.TestCase):
 				'country': 'Kiribati',
 				'lat': 1.98487,
 				'lon': -157.47502,
+				'region': 'London',
 			},
 		]
 		self.assert_extract_functions(arg, expected)

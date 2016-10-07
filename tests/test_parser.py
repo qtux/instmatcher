@@ -35,6 +35,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'country': None,
 			'city': None,
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(None), expected)
 	
@@ -45,6 +46,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'country': None,
 			'city': None,
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -63,6 +65,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -82,6 +85,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'country': None,
 			'city': 'settlement',
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -100,6 +104,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'country': None,
 			'city': 'settlement',
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -118,6 +123,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': None,
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -137,6 +143,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -163,6 +170,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
+			'region': 'region',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -203,6 +211,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
+			'region': 'region',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -213,5 +222,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'country': None,
 			'city': None,
+			'region': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
