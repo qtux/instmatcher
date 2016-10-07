@@ -55,7 +55,7 @@ class test_parser(unittest.TestCase):
 			__name__,
 			'''<affiliation>
 			<address>
-				<country key="AQ">Antarctica</country>
+				<country key="AQ">Irrelevant</country>
 				<settlement>settlement</settlement>
 			</address>
 			</affiliation>'''
@@ -114,7 +114,7 @@ class test_parser(unittest.TestCase):
 			'''<affiliation>
 			<orgName type="institution">institC</orgName>
 			<address>
-				<country key="AQ">Antarctica</country>
+				<country key="AQ">Irrelevant</country>
 			</address>
 			</affiliation>'''
 		)
@@ -133,7 +133,7 @@ class test_parser(unittest.TestCase):
 			'''<affiliation>
 			<orgName type="institution">institD</orgName>
 			<address>
-				<country key="AQ">Antarctica</country>
+				<country key="AQ">Irrelevant</country>
 				<settlement>settlement</settlement>
 			</address>
 			</affiliation>'''
@@ -156,7 +156,7 @@ class test_parser(unittest.TestCase):
 				<orgName type="institution">institE</orgName>
 				<address>
 					<addrLine>addrLine</addrLine>
-					<country key="AQ">Antarctica</country>
+					<country key="AQ">Irrelevant</country>
 					<postCode>postCode</postCode>
 					<region>region</region>
 					<settlement>settlement</settlement>
@@ -191,7 +191,7 @@ class test_parser(unittest.TestCase):
 					<addrLine>addrLine1</addrLine>
 					<addrLine>addrLine2</addrLine>
 					<addrLine>addrLine3</addrLine>
-					<country key="AQ">Antarctica</country>
+					<country key="AQ">Irrelevant</country>
 					<postCode>postCode</postCode>
 					<region>region</region>
 					<settlement>settlement</settlement>
