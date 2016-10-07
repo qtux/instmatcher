@@ -1,10 +1,10 @@
 ===========
 instmatcher
 ===========
-This library provides means to find an institute matching an affiliation string, a string consisting of for example a name, an address or similar information associated with the institute.
+This library provides means to find an institution matching an affiliation string, a string consisting of for example a name, an address or similar information associated with the institution.
 Its main features are:
 
-1. Search for an institute by its name in a list based on `Wikidata`_ and `GeoNames`_.
+1. Search for an institution by its name in a list based on `Wikidata`_ and `GeoNames`_.
 2. Parse affiliation strings using `grobid`_ to retrieve the corresponding name and address.
 3. Geocode the parsed data to enrich it with geographical coordinates based on `GeoNames`_.
 
@@ -21,7 +21,7 @@ To install instmatcher simply clone the git repository and install it using pip:
 Basic Usage Example
 ===================
 The library must be initialised with the ``init`` function before calling any other function.
-Afterwards the ``match`` function may be used to search for a matching institute for a given affiliation string.
+Afterwards the ``match`` function may be used to search for a matching institution for a given affiliation string.
 
 .. code:: python
 
@@ -51,8 +51,8 @@ and use the Makefile in the **docs** folder to build the documentation.
 ===========
 Attribution
 ===========
-1. The list of `institutes`_ is queried from `Wikidata`_ (available under `CC0`_).
-2. The list of `institutes`_ is enhanced using the `reverse-geocoder`_ library which contains `GeoNames`_ data (available under `CC BY 3.0`_).
+1. The list of `institutions`_ is queried from `Wikidata`_ (available under `CC0`_).
+2. The list of `institutions`_ is enhanced using the `reverse-geocoder`_ library which contains `GeoNames`_ data (available under `CC BY 3.0`_).
 3. The list of `cities`_ and the list of `countries`_ are taken from `GeoNames`_  (available under `CC BY 3.0`_).
 
 .. image:: https://raw.githubusercontent.com/qtux/instmatcher/master/attribution.png
@@ -70,7 +70,7 @@ This software is licensed under the `Apache License, Version 2.0`_.
 .. DATASETS
 .. _cities: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/cities1000.txt
 .. _countries: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/countryInfo.txt
-.. _institutes: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/institutes.csv
+.. _institutions: https://github.com/qtux/instmatcher/blob/master/instmatcher/data/institutions.csv
 
 .. DATASOURCES:
 .. _Wikidata: https://www.wikidata.org

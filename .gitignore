@@ -10,7 +10,7 @@ __pycache__/
 *.seg
 MAIN_WRITELOCK
 
-# intermediate data used to generate the list of institutes
+# intermediate data used to generate the list of institutions
 /query/*.csv
 
 # output folder of the documentation

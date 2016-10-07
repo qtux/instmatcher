@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''Module to search for known institutes.'''
+'''Module to search for known institutions.'''
 
 import csv
 from pkg_resources import resource_filename
@@ -31,16 +31,16 @@ with open(source) as csvfile:
 	for row in reader:
 		abbreviations[row[0]] = row[1]
 
-# load the index and create the institute and coordinate query parsers
+# load the index and create the institution and coordinate query parsers
 ixPath = resource_filename(__name__, 'data/index')
 ix = index.open_dir(ixPath)
 instParser = MultifieldParser(['name', 'alias',], ix.schema)
 coordParser = MultifieldParser(['lat', 'lon',], ix.schema)
 
-def query(institute, alpha2, lat, lon, offset):
+def query(institution, alpha2, lat, lon, offset):
 	'''
-	Search for institutes compatible to the search parameters sorted in
-	descending order starting with the most accurate search result.
+	Search for institutions compatible to the search parameters sorted
+	in descending order starting with the most accurate search result.
 	
 	Applying the ISO 3166-1 alpha-2 country code will restrict the
 	search results to the given country.
@@ -49,17 +49,17 @@ def query(institute, alpha2, lat, lon, offset):
 	an offset of one degree of arc corresponds to about 111 km: Using an
 	offset of 1 results into a box with a width of approximately 222 km.
 	
-	:param institute: the institute name to search for
+	:param institution: the institution name to search for
 	:param alpha2: the country to restrict search results to
 	:param lat: the latitude describing the middle of the preferred box
 	:param lon: the longitude describing the middle of preferred box
 	:param offset: the half-width of the preferred box in degree of arcs
 	'''
-	if not institute:
+	if not institution:
 		return
 	with ix.searcher() as searcher:
-		# search for the given institute
-		instQuery = instParser.parse(institute)
+		# search for the given institution
+		instQuery = instParser.parse(institution)
 		filterTerm = Term('alpha2', alpha2) if alpha2 else None
 		instResults = searcher.search(instQuery, limit=None, filter=filterTerm)
 		# try to enhance the search boosting results in the vicinity of lat/lon

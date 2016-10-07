@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''A Python library to match an affiliation string to a known institute'''
+'''A Python library to match an affiliation string to a known institution'''
 
 import os, os.path
 import csv
@@ -40,8 +40,8 @@ def create_index(procs, multisegment, ixPath):
 	)
 	ix = index.create_in(ixPath, schema)
 	writer = ix.writer(procs=procs, multisegment=multisegment)
-	institutes = os.path.join('instmatcher', 'data', 'institutes.csv')
-	with open(institutes) as csvfile:
+	institutions = os.path.join('instmatcher', 'data', 'institutions.csv')
+	with open(institutions) as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			writer.add_document(**row)
@@ -100,7 +100,7 @@ def create_indices(force):
 				forceInst = True
 				os.mkdir(ixPath)
 			if forceInst:
-				print('creating the institute index - this may take some time')
+				print('creating the institution index, this may take some time')
 				create_index(procs, multisegment, ixPath)
 			
 			forceGeo = force
@@ -109,7 +109,7 @@ def create_indices(force):
 				forceGeo = True
 				os.mkdir(ixPath)
 			if forceGeo:
-				print('creating the geoindex - this may take some time')
+				print('creating the geoindex, this may take some time')
 				create_geoindex(procs, multisegment, ixPath)
 			
 			orig_run(self)
@@ -174,7 +174,7 @@ setup(
 	},
 	include_package_data=True,
 	zip_safe=False,
-	keywords='institute affiliation organisation search match',
+	keywords='institute institution affiliation organisation search match',
 	platforms='any',
 	classifiers=[
 		'Development Status :: 4 - Beta',

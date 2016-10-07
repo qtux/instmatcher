@@ -108,7 +108,7 @@ class test_api(unittest.TestCase):
 		arg = None
 		expected = [
 			{
-				'institute': None,
+				'institution': None,
 				'city': None,
 				'alpha2': None,
 				'country': None,
@@ -120,7 +120,7 @@ class test_api(unittest.TestCase):
 		arg = 'Unknown'
 		expected = [
 			{
-				'institute': None,
+				'institution': None,
 				'city': None,
 				'alpha2': None,
 				'country': None,
@@ -141,14 +141,14 @@ class test_api(unittest.TestCase):
 		)
 		expected = [
 			{
-				'institute': 'Charles University',
+				'institution': 'Charles University',
 				'city': 'Prague',
 				'alpha2': 'CZ',
 				'country': 'Czechia',
 				'lat': 50.08804,
 				'lon': 14.42076,
 			},{
-				'institute': 'Charles University',
+				'institution': 'Charles University',
 				'city': 'Prague',
 				'alpha2': 'US',
 				'country': 'United States',
@@ -171,56 +171,56 @@ class test_api(unittest.TestCase):
 		)
 		expected = [
 			{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'GB',
 				'country': 'United Kingdom',
 				'lat': 51.50853,
 				'lon': -0.12574,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'CA',
 				'country': 'Canada',
 				'lat': 42.98339,
 				'lon': -81.23304,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2':'US',
 				'country': 'United States',
 				'lat': 37.12898,
 				'lon': -84.08326,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 39.88645,
 				'lon': -83.44825,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'GB',
 				'country': 'United Kingdom',
 				'lat': 51.51279,
 				'lon': -0.09184,
 			},{
-				'institute':'University of London',
+				'institution':'University of London',
 				'city': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 36.47606,
 				'lon': -119.44318,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 35.32897,
 				'lon': -93.25296,
 			},{
-				'institute': 'University of London',
+				'institution': 'University of London',
 				'city': 'London',
 				'alpha2': 'KI',
 				'country': 'Kiribati',

@@ -44,7 +44,7 @@ def grobid(affiliation):
 	:param affiliation: the affiliation string to be parsed
 	'''
 	# default return value
-	result = dict.fromkeys(['institute', 'city', 'alpha2', 'country',])
+	result = dict.fromkeys(['institution', 'city', 'alpha2', 'country',])
 	
 	# let grobid process the given affiliation string
 	try:
@@ -64,7 +64,7 @@ def grobid(affiliation):
 	organisations = root.findall('./affiliation/orgName')
 	for org in organisations:
 		if org.get('type') == 'institution':
-			result['institute'] = org.text
+			result['institution'] = org.text
 			break
 	# return immediately if none was found
 	else:

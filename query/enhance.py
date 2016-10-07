@@ -63,7 +63,7 @@ def enhance(src, dest, countryInfo):
 def main():
 	# parse arguments
 	parser = argparse.ArgumentParser(
-		description='Enhance institute data using reverse-geocoder.'
+		description='Enhance institution data using reverse-geocoder.'
 	)
 	parser.add_argument(
 		'--src',

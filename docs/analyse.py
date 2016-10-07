@@ -31,20 +31,20 @@ def analyse(sample):
 		writer.writerow(fieldnames)
 		
 		affiStrings = []
-		institutes = []
+		institutions = []
 		
 		print('processing affiliation strings...')
 		for row in reader:
 			affiStrings.append(row[0])
-			institutes.append(instmatcher.match(row[0]))
+			institutions.append(instmatcher.match(row[0]))
 		
 		i = 1
-		size = len(institutes)
-		for affiString, institute in zip(affiStrings, institutes):
+		size = len(institutions)
+		for affiString, institution in zip(affiStrings, institutions):
 			row = [affiString]
 			print(chr(27) + "[2J")
 			print(affiString, '({} of {})'.format(i, size))
-			pp.pprint(institute)
+			pp.pprint(institution)
 			
 			# retrieve an valid input
 			answer = input('Is this correct? [y/n] ')
@@ -52,7 +52,7 @@ def analyse(sample):
 				answer = input('enter either y or n')
 			
 			# check for true/false postive and negatives
-			classification = 'negative' if not institute else 'positive'
+			classification = 'negative' if not institution else 'positive'
 			if answer == 'y':
 				row.append('true_' + classification)
 			elif answer == 'n':

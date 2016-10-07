@@ -31,7 +31,7 @@ class test_parser(unittest.TestCase):
 	
 	def test_None(self):
 		expected = {
-			'institute': None,
+			'institution': None,
 			'alpha2': None,
 			'country': None,
 			'city': None,
@@ -41,14 +41,14 @@ class test_parser(unittest.TestCase):
 	def test_empty(self):
 		self.server.setResponse(__name__, '')
 		expected = {
-			'institute': None,
+			'institution': None,
 			'alpha2': None,
 			'country': None,
 			'city': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
-	def test_no_institute(self):
+	def test_no_institution(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -59,7 +59,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': None,
+			'institution': None,
 			'alpha2': None,
 			'country': None,
 			'city': None,
@@ -78,7 +78,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'institA',
+			'institution': 'institA',
 			'alpha2': None,
 			'country': None,
 			'city': 'settlement',
@@ -96,7 +96,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'institB',
+			'institution': 'institB',
 			'alpha2': None,
 			'country': None,
 			'city': 'settlement',
@@ -114,7 +114,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'institC',
+			'institution': 'institC',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': None,
@@ -133,7 +133,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'institD',
+			'institution': 'institD',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
@@ -157,14 +157,14 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'institE',
+			'institution': 'institE',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
-	def test_multiple_institutes(self):
+	def test_multiple_institutions(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -189,7 +189,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institute': 'instit1',
+			'institution': 'instit1',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
@@ -199,7 +199,7 @@ class test_parser(unittest.TestCase):
 	def test_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
 		expected = {
-			'institute': None,
+			'institution': None,
 			'alpha2': None,
 			'country': None,
 			'city': None,
