@@ -60,9 +60,9 @@ class test_parser(unittest.TestCase):
 		)
 		expected = {
 			'institution': None,
-			'alpha2': None,
-			'country': None,
-			'city': None,
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'city': 'settlement',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -158,6 +158,8 @@ class test_parser(unittest.TestCase):
 		)
 		expected = {
 			'institution': 'institE',
+			'department': 'dep',
+			'laboratory': 'lab',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',
@@ -190,6 +192,14 @@ class test_parser(unittest.TestCase):
 		)
 		expected = {
 			'institution': 'instit1',
+			'institution2': 'instit2',
+			'institution3': 'instit3',
+			'department': 'dep1',
+			'department2': 'dep2',
+			'department3': 'dep3',
+			'laboratory': 'lab1',
+			'laboratory2': 'lab2',
+			'laboratory3': 'lab3',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'city': 'settlement',

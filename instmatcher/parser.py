@@ -60,15 +60,16 @@ def grobid(affiliation):
 	except et.ParseError:
 		return result
 	
-	# try to find an organisation (consider only the first one)
+	# try to find institutions and their corresponding labs and departments
 	organisations = root.findall('./affiliation/orgName')
 	for org in organisations:
-		if org.get('type') == 'institution':
-			result['institution'] = org.text
-			break
-	# return immediately if none was found
-	else:
-		return result
+		orgType = org.get('type')
+		orgKey = org.get('key')
+		number = next(filter(str.isdigit, orgKey)) if orgKey else '1'
+		if number == '1':
+			result[orgType] = org.text
+		else:
+			result[orgType + number] = org.text
 	
 	# try to find the alpha2 code and retrieve the corresponding country name
 	try:
