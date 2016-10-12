@@ -36,6 +36,7 @@ class test_parser(unittest.TestCase):
 			'country': None,
 			'settlement': None,
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(None), expected)
 	
@@ -47,6 +48,7 @@ class test_parser(unittest.TestCase):
 			'country': None,
 			'settlement': None,
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -66,6 +68,7 @@ class test_parser(unittest.TestCase):
 			'country': 'Antarctica',
 			'settlement': 'settlement',
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -86,6 +89,7 @@ class test_parser(unittest.TestCase):
 			'country': None,
 			'settlement': 'settlement',
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -105,6 +109,7 @@ class test_parser(unittest.TestCase):
 			'country': None,
 			'settlement': 'settlement',
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -124,6 +129,7 @@ class test_parser(unittest.TestCase):
 			'country': 'Antarctica',
 			'settlement': None,
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -144,6 +150,7 @@ class test_parser(unittest.TestCase):
 			'country': 'Antarctica',
 			'settlement': 'settlement',
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -171,6 +178,7 @@ class test_parser(unittest.TestCase):
 			'country': 'Antarctica',
 			'settlement': 'settlement',
 			'region': 'region',
+			'postCode': 'postCode',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -212,6 +220,7 @@ class test_parser(unittest.TestCase):
 			'country': 'Antarctica',
 			'settlement': 'settlement',
 			'region': 'region',
+			'postCode': 'postCode',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -223,5 +232,6 @@ class test_parser(unittest.TestCase):
 			'country': None,
 			'settlement': None,
 			'region': None,
+			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)

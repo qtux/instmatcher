@@ -113,6 +113,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'country': None,
 				'region': None,
+				'postCode': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -126,6 +127,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'country': None,
 				'region': None,
+				'postCode': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -151,6 +153,7 @@ class test_api(unittest.TestCase):
 				'lat': 50.08804,
 				'lon': 14.42076,
 				'region': 'Prague',
+				'postCode': None,
 			},{
 				'institution': 'Charles University',
 				'settlement': 'Prague',
@@ -159,6 +162,7 @@ class test_api(unittest.TestCase):
 				'lat': 35.48674,
 				'lon': -96.68502,
 				'region': 'Prague',
+				'postCode': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)
@@ -184,6 +188,7 @@ class test_api(unittest.TestCase):
 				'lat': 51.50853,
 				'lon': -0.12574,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -192,6 +197,7 @@ class test_api(unittest.TestCase):
 				'lat': 42.98339,
 				'lon': -81.23304,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -200,6 +206,7 @@ class test_api(unittest.TestCase):
 				'lat': 37.12898,
 				'lon': -84.08326,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -208,6 +215,7 @@ class test_api(unittest.TestCase):
 				'lat': 39.88645,
 				'lon': -83.44825,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -216,6 +224,7 @@ class test_api(unittest.TestCase):
 				'lat': 51.51279,
 				'lon': -0.09184,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution':'University of London',
 				'settlement': 'London',
@@ -224,6 +233,7 @@ class test_api(unittest.TestCase):
 				'lat': 36.47606,
 				'lon': -119.44318,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -232,6 +242,7 @@ class test_api(unittest.TestCase):
 				'lat': 35.32897,
 				'lon': -93.25296,
 				'region': 'London',
+				'postCode': None,
 			},{
 				'institution': 'University of London',
 				'settlement': 'London',
@@ -240,6 +251,7 @@ class test_api(unittest.TestCase):
 				'lat': 1.98487,
 				'lon': -157.47502,
 				'region': 'London',
+				'postCode': None,
 			},
 		]
 		self.assert_extract_functions(arg, expected)

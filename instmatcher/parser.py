@@ -43,14 +43,11 @@ def grobid(affiliation):
 	
 	:param affiliation: the affiliation string to be parsed
 	'''
+	# retrieved address tags
+	addressTags = ['settlement', 'region', 'postCode', 'country',]
 	# default return value
-	result = dict.fromkeys([
-		'institution',
-		'settlement',
-		'alpha2',
-		'country',
-		'region',
-	])
+	result = dict.fromkeys(['institution', 'alpha2',])
+	result.update(dict.fromkeys(addressTags))
 	
 	# let grobid process the given affiliation string
 	try:
@@ -77,25 +74,19 @@ def grobid(affiliation):
 		else:
 			result[orgType + number] = org.text
 	
+	# try to find address data
+	for tag in addressTags:
+		try:
+			result[tag] = root.find('./affiliation/address/' + tag).text
+		except AttributeError:
+			result[tag] = None
+	
 	# try to find the alpha2 code and retrieve the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = codes[countryKey]
-	except (AttributeError, KeyError):
+		result['country'] = codes.get(result['alpha2'])
+	except AttributeError:
 		result['alpha2'] = None
-		result['country'] = None
-	
-	# try to find the settlement name
-	try:
-		result['settlement'] = root.find('./affiliation/address/settlement').text
-	except AttributeError:
-		result['settlement'] = None
-	
-	# try to find the region
-	try:
-		result['region'] = root.find('./affiliation/address/region').text
-	except AttributeError:
-		result['region'] = None
 	
 	return result
