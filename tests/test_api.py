@@ -109,7 +109,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': None,
-				'city': None,
+				'settlement': None,
 				'alpha2': None,
 				'country': None,
 				'region': None,
@@ -122,7 +122,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': None,
-				'city': None,
+				'settlement': None,
 				'alpha2': None,
 				'country': None,
 				'region': None,
@@ -145,7 +145,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': 'Charles University',
-				'city': 'Prague',
+				'settlement': 'Prague',
 				'alpha2': 'CZ',
 				'country': 'Czechia',
 				'lat': 50.08804,
@@ -153,7 +153,7 @@ class test_api(unittest.TestCase):
 				'region': 'Prague',
 			},{
 				'institution': 'Charles University',
-				'city': 'Prague',
+				'settlement': 'Prague',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 35.48674,
@@ -178,7 +178,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'GB',
 				'country': 'United Kingdom',
 				'lat': 51.50853,
@@ -186,7 +186,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'CA',
 				'country': 'Canada',
 				'lat': 42.98339,
@@ -194,7 +194,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2':'US',
 				'country': 'United States',
 				'lat': 37.12898,
@@ -202,7 +202,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 39.88645,
@@ -210,7 +210,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'GB',
 				'country': 'United Kingdom',
 				'lat': 51.51279,
@@ -218,7 +218,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution':'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 36.47606,
@@ -226,7 +226,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'US',
 				'country': 'United States',
 				'lat': 35.32897,
@@ -234,7 +234,7 @@ class test_api(unittest.TestCase):
 				'region': 'London',
 			},{
 				'institution': 'University of London',
-				'city': 'London',
+				'settlement': 'London',
 				'alpha2': 'KI',
 				'country': 'Kiribati',
 				'lat': 1.98487,

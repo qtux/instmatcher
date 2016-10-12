@@ -46,7 +46,7 @@ def grobid(affiliation):
 	# default return value
 	result = dict.fromkeys([
 		'institution',
-		'city',
+		'settlement',
 		'alpha2',
 		'country',
 		'region',
@@ -86,11 +86,11 @@ def grobid(affiliation):
 		result['alpha2'] = None
 		result['country'] = None
 	
-	# try to find the city name
+	# try to find the settlement name
 	try:
-		result['city'] = root.find('./affiliation/address/settlement').text
+		result['settlement'] = root.find('./affiliation/address/settlement').text
 	except AttributeError:
-		result['city'] = None
+		result['settlement'] = None
 	
 	# try to find the region
 	try:

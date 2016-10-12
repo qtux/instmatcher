@@ -84,7 +84,7 @@ def find(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 _extract_doc = '''
 	:param string: the affiliation string to be extracted
 	:param parse: a function to parse the affiliation string
-	:param geocode: a function to retrieve coordinates of a given city
+	:param geocode: a function to retrieve coordinates of a settlement
 '''
 
 @_appendDoc(_extract_doc)
@@ -120,6 +120,6 @@ def match(string, parse=grobid, geocode=geocode, offset=1):
 	
 	:param string: the affiliation string to be extracted
 	:param parse: a function to parse the string into a structure
-	:param geocode: a function to retrieve coordinates of a given city
+	:param geocode: a function to retrieve coordinates of a settlement
 	'''
 	return find(offset=offset, **extract(string, parse, geocode))

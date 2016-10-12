@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''Module to retrieve coordinates of a given city'''
+'''Module to retrieve coordinates of a given settlement'''
 
 from pkg_resources import resource_filename
 
@@ -20,23 +20,23 @@ from whoosh import index
 from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
 
-# load the index and create the city/alpha2 query parser
+# load the index and create the settlement/alpha2 query parser
 ixPath = resource_filename(__name__, 'data/geoindex')
 ix = index.open_dir(ixPath)
 parser = MultifieldParser(['name', 'asci', 'alias',], ix.schema)
 
-def geocode(city, alpha2, **ignore):
+def geocode(settlement, alpha2, **ignore):
 	'''
-	Search for geographical coordinates of a given city name, optionally
-	restricting search results to a specified country.
+	Search for geographical coordinates of a given settlement name,
+	optionally restricting search results to a specified country.
 	
-	:param city: the city name to search for
+	:param settlement: the settlement name to search for
 	:param alpha2: the country to restrict search results to
 	:param ignore: ignored keyword arguments
 	'''
-	if not city:
+	if not settlement:
 		return
-	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=city)
+	text = 'name:"{key}" OR asci:"{key}" OR alias:({key})'.format(key=settlement)
 	query = parser.parse(text)
 	filterTerm = Term('alpha2', alpha2) if alpha2 else None
 	with ix.searcher() as searcher:
