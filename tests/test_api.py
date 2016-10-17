@@ -47,15 +47,6 @@ class test_api(unittest.TestCase):
 	
 	def test_find_Univ_Boston(self):
 		arg = 'Univ Boston'
-		self.server.setResponse(
-			arg,
-			'''<affiliation>
-			<address>
-				<country key="AQ">Antarctica</country>
-				<settlement>settlement</settlement>
-			</address>
-			</affiliation>'''
-		)
 		expected = [
 			{
 				'name': 'Boston University',
