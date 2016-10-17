@@ -249,12 +249,12 @@ class test_core(unittest.TestCase):
 	
 	def test_abbreviation_expansion_considering_word_boundaries(self):
 		actual = core.expandAbbreviations('univ Univ univuniv univx xuniv UNIV')
-		expected = 'university university univuniv univx xuniv university'
+		expected = 'univ* univ* univuniv univx xuniv univ*'
 		self.assertEqual(actual, expected)
 	
 	def test_some_abbreviations(self):
 		actual = core.expandAbbreviations('chem ACAD of sCI, INST of EngN.')
-		expected = 'chemical academy of science, institute of engineering.'
+		expected = 'chem* acad* of sci*, inst* of engineering.'
 		self.assertEqual(actual, expected)
 	
 	def test_abbreviations_no_hits(self):
