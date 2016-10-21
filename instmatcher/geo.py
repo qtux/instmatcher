@@ -45,6 +45,4 @@ def geocode(settlement, alpha2, **ignore):
 			yield {
 				'lat': float(hit['lat']),
 				'lon': float(hit['lon']),
-				'alpha2': hit['alpha2'],
-				'country': hit['country'],
 			}
