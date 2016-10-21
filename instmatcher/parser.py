@@ -20,13 +20,14 @@ import csv
 from pkg_resources import resource_filename
 
 _url = None
-codes = {}
+codes, countries = {}, {}
 countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
 with open(countryInfo) as csvfile:
 	data = filter(lambda row: not row[0].startswith('#'), csvfile)
 	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 	for row in reader:
 		codes[row[0]] = row[4]
+		countries[row[4]] = row[0]
 
 def init(url):
 	'''
@@ -86,7 +87,17 @@ def grobid(affiliation):
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
 		result['country'] = codes.get(result['alpha2'])
+	# try to search for a country name rightmost inside the affiliation string
 	except AttributeError:
-		result['alpha2'] = None
+		lowAffi = affiliation.lower()
+		index = -1
+		foundCountry = None
+		for country in countries:
+			newIndex = lowAffi.rfind(country.lower())
+			if newIndex > index:
+				index = newIndex
+				foundCountry = country
+		result['alpha2'] = countries.get(foundCountry)
+		result['country'] = foundCountry
 	
 	return result

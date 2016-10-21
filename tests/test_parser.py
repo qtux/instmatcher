@@ -133,6 +133,90 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
+	def test_not_regocnised_country(self):
+		affiliation = 'institA, settlement, INDIA'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+			<orgName type="institution">institA</orgName>
+			<address>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institution': 'institA',
+			'alpha2': 'IN',
+			'country': 'India',
+			'settlement': 'settlement',
+			'region': None,
+			'postCode': None,
+		}
+		self.assertEqual(parser.grobid(affiliation), expected)
+	
+	def test_not_regocnised_bad_country(self):
+		affiliation = 'institA, settlement, Fantasia'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+			<orgName type="institution">institA</orgName>
+			<address>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institution': 'institA',
+			'alpha2': None,
+			'country': None,
+			'settlement': 'settlement',
+			'region': None,
+			'postCode': None,
+		}
+		self.assertEqual(parser.grobid(affiliation), expected)
+	
+	def test_not_recognised_country_no_comma_in_affiliation_string(self):
+		affiliation = 'institA settlement Algeria'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+			<orgName type="institution">institA</orgName>
+			<address>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institution': 'institA',
+			'alpha2': 'DZ',
+			'country': 'Algeria',
+			'settlement': 'settlement',
+			'region': None,
+			'postCode': None,
+		}
+		self.assertEqual(parser.grobid(affiliation), expected)
+	
+	def test_multiple_not_recognised_countries(self):
+		affiliation = 'institA settlement Algeria India'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+			<orgName type="institution">institA</orgName>
+			<address>
+				<settlement>settlement</settlement>
+			</address>
+			</affiliation>'''
+		)
+		expected = {
+			'institution': 'institA',
+			'alpha2': 'IN',
+			'country': 'India',
+			'settlement': 'settlement',
+			'region': None,
+			'postCode': None,
+		}
+		self.assertEqual(parser.grobid(affiliation), expected)
+	
 	def test_releveant_tags(self):
 		self.server.setResponse(
 			__name__,
