@@ -89,6 +89,32 @@ def extract(sample, url):
 				result.get('lon'),
 			])
 
+def match(sample, url):
+	instmatcher.init(url)
+	with open(sample, 'r') as s, open(sample + '_matched', 'w') as r:
+		reader = csv.reader(s)
+		writer = csv.writer(r)
+		fieldnames = next(reader)
+		fieldnames.extend([
+			'name',
+			'type',
+			'alpha2',
+			'country',
+		])
+		writer.writerow(fieldnames)
+		for row in reader:
+			result = instmatcher.match(row[0])
+			if result:
+				writer.writerow([
+					row[0],
+					result['name'],
+					result['type'],
+					result['alpha2'],
+					result['country'],
+				])
+			else:
+				writer.writerow([row[0],])
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Analyse classification.')
 	parser.add_argument('-s', '--sample', help='path to the sample file')
@@ -98,8 +124,12 @@ if __name__ == '__main__':
 		help='manually classify matcing results')
 	parser.add_argument('-e', '--extract', action='store_true',
 		help='extract information from affiliation strings')
+	parser.add_argument('-m', '--match', action='store_true',
+		help='find matching organisations for address nodes')
 	args = parser.parse_args()
 	if args.classify:
 		classify(args.sample, args.url)
 	if args.extract:
 		extract(args.sample, args.url)
+	if args.match:
+		match(args.sample, args.url)
