@@ -115,6 +115,34 @@ def match(sample, url):
 			else:
 				writer.writerow([row[0],])
 
+def find(sample):
+	with open(sample, 'r') as s, open(sample + '_found', 'w') as r:
+		reader = csv.reader(s)
+		writer = csv.writer(r)
+		fieldnames = next(reader)
+		fieldnames.extend([
+			'name',
+			'type',
+			'alpha2',
+			'country',
+		])
+		writer.writerow(fieldnames)
+		for row in reader:
+			result = instmatcher.find(
+				row[1],
+				row[3],
+				None if row[5] == '' else row[5],
+				None if row[6] == '' else row[6]
+			)
+			if result:
+				row.extend([
+					result['name'],
+					result['type'],
+					result['alpha2'],
+					result['country'],
+				])
+			writer.writerow(row)
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Analyse classification.')
 	parser.add_argument('-s', '--sample', help='path to the sample file')
@@ -126,6 +154,8 @@ if __name__ == '__main__':
 		help='extract information from affiliation strings')
 	parser.add_argument('-m', '--match', action='store_true',
 		help='find matching organisations for address nodes')
+	parser.add_argument('-f', '--find', action='store_true',
+		help='find organisations for extracted information')
 	args = parser.parse_args()
 	if args.classify:
 		classify(args.sample, args.url)
@@ -133,3 +163,5 @@ if __name__ == '__main__':
 		extract(args.sample, args.url)
 	if args.match:
 		match(args.sample, args.url)
+	if args.find:
+		find(args.sample)
