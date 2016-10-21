@@ -17,9 +17,9 @@ import instmatcher
 import argparse
 import pprint
 
-def analyse(sample):
+def classify(sample, url):
 	pp = pprint.PrettyPrinter(indent=4)
-	instmatcher.init('http://0.0.0.0:8080')
+	instmatcher.init(url)
 	
 	result = sample + '_classified'
 	with open(sample, 'r') as s, open(result, 'w') as r:
@@ -62,8 +62,44 @@ def analyse(sample):
 			writer.writerow(row)
 			i += 1
 
+def extract(sample, url):
+	instmatcher.init(url)
+	with open(sample, 'r') as s, open(sample + '_extracted', 'w') as r:
+		reader = csv.reader(s)
+		writer = csv.writer(r)
+		fieldnames = next(reader)
+		fieldnames.extend([
+			'institution',
+			'settlement',
+			'alpha2',
+			'country',
+			'lat',
+			'lon',
+		])
+		writer.writerow(fieldnames)
+		for row in reader:
+			result = instmatcher.extract(row[0])
+			writer.writerow([
+				row[0],
+				result['institution'],
+				result['settlement'],
+				result['alpha2'],
+				result['country'],
+				result.get('lat'),
+				result.get('lon'),
+			])
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Analyse classification.')
 	parser.add_argument('-s', '--sample', help='path to the sample file')
+	parser.add_argument('-u', '--url', default='http://0.0.0.0:8080',
+		help='url of the grobid server (default: %(default)s)')
+	parser.add_argument('-c', '--classify', action='store_true',
+		help='manually classify matcing results')
+	parser.add_argument('-e', '--extract', action='store_true',
+		help='extract information from affiliation strings')
 	args = parser.parse_args()
-	analyse(args.sample)
+	if args.classify:
+		classify(args.sample, args.url)
+	if args.extract:
+		extract(args.sample, args.url)
