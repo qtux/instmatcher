@@ -26,8 +26,8 @@ with open(countryInfo) as csvfile:
 	data = filter(lambda row: not row[0].startswith('#'), csvfile)
 	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 	for row in reader:
-		codes[row[0]] = row[4]
-		countries[row[4]] = row[0]
+		countries[row[0]] = row[4]
+		codes[row[4]] = row[0]
 
 def init(url):
 	'''
@@ -80,24 +80,24 @@ def grobid(affiliation):
 		try:
 			result[tag] = root.find('./affiliation/address/' + tag).text
 		except AttributeError:
-			result[tag] = None
+			pass
 	
 	# try to find the alpha2 code and retrieve the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = codes.get(result['alpha2'])
+		result['country'] = countries.get(countryKey)
 	# try to search for a country name rightmost inside the affiliation string
 	except AttributeError:
 		lowAffi = affiliation.lower()
 		index = -1
 		foundCountry = None
-		for country in countries:
+		for country in codes:
 			newIndex = lowAffi.rfind(country.lower())
 			if newIndex > index:
 				index = newIndex
 				foundCountry = country
-		result['alpha2'] = countries.get(foundCountry)
+		result['alpha2'] = codes.get(foundCountry)
 		result['country'] = foundCountry
 	
 	return result
