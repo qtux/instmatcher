@@ -4,6 +4,9 @@ chem,chem*
 politecn,politecn*
 polyclin,polyclin*
 natl,national
+int,int*
+fed,fed*
+gen,gen*
 # type of institutions
 univ,univ*
 sch,sch*
@@ -13,6 +16,7 @@ clin,clin*
 acad,acad*
 coll,coll*
 ctr,center
+fdn,foundation
 # description
 sci,sci*
 engn,engineering
