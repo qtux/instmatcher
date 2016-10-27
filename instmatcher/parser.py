@@ -86,9 +86,9 @@ def grobid(affiliation):
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['alpha2'] = countryKey
-		result['country'] = countries.get(countryKey)
+		result['country'] = countries[countryKey]
 	# try to search for a country name rightmost inside the affiliation string
-	except AttributeError:
+	except (AttributeError, KeyError):
 		lowAffi = affiliation.lower()
 		index = -1
 		foundCountry = None
