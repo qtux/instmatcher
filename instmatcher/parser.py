@@ -39,6 +39,11 @@ def init(url):
 	_url = url
 
 def extractCountry(affiliation):
+	'''
+	Try to extract a country from an affiliation string.
+	
+	:param affiliation: the affiliation to be searched in
+	'''
 	lowAffi = affiliation.lower()
 	index = -1
 	foundCountry = None
