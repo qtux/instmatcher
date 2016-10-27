@@ -38,6 +38,18 @@ def init(url):
 	global _url
 	_url = url
 
+def extractCountry(affiliation):
+	lowAffi = affiliation.lower()
+	index = -1
+	foundCountry = None
+	for country in codes:
+		newIndex = lowAffi.rfind(country.lower())
+		if newIndex > index:
+			index = newIndex
+			foundCountry = country
+	alpha2 = codes.get(foundCountry)
+	return alpha2, foundCountry
+
 def grobid(affiliation):
 	'''
 	Parse the given affiliation string using grobid.
@@ -85,19 +97,11 @@ def grobid(affiliation):
 	# try to find the alpha2 code and retrieve the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
-		result['alpha2'] = countryKey
-		result['country'] = countries[countryKey]
+		country = countries[countryKey]
 	# try to search for a country name rightmost inside the affiliation string
 	except (AttributeError, KeyError):
-		lowAffi = affiliation.lower()
-		index = -1
-		foundCountry = None
-		for country in codes:
-			newIndex = lowAffi.rfind(country.lower())
-			if newIndex > index:
-				index = newIndex
-				foundCountry = country
-		result['alpha2'] = codes.get(foundCountry)
-		result['country'] = foundCountry
+		countryKey, country = extractCountry(affiliation)
+	result['alpha2'] = countryKey
+	result['country'] = country
 	
 	return result
