@@ -84,7 +84,7 @@ def extract(sample, url):
 				result['institution'],
 				result['settlement'],
 				result['alpha2'],
-				result['country'],
+				result.get('country'),
 				result.get('lat'),
 				result.get('lon'),
 			])

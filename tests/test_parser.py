@@ -33,10 +33,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': None,
 			'alpha2': None,
-			'country': None,
 			'settlement': None,
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(None), expected)
 	
@@ -45,10 +42,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': None,
 			'alpha2': None,
-			'country': None,
 			'settlement': None,
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -67,8 +61,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -86,10 +78,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': 'institA',
 			'alpha2': None,
-			'country': None,
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -106,10 +95,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': 'institB',
 			'alpha2': None,
-			'country': None,
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -128,8 +114,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'settlement': None,
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -149,8 +133,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'IN',
 			'country': 'India',
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
 	
@@ -168,10 +150,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': 'institA',
 			'alpha2': None,
-			'country': None,
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
 	
@@ -191,8 +170,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'DZ',
 			'country': 'Algeria',
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
 	
@@ -212,8 +189,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'IN',
 			'country': 'India',
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
 	
@@ -233,8 +208,6 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'settlement': 'settlement',
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	
@@ -313,10 +286,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': None,
 			'alpha2': None,
-			'country': None,
 			'settlement': None,
-			'region': None,
-			'postCode': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
 	

@@ -69,8 +69,7 @@ def grobid(affiliation):
 	# retrieved address tags
 	addressTags = ['settlement', 'region', 'postCode',]
 	# default return value
-	result = dict.fromkeys(['institution', 'alpha2', 'country',])
-	result.update(dict.fromkeys(addressTags))
+	result = dict.fromkeys(['institution', 'alpha2','settlement',])
 	
 	# let grobid process the given affiliation string
 	try:
