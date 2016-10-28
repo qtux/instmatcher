@@ -54,8 +54,11 @@ def extractCountry(affiliation):
 	for alpha2, country in countryList:
 		match = re.search(r'\b(?i){}$'.format(country), affiliation)
 		if match:
-			return alpha2, country
-	return None, None
+			return {
+				'alpha2': alpha2,
+				'country': country,
+			}
+	return {}
 
 def grobid(affiliation):
 	'''
@@ -104,10 +107,9 @@ def grobid(affiliation):
 	# try to find the alpha2 code and the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
-		country = countryDict[countryKey]
+		result['country'] = countryDict[countryKey]
+		result['alpha2'] = countryKey
 	except (AttributeError, KeyError):
-		countryKey, country = extractCountry(affiliation)
-	result['alpha2'] = countryKey
-	result['country'] = country
+		result.update(extractCountry(affiliation))
 	
 	return result

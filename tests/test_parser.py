@@ -322,25 +322,34 @@ class test_parser(unittest.TestCase):
 	
 	def test_extract_Guinea(self):
 		actual = parser.extractCountry('guinea')
-		expected = ('GN','Guinea',)
+		expected = {
+			'alpha2': 'GN',
+			'country': 'Guinea',
+		}
 		self.assertEqual(actual, expected)
 	
 	def test_extract_Papua_New_Guinea(self):
 		actual = parser.extractCountry('papua new guinea')
-		expected = ('PG','Papua New Guinea',)
+		expected = {
+			'alpha2': 'PG',
+			'country': 'Papua New Guinea',
+		}
 		self.assertEqual(actual, expected)
 	
 	def test_extract_None(self):
 		actual = parser.extractCountry('there is no country in this string')
-		expected = (None, None,)
+		expected = {}
 		self.assertEqual(actual, expected)
 	
 	def test_extract_empty(self):
 		actual = parser.extractCountry('')
-		expected = (None, None,)
+		expected = {}
 		self.assertEqual(actual, expected)
 	
 	def test_extract_multiple_countries(self):
 		actual = parser.extractCountry('Serbia Montenegro')
-		expected = ('ME', 'Montenegro',)
+		expected = {
+			'alpha2': 'ME',
+			'country': 'Montenegro',
+		}
 		self.assertEqual(actual, expected)
