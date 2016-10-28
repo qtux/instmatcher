@@ -64,9 +64,9 @@ def grobid(affiliation):
 	:param affiliation: the affiliation string to be parsed
 	'''
 	# retrieved address tags
-	addressTags = ['settlement', 'region', 'postCode', 'country',]
+	addressTags = ['settlement', 'region', 'postCode',]
 	# default return value
-	result = dict.fromkeys(['institution', 'alpha2',])
+	result = dict.fromkeys(['institution', 'alpha2', 'country',])
 	result.update(dict.fromkeys(addressTags))
 	
 	# let grobid process the given affiliation string
