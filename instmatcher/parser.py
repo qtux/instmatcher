@@ -18,16 +18,23 @@ import requests
 import xml.etree.ElementTree as et
 import csv
 from pkg_resources import resource_filename
+import re
 
 _url = None
-codes, countries = {}, {}
+# generate a dictionary of the ISO 3166-1 alpha-2 country codes mapping to the
+# corresponding country names
+countries = {}
 countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
 with open(countryInfo) as csvfile:
 	data = filter(lambda row: not row[0].startswith('#'), csvfile)
 	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 	for row in reader:
 		countries[row[0]] = row[4]
-		codes[row[4]] = row[0]
+# create a list of country code and country tuples sorted by the length of the
+# country name to avoid false positive recognition of countries when the name is
+# part of another country name
+countryList = list(countries.items())
+countryList.sort(key=lambda item: len(item[1]), reverse=True)
 
 def init(url):
 	'''
@@ -44,16 +51,11 @@ def extractCountry(affiliation):
 	
 	:param affiliation: the affiliation to be searched in
 	'''
-	lowAffi = affiliation.lower()
-	index = -1
-	foundCountry = None
-	for country in codes:
-		newIndex = lowAffi.rfind(country.lower())
-		if newIndex > index:
-			index = newIndex
-			foundCountry = country
-	alpha2 = codes.get(foundCountry)
-	return alpha2, foundCountry
+	for alpha2, country in countryList:
+		match = re.search(r'\b(?i){}$'.format(country), affiliation)
+		if match:
+			return alpha2, country
+	return None, None
 
 def grobid(affiliation):
 	'''
@@ -99,11 +101,10 @@ def grobid(affiliation):
 		except AttributeError:
 			pass
 	
-	# try to find the alpha2 code and retrieve the corresponding country name
+	# try to find the alpha2 code and the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
 		country = countries[countryKey]
-	# try to search for a country name rightmost inside the affiliation string
 	except (AttributeError, KeyError):
 		countryKey, country = extractCountry(affiliation)
 	result['alpha2'] = countryKey
