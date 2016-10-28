@@ -23,17 +23,17 @@ import re
 _url = None
 # generate a dictionary of the ISO 3166-1 alpha-2 country codes mapping to the
 # corresponding country names
-countries = {}
+countryDict = {}
 countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
 with open(countryInfo) as csvfile:
 	data = filter(lambda row: not row[0].startswith('#'), csvfile)
 	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 	for row in reader:
-		countries[row[0]] = row[4]
+		countryDict[row[0]] = row[4]
 # create a list of country code and country tuples sorted by the length of the
 # country name to avoid false positive recognition of countries when the name is
 # part of another country name
-countryList = list(countries.items())
+countryList = list(countryDict.items())
 countryList.sort(key=lambda item: len(item[1]), reverse=True)
 
 def init(url):
@@ -104,7 +104,7 @@ def grobid(affiliation):
 	# try to find the alpha2 code and the corresponding country name
 	try:
 		countryKey = root.find('./affiliation/address/country').get('key')
-		country = countries[countryKey]
+		country = countryDict[countryKey]
 	except (AttributeError, KeyError):
 		countryKey, country = extractCountry(affiliation)
 	result['alpha2'] = countryKey
