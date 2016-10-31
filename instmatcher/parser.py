@@ -57,6 +57,7 @@ def extractCountry(affiliation):
 			return {
 				'alpha2': alpha2,
 				'country': country,
+				'countrySource': 'extract',
 			}
 	return {}
 
@@ -108,6 +109,7 @@ def grobid(affiliation):
 		countryKey = root.find('./affiliation/address/country').get('key')
 		result['country'] = countryDict[countryKey]
 		result['alpha2'] = countryKey
+		result['countrySource'] = 'grobid'
 	except (AttributeError, KeyError):
 		result.update(extractCountry(affiliation))
 	

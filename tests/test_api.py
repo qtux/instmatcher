@@ -136,6 +136,7 @@ class test_api(unittest.TestCase):
 				'settlement': 'Prague',
 				'alpha2': 'CZ',
 				'country': 'Czechia',
+				'countrySource': 'grobid',
 				'lat': 50.08804,
 				'lon': 14.42076,
 				'region': 'Prague',

@@ -60,6 +60,7 @@ class test_parser(unittest.TestCase):
 			'institution': None,
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
+			'countrySource': 'grobid',
 			'settlement': 'settlement',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
@@ -113,6 +114,7 @@ class test_parser(unittest.TestCase):
 			'institution': 'institC',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
+			'countrySource': 'grobid',
 			'settlement': None,
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
@@ -132,6 +134,7 @@ class test_parser(unittest.TestCase):
 			'institution': 'institA',
 			'alpha2': 'IN',
 			'country': 'India',
+			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
@@ -169,6 +172,7 @@ class test_parser(unittest.TestCase):
 			'institution': 'institA',
 			'alpha2': 'DZ',
 			'country': 'Algeria',
+			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
@@ -188,6 +192,7 @@ class test_parser(unittest.TestCase):
 			'institution': 'institA',
 			'alpha2': 'IN',
 			'country': 'India',
+			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
 		self.assertEqual(parser.grobid(affiliation), expected)
@@ -207,6 +212,7 @@ class test_parser(unittest.TestCase):
 			'institution': 'institD',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
+			'countrySource': 'grobid',
 			'settlement': 'settlement',
 		}
 		self.assertEqual(parser.grobid(__name__), expected)
@@ -233,6 +239,7 @@ class test_parser(unittest.TestCase):
 			'laboratory': 'lab',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
+			'countrySource': 'grobid',
 			'settlement': 'settlement',
 			'region': 'region',
 			'postCode': 'postCode',
@@ -275,6 +282,7 @@ class test_parser(unittest.TestCase):
 			'laboratory3': 'lab3',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
+			'countrySource': 'grobid',
 			'settlement': 'settlement',
 			'region': 'region',
 			'postCode': 'postCode',
@@ -295,6 +303,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'GN',
 			'country': 'Guinea',
+			'countrySource': 'extract',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -303,6 +312,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'PG',
 			'country': 'Papua New Guinea',
+			'countrySource': 'extract',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -321,5 +331,6 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'ME',
 			'country': 'Montenegro',
+			'countrySource': 'extract',
 		}
 		self.assertEqual(actual, expected)
