@@ -21,20 +21,27 @@ from pkg_resources import resource_filename
 import re
 
 _url = None
-# generate a dictionary of the ISO 3166-1 alpha-2 country codes mapping to the
-# corresponding country names
-countryDict = {}
+# generate two dictionaries mapping the ISO 3166-1 alpha-2 country codes to
+# the corresponding country names and to the corresponding population sizes
+countryDict, populationDict = {}, {}
 countryInfo = resource_filename(__name__, 'data/countryInfo.txt')
 with open(countryInfo) as csvfile:
 	data = filter(lambda row: not row[0].startswith('#'), csvfile)
 	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
 	for row in reader:
 		countryDict[row[0]] = row[4]
-# create a list of country code and country tuples sorted by the length of the
-# country name to avoid false positive recognition of countries when the name is
-# part of another country name
+		populationDict[row[0]] = int(row[7])
+
+# create a list of country code and country tuples
 countryList = list(countryDict.items())
-countryList.sort(key=lambda item: len(item[1]), reverse=True)
+# sort the list by the population size
+countryList.sort(key=lambda item: populationDict[item[0]], reverse=True)
+# move country names which contain a part of another country name before these
+# countries in order to avoid false assignments when extracting them
+for i in range(len(countryList)):
+	for j in range(i + 1, len(countryList)):
+		if countryList[i][1] in countryList[j][1]:
+			countryList.insert(i, countryList.pop(j))
 
 def init(url):
 	'''
