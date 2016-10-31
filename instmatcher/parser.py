@@ -124,6 +124,7 @@ def grobid(affiliation):
 		result['alpha2'] = countryKey
 		result['countrySource'] = 'grobid'
 	except (AttributeError, KeyError):
-		result.update(extractCountry(affiliation))
+		pass
+	result.update(extractCountry(affiliation))
 	
 	return result
