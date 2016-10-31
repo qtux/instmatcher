@@ -60,7 +60,7 @@ def init(url):
 
 def extractCountry(affiliation):
 	'''
-	Try to extract a country from an affiliation string.
+	Try to extract the country information from an affiliation string.
 	
 	:param affiliation: the affiliation to be searched in
 	'''
