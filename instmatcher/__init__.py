@@ -22,7 +22,7 @@ with an external grobid server or by providing self-defined functions.
 
 from .core import query, expandAbbreviations
 from .geo import geocode
-from .parser import grobid
+from .parser import parse
 from .version import __version__
 
 def _appendDoc(docstring):
@@ -88,7 +88,7 @@ _extract_doc = '''
 '''
 
 @_appendDoc(_extract_doc)
-def extractAll(string, parse=grobid, geocode=geocode):
+def extractAll(string, parse=parse, geocode=geocode):
 	'''
 	Yield the data extracted from the affiliation string augmented with
 	each compatible geographical location. The generator is sorted in a
@@ -105,7 +105,7 @@ def extractAll(string, parse=grobid, geocode=geocode):
 		yield affiDict
 
 @_appendDoc(_extract_doc)
-def extract(string, parse=grobid, geocode=geocode):
+def extract(string, parse=parse, geocode=geocode):
 	'''
 	Extract the data from the given affiliation string and augment it
 	with the most likely geographical location.
@@ -114,7 +114,7 @@ def extract(string, parse=grobid, geocode=geocode):
 
 ############################### match function ################################
 
-def match(string, parse=grobid, geocode=geocode, offset=1):
+def match(string, parse=parse, geocode=geocode, offset=1):
 	'''
 	Find the most accurate institution matching the affiliation string.
 	

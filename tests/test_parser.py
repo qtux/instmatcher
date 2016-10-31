@@ -35,7 +35,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': None,
 		}
-		self.assertEqual(parser.grobid(None), expected)
+		self.assertEqual(parser.parse(None), expected)
 	
 	def test_empty(self):
 		self.server.setResponse(__name__, '')
@@ -44,7 +44,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': None,
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_no_institution(self):
 		self.server.setResponse(
@@ -63,7 +63,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_no_alpha2(self):
 		self.server.setResponse(
@@ -81,7 +81,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_no_country(self):
 		self.server.setResponse(
@@ -98,7 +98,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_no_settlement(self):
 		self.server.setResponse(
@@ -117,7 +117,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': None,
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_not_regocnised_country(self):
 		affiliation = 'institA, settlement, INDIA'
@@ -137,7 +137,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation), expected)
 	
 	def test_not_regocnised_bad_country(self):
 		affiliation = 'institA, settlement, Fantasia'
@@ -155,7 +155,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation), expected)
 	
 	def test_not_recognised_country_no_comma_in_affiliation_string(self):
 		affiliation = 'institA settlement Algeria'
@@ -175,7 +175,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation), expected)
 	
 	def test_multiple_not_recognised_countries(self):
 		affiliation = 'institA settlement Algeria India'
@@ -195,7 +195,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation), expected)
 	
 	def test_releveant_tags(self):
 		self.server.setResponse(
@@ -215,7 +215,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': 'settlement',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_every_tags(self):
 		self.server.setResponse(
@@ -244,7 +244,7 @@ class test_parser(unittest.TestCase):
 			'region': 'region',
 			'postCode': 'postCode',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_multiple_institutions(self):
 		self.server.setResponse(
@@ -287,7 +287,7 @@ class test_parser(unittest.TestCase):
 			'region': 'region',
 			'postCode': 'postCode',
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
@@ -296,7 +296,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': None,
 		}
-		self.assertEqual(parser.grobid(__name__), expected)
+		self.assertEqual(parser.parse(__name__), expected)
 	
 	def test_extract_Guinea(self):
 		actual = parser.extractCountry('guinea')

@@ -65,7 +65,10 @@ def extractCountry(affiliation):
 	:param affiliation: the affiliation to be searched in
 	'''
 	for alpha2, country in countryList:
-		match = re.search(r'\b(?i){}$'.format(country), affiliation)
+		try:
+			match = re.search(r'\b(?i){}$'.format(country), affiliation)
+		except TypeError:
+			return {}
 		if match:
 			return {
 				'alpha2': alpha2,
@@ -76,12 +79,12 @@ def extractCountry(affiliation):
 
 def grobid(affiliation):
 	'''
-	Parse the given affiliation string using grobid.
+	Try to extract information from an affiliation string using grobid.
 	
 	:param affiliation: the affiliation string to be parsed
 	'''
 	# default return value
-	result = dict.fromkeys(['institution', 'alpha2','settlement',])
+	result = {}
 	
 	# let grobid process the given affiliation string
 	try:
@@ -123,6 +126,21 @@ def grobid(affiliation):
 		result['countrySource'] = 'grobid'
 	except (AttributeError, KeyError):
 		pass
-	result.update(extractCountry(affiliation))
 	
+	return result
+
+def parse(affiliation):
+	'''
+	Parse the given affiliation string.
+	
+	:param affiliation: the affiliation string to be parsed
+	'''
+	# required return values
+	result = {
+		'institution': None,
+		'alpha2': None,
+		'settlement': None,
+	}
+	result.update(grobid(affiliation))
+	result.update(extractCountry(affiliation))
 	return result
