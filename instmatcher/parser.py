@@ -80,8 +80,6 @@ def grobid(affiliation):
 	
 	:param affiliation: the affiliation string to be parsed
 	'''
-	# retrieved address tags
-	addressTags = ['settlement', 'region', 'postCode',]
 	# default return value
 	result = dict.fromkeys(['institution', 'alpha2','settlement',])
 	
@@ -111,7 +109,7 @@ def grobid(affiliation):
 			result[orgType + number] = org.text
 	
 	# try to find address data
-	for tag in addressTags:
+	for tag in ['settlement', 'region', 'postCode',]:
 		try:
 			result[tag] = root.find('./affiliation/address/' + tag).text
 		except AttributeError:
