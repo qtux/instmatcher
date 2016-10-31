@@ -34,6 +34,12 @@ with open(countryInfo) as csvfile:
 
 # create a list of country code and country tuples
 countryList = list(countryDict.items())
+# add alternative country names
+altCountries = resource_filename(__name__, 'data/alternativeCountryNames.csv')
+with open(altCountries) as csvfile:
+	reader = csv.reader(csvfile)
+	for row in reader:
+		countryList.append((row[0], row[1]))
 # sort the list by the population size
 countryList.sort(key=lambda item: populationDict[item[0]], reverse=True)
 # move country names which contain a part of another country name before these
@@ -63,7 +69,7 @@ def extractCountry(affiliation):
 		if match:
 			return {
 				'alpha2': alpha2,
-				'country': country,
+				'country': countryDict[alpha2],
 				'countrySource': 'extract',
 			}
 	return {}

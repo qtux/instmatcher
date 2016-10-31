@@ -154,6 +154,7 @@ setup(
 	package_data={
 		'instmatcher': [
 			'data/abbreviations.csv',
+			'data/alternativeCountryNames.csv',
 			'data/countryInfo.txt',
 			'data/index/*',
 			'data/geoindex/*',
