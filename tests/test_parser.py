@@ -334,3 +334,11 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 		}
 		self.assertEqual(actual, expected)
+	
+	def test_country_successors_name_are_not_part_of_predecessors_name(self):
+		length = len(parser.countryList)
+		for i in range(length):
+			for j in range(i + 1, length):
+				predeccesor = parser.countryList[i][1]
+				successor = parser.countryList[j][1]
+				self.assertNotIn(predeccesor, successor)
