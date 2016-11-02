@@ -91,6 +91,9 @@ def expandAbbreviations(text):
 	
 	:param text: the text in which abbreviations should be expanded
 	'''
-	for abbrev, expansion in abbreviations.items():
-		text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
+	try:
+		for abbrev, expansion in abbreviations.items():
+			text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
+	except TypeError:
+		pass
 	return text
