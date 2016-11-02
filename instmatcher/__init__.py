@@ -78,7 +78,7 @@ def find(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 	try:
 		return next(findAll(institution, alpha2, lat, lon, offset))
 	except StopIteration:
-		return None
+		return
 
 ############################## extract functions ##############################
 _extract_doc = '''
