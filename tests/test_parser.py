@@ -31,7 +31,7 @@ class test_parser(unittest.TestCase):
 	
 	def test_None(self):
 		expected = {
-			'institution': None,
+			'institution': [],
 			'alpha2': None,
 			'settlement': None,
 		}
@@ -40,7 +40,7 @@ class test_parser(unittest.TestCase):
 	def test_empty(self):
 		self.server.setResponse(__name__, '')
 		expected = {
-			'institution': None,
+			'institution': [],
 			'alpha2': None,
 			'settlement': None,
 		}
@@ -57,7 +57,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': None,
+			'institution': [],
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -77,7 +77,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institA',
+			'institution': ['institA',],
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
@@ -94,7 +94,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institB',
+			'institution': ['institB',],
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
@@ -111,7 +111,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institC',
+			'institution': ['institC',],
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -131,7 +131,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institA',
+			'institution': ['institA',],
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
@@ -151,7 +151,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institA',
+			'institution': ['institA',],
 			'alpha2': None,
 			'settlement': 'settlement',
 		}
@@ -169,7 +169,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institA',
+			'institution': ['institA',],
 			'alpha2': 'DZ',
 			'country': 'Algeria',
 			'countrySource': 'extract',
@@ -189,7 +189,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institA',
+			'institution': ['institA',],
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
@@ -209,7 +209,7 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institD',
+			'institution': ['institD',],
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -234,9 +234,9 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'institE',
-			'department': 'dep',
-			'laboratory': 'lab',
+			'institution': ['institE',],
+			'department': ['dep',],
+			'laboratory': ['lab',],
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -271,15 +271,9 @@ class test_parser(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = {
-			'institution': 'instit1',
-			'institution2': 'instit2',
-			'institution3': 'instit3',
-			'department': 'dep1',
-			'department2': 'dep2',
-			'department3': 'dep3',
-			'laboratory': 'lab1',
-			'laboratory2': 'lab2',
-			'laboratory3': 'lab3',
+			'institution': ['instit1', 'instit2', 'instit3',],
+			'department': ['dep1', 'dep2', 'dep3',],
+			'laboratory': ['lab1', 'lab2', 'lab3',],
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -292,7 +286,7 @@ class test_parser(unittest.TestCase):
 	def test_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
 		expected = {
-			'institution': None,
+			'institution': [],
 			'alpha2': None,
 			'settlement': None,
 		}

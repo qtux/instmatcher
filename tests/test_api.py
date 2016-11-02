@@ -42,11 +42,20 @@ class test_api(unittest.TestCase):
 	def test_find_None(self):
 		self.assert_find_functions(None, [])
 	
+	def test_find_String(self):
+		self.assert_find_functions('University of Madrid', [])
+	
+	def test_find_empty(self):
+		self.assert_find_functions([], [])
+	
+	def test_find_None_list(self):
+		self.assert_find_functions([None, None,], [])
+	
 	def test_find_Univ_Fantasia(self):
-		self.assert_find_functions('University of Fantasia', [])
+		self.assert_find_functions(['University of Fantasia',], [])
 	
 	def test_find_Univ_Boston(self):
-		arg = 'Univ Boston'
+		arg = ['Univ Boston',]
 		expected = [
 			{
 				'name': 'Boston University',
@@ -80,7 +89,7 @@ class test_api(unittest.TestCase):
 		self.assert_find_functions(arg, expected)
 	
 	def test_find_TU_Berlin(self):
-		arg = 'TU Berlin'
+		arg = ['TU Berlin',]
 		expected = [
 			{
 				'name': 'Technical University of Berlin',
@@ -99,7 +108,7 @@ class test_api(unittest.TestCase):
 		arg = None
 		expected = [
 			{
-				'institution': None,
+				'institution': [],
 				'settlement': None,
 				'alpha2': None,
 			},
@@ -110,7 +119,7 @@ class test_api(unittest.TestCase):
 		arg = 'Unknown'
 		expected = [
 			{
-				'institution': None,
+				'institution': [],
 				'settlement': None,
 				'alpha2': None,
 			},
@@ -132,7 +141,7 @@ class test_api(unittest.TestCase):
 		)
 		expected = [
 			{
-				'institution': 'Charles University',
+				'institution': ['Charles University',],
 				'settlement': 'Prague',
 				'alpha2': 'CZ',
 				'country': 'Czechia',
@@ -158,56 +167,56 @@ class test_api(unittest.TestCase):
 		)
 		expected = [
 			{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 51.50853,
 				'lon': -0.12574,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 42.98339,
 				'lon': -81.23304,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 37.12898,
 				'lon': -84.08326,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 39.88645,
 				'lon': -83.44825,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 51.51279,
 				'lon': -0.09184,
 				'region': 'London',
 			},{
-				'institution':'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 36.47606,
 				'lon': -119.44318,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 35.32897,
 				'lon': -93.25296,
 				'region': 'London',
 			},{
-				'institution': 'University of London',
+				'institution': ['University of London',],
 				'settlement': 'London',
 				'alpha2': None,
 				'lat': 1.98487,

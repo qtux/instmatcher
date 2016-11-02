@@ -50,7 +50,7 @@ _find_doc = '''
 	an offset of one degree of arc corresponds to about 111 km: Using an
 	offset of 1 results into a box with a width of approximately 222 km.
 	
-	:param institution: the institution name to search for
+	:param institution: the list of institutions to search for
 	:param alpha2: the country to restrict search results to
 	:param lat: the latitude describing the middle of the preferred box
 	:param lon: the longitude describing the middle of preferred box
@@ -64,11 +64,12 @@ def findAll(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 	Yield all institutions compatible to the search parameters sorted in
 	descending order starting with the most accurate search result.
 	'''
-	if not institution:
+	if not isinstance(institution, list):
 		return
-	fullName = expandAbbreviations(institution)
-	for result in query(fullName, alpha2, lat, lon, offset):
-		yield result[0]
+	for inst in institution:
+		fullName = expandAbbreviations(inst)
+		for result in query(fullName, alpha2, lat, lon, offset):
+			yield result[0]
 
 @_appendDoc(_find_doc)
 def find(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):

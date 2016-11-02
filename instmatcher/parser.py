@@ -103,13 +103,7 @@ def grobid(affiliation):
 	# try to find institutions and their corresponding labs and departments
 	organisations = root.findall('./affiliation/orgName')
 	for org in organisations:
-		orgType = org.get('type')
-		orgKey = org.get('key')
-		number = next(filter(str.isdigit, orgKey)) if orgKey else '1'
-		if number == '1':
-			result[orgType] = org.text
-		else:
-			result[orgType + number] = org.text
+		result.setdefault(org.get('type'), []).append(org.text)
 	
 	# try to find address data
 	for tag in ['settlement', 'region', 'postCode',]:
@@ -137,7 +131,7 @@ def parse(affiliation):
 	'''
 	# required return values
 	result = {
-		'institution': None,
+		'institution': [],
 		'alpha2': None,
 		'settlement': None,
 	}

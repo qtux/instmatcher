@@ -16,6 +16,7 @@ import csv
 import instmatcher
 import argparse
 import pprint
+import json
 
 def classify(sample, url):
 	pp = pprint.PrettyPrinter(indent=4)
@@ -81,7 +82,7 @@ def extract(sample, url):
 			result = instmatcher.extract(row[0])
 			writer.writerow([
 				row[0],
-				result['institution'],
+				json.dumps(result['institution']),
 				result['settlement'],
 				result['alpha2'],
 				result.get('country'),
@@ -129,7 +130,7 @@ def find(sample):
 		writer.writerow(fieldnames)
 		for row in reader:
 			result = instmatcher.find(
-				row[1],
+				json.loads(row[1]),
 				row[3],
 				None if row[5] == '' else row[5],
 				None if row[6] == '' else row[6]
