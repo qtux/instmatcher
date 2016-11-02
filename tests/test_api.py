@@ -153,6 +153,47 @@ class test_api(unittest.TestCase):
 		]
 		self.assert_extract_functions(arg, expected)
 	
+	def test_find_Univ_Leuven(self):
+		arg = ['Univ Leuven',]
+		expected = [
+			{
+				'name': 'Katholieke Universiteit Leuven Campus Kortrijk',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': '50.806139',
+				'lon': '3.291939',
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q1736308',
+				'type': 'university',
+			},{
+				'name': 'Catholic University of Leuven',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': '50.669722222222',
+				'lon': '4.6122222222222',
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q5121415',
+				'type': 'university',
+			},
+		]
+		self.assert_find_functions(arg, expected)
+	
+	def test_find_Univ_Louvain(self):
+		arg = ['Univ Louvain',]
+		expected = [
+			{
+				'name': 'Université catholique de Louvain',
+				'alpha2': 'BE',
+				'country': 'Belgium',
+				'lat': '50.669611111111',
+				'lon': '4.6122638888889',
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q378134',
+				'type': 'university',
+			},
+		]
+		self.assert_find_functions(arg, expected)
+	
 	def test_extract_London(self):
 		arg = 'University of London, London'
 		self.server.setResponse(
