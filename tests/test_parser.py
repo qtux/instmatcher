@@ -29,7 +29,7 @@ class test_parser(unittest.TestCase):
 	def tearDown(self):
 		self.server.stop()
 	
-	def test_None(self):
+	def test_parse_None(self):
 		expected = {
 			'institution': [],
 			'alpha2': None,
@@ -37,7 +37,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(None), expected)
 	
-	def test_empty(self):
+	def test_parse_empty(self):
 		self.server.setResponse(__name__, '')
 		expected = {
 			'institution': [],
@@ -46,7 +46,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_no_institution(self):
+	def test_parse_no_institution(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -65,7 +65,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_no_alpha2(self):
+	def test_parse_no_alpha2(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -83,7 +83,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_no_country(self):
+	def test_parse_no_country(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -100,7 +100,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_no_settlement(self):
+	def test_parse_no_settlement(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -119,7 +119,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_not_regocnised_country(self):
+	def test_parse_not_regocnised_country(self):
 		affiliation = 'institA, settlement, INDIA'
 		self.server.setResponse(
 			affiliation,
@@ -139,7 +139,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
-	def test_not_regocnised_bad_country(self):
+	def test_parse_not_regocnised_bad_country(self):
 		affiliation = 'institA, settlement, Fantasia'
 		self.server.setResponse(
 			affiliation,
@@ -157,7 +157,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
-	def test_not_recognised_country_no_comma_in_affiliation_string(self):
+	def test_parse_not_recognised_country_no_comma_in_affiliation_string(self):
 		affiliation = 'institA settlement Algeria'
 		self.server.setResponse(
 			affiliation,
@@ -177,7 +177,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
-	def test_multiple_not_recognised_countries(self):
+	def test_parse_multiple_not_recognised_countries(self):
 		affiliation = 'institA settlement Algeria India'
 		self.server.setResponse(
 			affiliation,
@@ -197,7 +197,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
-	def test_releveant_tags(self):
+	def test_parse_releveant_tags(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -217,7 +217,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_every_tags(self):
+	def test_parse_every_tags(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -246,7 +246,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_multiple_institutions(self):
+	def test_parse_multiple_institutions(self):
 		self.server.setResponse(
 			__name__,
 			'''<affiliation>
@@ -283,7 +283,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_invalid_xml(self):
+	def test_parse_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
 		expected = {
 			'institution': [],
@@ -292,7 +292,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_extract_Guinea(self):
+	def test_extractCountry_Guinea(self):
 		actual = parser.extractCountry('guinea')
 		expected = {
 			'alpha2': 'GN',
@@ -301,7 +301,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_extract_Papua_New_Guinea(self):
+	def test_extractCountry_Papua_New_Guinea(self):
 		actual = parser.extractCountry('papua new guinea')
 		expected = {
 			'alpha2': 'PG',
@@ -310,17 +310,17 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_extract_None(self):
+	def test_extractCountry_None(self):
 		actual = parser.extractCountry('there is no country in this string')
 		expected = {}
 		self.assertEqual(actual, expected)
 	
-	def test_extract_empty(self):
+	def test_extractCountry_empty(self):
 		actual = parser.extractCountry('')
 		expected = {}
 		self.assertEqual(actual, expected)
 	
-	def test_extract_multiple_countries(self):
+	def test_extractCountry_multiple_countries(self):
 		actual = parser.extractCountry('Serbia Montenegro')
 		expected = {
 			'alpha2': 'ME',
@@ -329,7 +329,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_country_successors_name_are_not_part_of_predecessors_name(self):
+	def test_extractCountry_successors_name_are_not_part_of_predecessors(self):
 		length = len(parser.countryList)
 		for i in range(length):
 			for j in range(i + 1, length):
