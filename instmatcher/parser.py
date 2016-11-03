@@ -77,6 +77,34 @@ def extractCountry(affiliation):
 			}
 	return {}
 
+def improveInstitutions(institutionList, affiliation):
+	'''
+	Try to correct a list of institutions retrieved from an affiliation.
+	
+	:param institutionList: the list of institutions
+	:param affiliation: the affiliation string
+	'''
+	# try to extract the string before the first comma
+	pattern = re.compile(r'^[^,]+(?=,)')
+	try:
+		match = re.search(pattern, affiliation)
+	except TypeError:
+		return
+	try:
+		extracted = match.group(0)
+	except AttributeError:
+		return
+	
+	# improve the institution list
+	if not institutionList:
+		institutionList.append(extracted)
+	elif institutionList[0] in extracted:
+		institutionList[0] = extracted
+	elif extracted in institutionList[0]:
+		institutionList.insert(1, extracted)
+	else:
+		institutionList.insert(0, extracted)
+
 def grobid(affiliation):
 	'''
 	Try to extract information from an affiliation string using grobid.
@@ -137,4 +165,5 @@ def parse(affiliation):
 	}
 	result.update(grobid(affiliation))
 	result.update(extractCountry(affiliation))
+	improveInstitutions(result['institution'], affiliation)
 	return result

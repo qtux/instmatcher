@@ -336,3 +336,63 @@ class test_parser(unittest.TestCase):
 				predeccesor = parser.countryList[i][1]
 				successor = parser.countryList[j][1]
 				self.assertNotIn(predeccesor, successor)
+	
+	def test_improveInstitutions_empty_args(self):
+		args = ([], None)
+		parser.improveInstitutions(*args)
+		expected = []
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_empty_list(self):
+		args = ([], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_comma_before_words(self):
+		args = ([], ',comma before any words')
+		parser.improveInstitutions(*args)
+		expected = []
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_identical(self):
+		args = (['first words',], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_left_part(self):
+		args = (['fir',], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_middle_part(self):
+		args = (['st word',], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_right_part(self):
+		args = (['words',], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_more_on_the_right(self):
+		args = (['first words, second part',], 'first words, second part, ...')
+		parser.improveInstitutions(*args)
+		expected = ['first words, second part', 'first words',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_overlap_on_the_right(self):
+		args = (['words, second',], 'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words', 'words, second',]
+		self.assertEqual(args[0], expected)
+	
+	def test_improveInstitutions_no_overlap(self):
+		args = (['third word',],  'first words, second part, third word list')
+		parser.improveInstitutions(*args)
+		expected = ['first words', 'third word',]
+		self.assertEqual(args[0], expected)
