@@ -127,3 +127,8 @@ class test_geo(unittest.TestCase):
 		actual = list(geo.geocode('St Petersburg', 'RU'))
 		expected = [{'lat': 59.93863, 'lon': 30.31413,},]
 		self.assertSequenceEqual(actual, expected)
+	
+	def test_with_comma(self):
+		actual = list(geo.geocode('Pohang, Kyungbuk', 'KR'))
+		expected = []
+		self.assertSequenceEqual(actual, expected)

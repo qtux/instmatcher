@@ -36,7 +36,7 @@ def geocode(settlement, alpha2, **ignore):
 	'''
 	if not settlement:
 		return
-	text = 'name:"{key}" OR asci:"{key}" OR alias:"{key}"'.format(key=settlement)
+	text = "name:'{key}' OR asci:'{key}' OR alias:'{key}'".format(key=settlement)
 	query = parser.parse(text)
 	filterTerm = Term('alpha2', alpha2) if alpha2 else None
 	with ix.searcher() as searcher:
