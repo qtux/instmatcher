@@ -72,8 +72,11 @@ def extract(sample, url):
 		fieldnames.extend([
 			'institution',
 			'settlement',
+			'postCode',
+			'region',
 			'alpha2',
 			'country',
+			'countrySource',
 			'lat',
 			'lon',
 		])
@@ -84,8 +87,11 @@ def extract(sample, url):
 				row[0],
 				json.dumps(result['institution']),
 				result['settlement'],
+				result.get('postCode'),
+				result.get('region'),
 				result['alpha2'],
 				result.get('country'),
+				result.get('countrySource'),
 				result.get('lat'),
 				result.get('lon'),
 			])
