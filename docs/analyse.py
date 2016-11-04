@@ -124,30 +124,32 @@ def match(sample, url):
 
 def find(sample):
 	with open(sample, 'r') as s, open(sample + '_found', 'w') as r:
-		reader = csv.reader(s)
-		writer = csv.writer(r)
-		fieldnames = next(reader)
+		reader = csv.DictReader(s)
+		fieldnames = reader.fieldnames.copy()
 		fieldnames.extend([
-			'name',
-			'type',
-			'alpha2',
-			'country',
+			'inst_name',
+			'inst_type',
+			'inst_alpha2',
+			'inst_country',
+			'inst_lat',
+			'inst_lon',
+			'inst_isni',
+			'inst_source',
 		])
-		writer.writerow(fieldnames)
+		writer = csv.DictWriter(r, fieldnames=fieldnames)
+		writer.writeheader()
 		for row in reader:
 			result = instmatcher.find(
-				json.loads(row[1]),
-				row[3],
-				None if row[5] == '' else row[5],
-				None if row[6] == '' else row[6]
+				json.loads(row['institution']),
+				row['alpha2'],
+				None if row['lat'] == '' else row['lat'],
+				None if row['lon'] == '' else row['lon']
 			)
 			if result:
-				row.extend([
-					result['name'],
-					result['type'],
-					result['alpha2'],
-					result['country'],
-				])
+				prefixedResult = {}
+				for k,v in result.items():
+					prefixedResult['inst_' + k] = v
+				row.update(prefixedResult)
 			writer.writerow(row)
 
 if __name__ == '__main__':
