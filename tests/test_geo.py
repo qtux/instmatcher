@@ -31,6 +31,7 @@ class test_geo(unittest.TestCase):
 		actual = list(geo.geocode('Sao Paulo', None))
 		expected = [
 			{'lat': -23.5475, 'lon': -46.63611,},
+			{'lat': -10.54944, 'lon': -37.53444},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
@@ -38,6 +39,7 @@ class test_geo(unittest.TestCase):
 		actual = list(geo.geocode('São Paulo', None))
 		expected = [
 			{'lat': -23.5475, 'lon': -46.63611,},
+			{'lat': -10.54944, 'lon': -37.53444},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
@@ -119,4 +121,9 @@ class test_geo(unittest.TestCase):
 	def test_London_IT(self):
 		actual = list(geo.geocode('London', 'IT'))
 		expected = []
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_St_Petersburg_RU(self):
+		actual = list(geo.geocode('St Petersburg', 'RU'))
+		expected = [{'lat': 59.93863, 'lon': 30.31413,},]
 		self.assertSequenceEqual(actual, expected)
