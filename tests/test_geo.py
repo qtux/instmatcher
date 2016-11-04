@@ -128,7 +128,17 @@ class test_geo(unittest.TestCase):
 		expected = [{'lat': 59.93863, 'lon': 30.31413,},]
 		self.assertSequenceEqual(actual, expected)
 	
+	def test_St_Petersburg_RU_wrong_case(self):
+		actual = list(geo.geocode('st peTERSBURg', 'RU'))
+		expected = [{'lat': 59.93863, 'lon': 30.31413,},]
+		self.assertSequenceEqual(actual, expected)
+	
 	def test_with_comma(self):
 		actual = list(geo.geocode('Pohang, Kyungbuk', 'KR'))
 		expected = []
+		self.assertSequenceEqual(actual, expected)
+	
+	def test_Santiago_De_Compostela(self):
+		actual = list(geo.geocode('Santiago De Compostela', None))
+		expected = [{'lat': 42.88052, 'lon': -8.54569},]
 		self.assertSequenceEqual(actual, expected)

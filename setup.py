@@ -76,9 +76,9 @@ def create_geoindex(procs, multisegment, ixPath):
 		for row in reader:
 			population = int(row[14])
 			writer.add_document(
-				name=row[1],
-				asci=row[2],
-				alias=row[3],
+				name=row[1].lower(),
+				asci=row[2].lower(),
+				alias=row[3].lower(),
 				lat=row[4],
 				lon=row[5],
 				alpha2=row[8],
