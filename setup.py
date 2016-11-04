@@ -62,7 +62,7 @@ def create_geoindex(procs, multisegment, ixPath):
 	schema = Schema(
 		name=ID(stored=True),
 		asci=ID,
-		alias=IDLIST(expression=r"[^,]+"),
+		alias=IDLIST(expression=r'[^,]+'),
 		lat=STORED,
 		lon=STORED,
 		alpha2=ID(stored=True),
