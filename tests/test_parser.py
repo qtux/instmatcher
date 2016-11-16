@@ -21,8 +21,8 @@ class test_parser(unittest.TestCase):
 	def setUp(self):
 		host = 'localhost'
 		port = 8081
-		url = 'http://' + host + ':' + str(port)
-		parser.init(url)
+		self.url = 'http://' + host + ':' + str(port)
+		parser.init(self.url)
 		self.server = GrobidServer(host, port)
 		self.server.start()
 	
@@ -396,3 +396,30 @@ class test_parser(unittest.TestCase):
 		parser.improveInstitutions(*args)
 		expected = ['first words', 'third word',]
 		self.assertEqual(args[0], expected)
+	
+	def test_queryGrobid_None(self):
+		actual = parser.queryGrobid(None, self.url)
+		expected = '<results></results>'
+		self.assertEqual(actual, expected)
+	
+	def test_queryGrobid_invalid_type(self):
+		actual = parser.queryGrobid([1,2,3,], self.url)
+		expected = '<results></results>'
+		self.assertEqual(actual, expected)
+	
+	def test_queryGrobid_empty_string(self):
+		actual = parser.queryGrobid('', self.url)
+		expected = '<results></results>'
+		self.assertEqual(actual, expected)
+	
+	def test_queryGrobid_valid_xml(self):
+		self.server.setResponse('valid_output', '<affiliation/>')
+		actual = parser.queryGrobid('valid_output', self.url)
+		expected = '<results><affiliation/></results>'
+		self.assertEqual(actual, expected)
+	
+	def test_queryGrobid_invalid_xml(self):
+		self.server.setResponse('invalid_output', '>invalid<')
+		actual = parser.queryGrobid('invalid_output', self.url)
+		expected = '<results>>invalid<</results>'
+		self.assertEqual(actual, expected)

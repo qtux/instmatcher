@@ -105,6 +105,20 @@ def improveInstitutions(institutionList, affiliation):
 	else:
 		institutionList.insert(0, extracted)
 
+def queryGrobid(affiliation, url):
+	'''
+	Try to retrieve a structured xml representation of the the
+	affiliation string using grobid.
+	
+	:param affiliation: the affiliation string to be sent to grobid
+	'''
+	try:
+		cmd = 'affiliations=' + affiliation
+	except TypeError:
+		return '<results></results>'
+	r = requests.post(url + '/processAffiliations', data=cmd)
+	return '<results>' + r.content.decode('UTF-8') + '</results>'
+
 def grobid(affiliation):
 	'''
 	Try to extract information from an affiliation string using grobid.
@@ -114,17 +128,9 @@ def grobid(affiliation):
 	# default return value
 	result = {}
 	
-	# let grobid process the given affiliation string
-	try:
-		cmd = 'affiliations=' + affiliation
-	except TypeError:
-		return result
-	r = requests.post(_url + '/processAffiliations', data=cmd)
-	xml = r.content.decode('UTF-8')
-	
 	# return if the returned string is not parseable
 	try:
-		root = et.fromstring('<results>' + xml + '</results>')
+		root = et.fromstring(queryGrobid(affiliation, _url))
 	except et.ParseError:
 		return result
 	
