@@ -95,33 +95,39 @@ def parseAddress(affiliation, root):
 	
 	return result
 
-def improveInstitutions(institutionList, affiliation):
+def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
 	'''
-	Try to correct a list of institutions retrieved from an affiliation.
+	Parse every type of organisation inside the retrieved grobid xml
+	string and try to improve the list of possible institutions using
+	the part of the affiliation string before the first comma.
 	
-	:param institutionList: the list of institutions
 	:param affiliation: the affiliation string
+	:param root: the root node of the grobid xml string
+	:param pattern: the pattern for the string before the first comma
 	'''
-	# try to extract the string before the first comma
-	pattern = re.compile(r'^[^,]+(?=,)')
+	result = {'institution': []}
+	for org in root.findall('./affiliation/orgName'):
+		result.setdefault(org.get('type'), []).append(org.text)
+	
 	try:
 		match = re.search(pattern, affiliation)
 	except TypeError:
-		return
+		return result
 	try:
 		extracted = match.group(0)
 	except AttributeError:
-		return
+		return result
 	
-	# improve the institution list
-	if not institutionList:
-		institutionList.append(extracted)
-	elif institutionList[0] in extracted:
-		institutionList[0] = extracted
-	elif extracted in institutionList[0]:
-		institutionList.insert(1, extracted)
+	if not result['institution']:
+		result['institution'].append(extracted)
+	elif result['institution'][0] in extracted:
+		result['institution'][0] = extracted
+	elif extracted in result['institution'][0]:
+		result['institution'].insert(1, extracted)
 	else:
-		institutionList.insert(0, extracted)
+		result['institution'].insert(0, extracted)
+	
+	return result
 
 def queryGrobid(affiliation, url):
 	'''
@@ -137,30 +143,6 @@ def queryGrobid(affiliation, url):
 	r = requests.post(url + '/processAffiliations', data=cmd)
 	return '<results>' + r.content.decode('UTF-8') + '</results>'
 
-def grobid(affiliation):
-	'''
-	Try to extract information from an affiliation string using grobid.
-	
-	:param affiliation: the affiliation string to be parsed
-	'''
-	# default return value
-	result = {}
-	
-	# return if the returned string is not parseable
-	try:
-		root = et.fromstring(queryGrobid(affiliation, _url))
-	except et.ParseError:
-		return result
-	
-	# try to find institutions and their corresponding labs and departments
-	organisations = root.findall('./affiliation/orgName')
-	for org in organisations:
-		result.setdefault(org.get('type'), []).append(org.text)
-	
-	result.update(parseAddress(affiliation, root))
-	
-	return result
-
 def parse(affiliation):
 	'''
 	Parse the given affiliation string.
@@ -173,6 +155,10 @@ def parse(affiliation):
 		'alpha2': None,
 		'settlement': None,
 	}
-	result.update(grobid(affiliation))
-	improveInstitutions(result['institution'], affiliation)
+	try:
+		root = et.fromstring(queryGrobid(affiliation, _url))
+	except et.ParseError:
+		return result
+	result.update(parseOrganisations(affiliation, root))
+	result.update(parseAddress(affiliation, root))
 	return result
