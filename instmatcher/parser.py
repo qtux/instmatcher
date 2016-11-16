@@ -58,24 +58,42 @@ def init(url):
 	global _url
 	_url = url
 
-def extractCountry(affiliation):
+def parseAddress(affiliation, root):
 	'''
-	Try to extract the country information from an affiliation string.
+	Parse every address tag inside the retrieved grobid xml string and
+	try to improve the country information searching for a valid country
+	at the end of the affiliation string.
 	
-	:param affiliation: the affiliation to be searched in
+	:param affiliation: the affiliation string
+	:param root: the root node of the grobid xml string
 	'''
+	result = {}
 	for alpha2, country in countryList:
 		try:
 			match = re.search(r'\b(?i){}$'.format(country), affiliation)
 		except TypeError:
-			return {}
+			return result
 		if match:
-			return {
-				'alpha2': alpha2,
-				'country': countryDict[alpha2],
-				'countrySource': 'extract',
-			}
-	return {}
+			result['alpha2'] = alpha2
+			result['country'] = countryDict[alpha2]
+			result['countrySource'] = 'extract'
+			break
+	else:
+		for country in root.findall('./affiliation/address/country'):
+			result['alpha2'] = country.get('key')
+			try:
+				result['country'] = countryDict[result['alpha2']]
+				result['countrySource'] = 'grobid'
+				break
+			except KeyError:
+				pass
+	
+	for tag in ['settlement', 'region', 'postCode',]:
+		for addressTag in root.findall('./affiliation/address/' + tag):
+			result[tag] = addressTag.text
+			break
+	
+	return result
 
 def improveInstitutions(institutionList, affiliation):
 	'''
@@ -139,21 +157,7 @@ def grobid(affiliation):
 	for org in organisations:
 		result.setdefault(org.get('type'), []).append(org.text)
 	
-	# try to find address data
-	for tag in ['settlement', 'region', 'postCode',]:
-		try:
-			result[tag] = root.find('./affiliation/address/' + tag).text
-		except AttributeError:
-			pass
-	
-	# try to find the alpha2 code and the corresponding country name
-	try:
-		countryKey = root.find('./affiliation/address/country').get('key')
-		result['country'] = countryDict[countryKey]
-		result['alpha2'] = countryKey
-		result['countrySource'] = 'grobid'
-	except (AttributeError, KeyError):
-		pass
+	result.update(parseAddress(affiliation, root))
 	
 	return result
 
@@ -170,6 +174,5 @@ def parse(affiliation):
 		'settlement': None,
 	}
 	result.update(grobid(affiliation))
-	result.update(extractCountry(affiliation))
 	improveInstitutions(result['institution'], affiliation)
 	return result

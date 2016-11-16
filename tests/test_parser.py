@@ -15,6 +15,7 @@
 import unittest
 from .util import GrobidServer
 from instmatcher import parser
+import xml.etree.ElementTree as et
 
 class test_parser(unittest.TestCase):
 	
@@ -292,8 +293,8 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
-	def test_extractCountry_Guinea(self):
-		actual = parser.extractCountry('guinea')
+	def test_parseAddress_Guinea(self):
+		actual = parser.parseAddress('guinea', et.Element(None))
 		expected = {
 			'alpha2': 'GN',
 			'country': 'Guinea',
@@ -301,8 +302,8 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_extractCountry_Papua_New_Guinea(self):
-		actual = parser.extractCountry('papua new guinea')
+	def test_parseAddress_Papua_New_Guinea(self):
+		actual = parser.parseAddress('papua new guinea', et.Element(None))
 		expected = {
 			'alpha2': 'PG',
 			'country': 'Papua New Guinea',
@@ -310,18 +311,18 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_extractCountry_None(self):
-		actual = parser.extractCountry('there is no country in this string')
+	def test_parseAddress_None(self):
+		actual = parser.parseAddress('there is no country in this string', et.Element(None))
 		expected = {}
 		self.assertEqual(actual, expected)
 	
-	def test_extractCountry_empty(self):
-		actual = parser.extractCountry('')
+	def test_parseAddress_empty(self):
+		actual = parser.parseAddress('', et.Element(None))
 		expected = {}
 		self.assertEqual(actual, expected)
 	
-	def test_extractCountry_multiple_countries(self):
-		actual = parser.extractCountry('Serbia Montenegro')
+	def test_parseAddress_multiple_countries(self):
+		actual = parser.parseAddress('Serbia Montenegro', et.Element(None))
 		expected = {
 			'alpha2': 'ME',
 			'country': 'Montenegro',
@@ -329,7 +330,7 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
-	def test_extractCountry_successors_name_are_not_part_of_predecessors(self):
+	def test_countryList_successors_name_are_not_part_of_predecessors(self):
 		length = len(parser.countryList)
 		for i in range(length):
 			for j in range(i + 1, length):
