@@ -36,8 +36,12 @@ def geocode(settlement, alpha2, **ignore):
 	'''
 	if not settlement:
 		return
+	lowerSettlement = settlement.lower()
 	text = "name:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
-		key=settlement.lower()
+		key=lowerSettlement
+	)
+	text += " OR name:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
+		key=lowerSettlement.replace(' ', '-')
 	)
 	query = parser.parse(text)
 	filterTerm = Term('alpha2', alpha2) if alpha2 else None

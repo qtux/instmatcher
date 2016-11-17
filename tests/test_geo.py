@@ -142,3 +142,8 @@ class test_geo(unittest.TestCase):
 		actual = list(geo.geocode('Santiago De Compostela', None))
 		expected = [{'lat': 42.88052, 'lon': -8.54569},]
 		self.assertSequenceEqual(actual, expected)
+	
+	def test_Gif_Sur_Yvette_without_hyphens(self):
+		actual = list(geo.geocode('Gif Sur Yvette', None))
+		expected = [{'lat': 48.68333, 'lon': 2.13333},]
+		self.assertSequenceEqual(actual, expected)
