@@ -68,26 +68,33 @@ def parseAddress(affiliation, root):
 	:param root: the root node of the grobid xml string
 	'''
 	result = {}
+	
+	# extract the country code
 	for alpha2, country in countryList:
 		try:
 			match = re.search(r'\b(?i){}$'.format(country), affiliation)
 		except TypeError:
 			return result
 		if match:
-			result['alpha2'] = alpha2
-			result['country'] = countryDict[alpha2]
-			result['countrySource'] = 'extract'
+			countrySource = 'extract'
 			break
 	else:
 		for country in root.findall('./affiliation/address/country'):
-			result['alpha2'] = country.get('key')
-			try:
-				result['country'] = countryDict[result['alpha2']]
-				result['countrySource'] = 'grobid'
-				break
-			except KeyError:
-				pass
+			alpha2 = country.get('key')
+			countrySource = 'grobid'
+			break
+		else:
+			alpha2 = None
 	
+	# retrieve the country information corresponding to the country code
+	try:
+		result['country'] = countryDict[alpha2]
+		result['alpha2'] = alpha2
+		result['countrySource'] = countrySource
+	except KeyError:
+		pass
+	
+	# retrieve settlement, region and postCode
 	for tag in ['settlement', 'region', 'postCode',]:
 		for addressTag in root.findall('./affiliation/address/' + tag):
 			result[tag] = addressTag.text
