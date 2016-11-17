@@ -34,7 +34,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': [],
 			'alpha2': None,
-			'settlement': None,
+			'settlement': [],
 		}
 		self.assertEqual(parser.parse(None), expected)
 	
@@ -43,7 +43,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': [],
 			'alpha2': None,
-			'settlement': None,
+			'settlement': [],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -62,7 +62,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -80,7 +80,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': ['institA',],
 			'alpha2': None,
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -97,7 +97,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': ['institB',],
 			'alpha2': None,
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -116,7 +116,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': None,
+			'settlement': [],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -136,7 +136,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
-			'settlement': 'settlement',
+			'settlement': ['institA', 'settlement', 'settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -154,7 +154,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': ['institA',],
 			'alpha2': None,
-			'settlement': 'settlement',
+			'settlement': ['institA', 'settlement', 'settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -174,7 +174,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'DZ',
 			'country': 'Algeria',
 			'countrySource': 'extract',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -194,7 +194,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -214,7 +214,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -241,7 +241,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 			'region': 'region',
 			'postCode': 'postCode',
 		}
@@ -278,7 +278,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': 'settlement',
+			'settlement': ['settlement',],
 			'region': 'region',
 			'postCode': 'postCode',
 		}
@@ -289,7 +289,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': [],
 			'alpha2': None,
-			'settlement': None,
+			'settlement': [],
 		}
 		self.assertEqual(parser.parse(__name__), expected)
 	
@@ -491,4 +491,67 @@ class test_parser(unittest.TestCase):
 		self.server.setResponse('invalid_output', '>invalid<')
 		actual = parser.queryGrobid('invalid_output', self.url)
 		expected = '<results>>invalid<</results>'
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_None(self):
+		actual = parser.parseSettlement(None, et.Element(None))
+		expected = {'settlement':[],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_empty(self):
+		actual = parser.parseSettlement('', et.Element(None))
+		expected = {'settlement':[],}
+		self.assertEqual(actual, expected)
+		
+	def test_parseSettlement_empty_but_node(self):
+		actual = parser.parseSettlement('', et.fromstring('''
+				<results>
+					<affiliation>
+						<address>
+							<settlement>settlement</settlement>
+						</address>
+					</affiliation>
+				</results>
+			''')
+		)
+		expected = {'settlement':['settlement',],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_no_comma(self):
+		actual = parser.parseSettlement('teststring', et.Element(None))
+		expected = {'settlement':[],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_one_comma(self):
+		actual = parser.parseSettlement('before comma, after comma', et.Element(None))
+		expected = {'settlement':['before comma',],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_two_comma(self):
+		actual = parser.parseSettlement('one, two, three', et.Element(None))
+		expected = {'settlement':['one','two',],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_contain_number(self):
+		actual = parser.parseSettlement(
+			'3 A-2 one 1 , 343-C two 4 , three',
+			et.Element(None)
+		)
+		expected = {'settlement':['one','two',],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_contain_number_and_node(self):
+		actual = parser.parseSettlement(
+			'3 A-2 one 1 , 343-C two 4 , three',
+			et.fromstring('''
+				<results>
+					<affiliation>
+						<address>
+							<settlement>settlement</settlement>
+						</address>
+					</affiliation>
+				</results>
+			''')
+		)
+		expected = {'settlement':['one','two','settlement'],}
 		self.assertEqual(actual, expected)

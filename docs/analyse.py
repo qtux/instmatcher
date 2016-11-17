@@ -86,7 +86,7 @@ def extract(sample, url):
 			writer.writerow([
 				row[0],
 				json.dumps(result['institution']),
-				result['settlement'],
+				json.dumps(result['settlement']),
 				result.get('postCode'),
 				result.get('region'),
 				result['alpha2'],

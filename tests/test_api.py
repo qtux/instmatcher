@@ -109,7 +109,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': [],
-				'settlement': None,
+				'settlement': [],
 				'alpha2': None,
 			},
 		]
@@ -120,7 +120,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': [],
-				'settlement': None,
+				'settlement': [],
 				'alpha2': None,
 			},
 		]
@@ -142,7 +142,7 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': ['Charles University',],
-				'settlement': 'Prague',
+				'settlement': ['Prague',],
 				'alpha2': 'CZ',
 				'country': 'Czechia',
 				'countrySource': 'grobid',
@@ -209,56 +209,56 @@ class test_api(unittest.TestCase):
 		expected = [
 			{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 51.50853,
 				'lon': -0.12574,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 42.98339,
 				'lon': -81.23304,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 37.12898,
 				'lon': -84.08326,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 39.88645,
 				'lon': -83.44825,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 51.51279,
 				'lon': -0.09184,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 36.47606,
 				'lon': -119.44318,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 35.32897,
 				'lon': -93.25296,
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
-				'settlement': 'London',
+				'settlement': ['University of London', 'London',],
 				'alpha2': None,
 				'lat': 1.98487,
 				'lon': -157.47502,

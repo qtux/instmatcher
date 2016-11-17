@@ -103,12 +103,44 @@ def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
 	except KeyError:
 		pass
 	
-	# retrieve settlement, region and postCode
-	for tag in ['settlement', 'region', 'postCode',]:
+	# retrieve region and postCode
+	for tag in ['region', 'postCode',]:
 		for addressTag in root.findall('./affiliation/address/' + tag):
 			result[tag] = addressTag.text
 			break
 	
+	return result
+
+def parseSettlement(affiliation, root,
+		pattern=re.compile(r'\b(?<!\-)[^\d\W]+\b(?!\-)')):
+	'''
+	Extract every possible settlement starting with the words betweeen
+	the second and third last commas, followed by the words between the
+	last and second last comma and finally with the settlement extracted
+	by grobid.
+	
+	:param affiliation: the affiliation string
+	:param root: the root node of the grobid xml string
+	:param pattern: the pattern for a country name
+	'''
+	result = {'settlement':[]}
+	try:
+		splitAffi = affiliation.split(',')
+	except AttributeError:
+		return result
+	try:
+		settlement = ' '.join(re.findall(pattern, splitAffi[-3]))
+		result['settlement'].append(settlement)
+	except IndexError:
+		pass
+	try:
+		settlement = ' '.join(re.findall(pattern, splitAffi[-2]))
+		result['settlement'].append(settlement)
+	except IndexError:
+		pass
+	for addressTag in root.findall('./affiliation/address/settlement'):
+		result['settlement'].append(addressTag.text)
+		break
 	return result
 
 def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
@@ -169,7 +201,7 @@ def parse(affiliation):
 	result = {
 		'institution': [],
 		'alpha2': None,
-		'settlement': None,
+		'settlement': [],
 	}
 	try:
 		root = et.fromstring(queryGrobid(affiliation, _url))
@@ -177,4 +209,5 @@ def parse(affiliation):
 		return result
 	result.update(parseOrganisations(affiliation, root))
 	result.update(parseAddress(affiliation, root))
+	result.update(parseSettlement(affiliation, root))
 	return result

@@ -97,11 +97,12 @@ def extractAll(string, parse=parse, geocode=geocode):
 	'''
 	affiDict = parse(string)
 	emptyGenerator = True
-	for position in geocode(**affiDict):
-		emptyGenerator = False
-		result = affiDict.copy()
-		result.update(position)
-		yield result
+	for settlement in affiDict['settlement']:
+		for position in geocode(settlement, affiDict['alpha2']):
+			emptyGenerator = False
+			result = affiDict.copy()
+			result.update(position)
+			yield result
 	if emptyGenerator:
 		yield affiDict
 
