@@ -330,6 +330,24 @@ class test_parser(unittest.TestCase):
 		}
 		self.assertEqual(actual, expected)
 	
+	def test_parseAddress_Hong_Kong_in_China(self):
+		actual = parser.parseAddress('Hong Kong, China', et.Element(None))
+		expected = {
+			'alpha2': 'HK',
+			'country': 'Hong Kong',
+			'countrySource': 'extract',
+		}
+		self.assertEqual(actual, expected)
+	
+	def test_parseAddress_Macao_in_China(self):
+		actual = parser.parseAddress('Macao, PR China', et.Element(None))
+		expected = {
+			'alpha2': 'MO',
+			'country': 'Macao',
+			'countrySource': 'extract',
+		}
+		self.assertEqual(actual, expected)
+	
 	def test_countryList_successors_name_are_not_part_of_predecessors(self):
 		length = len(parser.countryList)
 		for i in range(length):

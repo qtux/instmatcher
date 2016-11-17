@@ -58,7 +58,8 @@ def init(url):
 	global _url
 	_url = url
 
-def parseAddress(affiliation, root):
+def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
+		patternMO=re.compile(r'\b(?i)Macao\b')):
 	'''
 	Parse every address tag inside the retrieved grobid xml string and
 	try to improve the country information searching for a valid country
@@ -66,6 +67,8 @@ def parseAddress(affiliation, root):
 	
 	:param affiliation: the affiliation string
 	:param root: the root node of the grobid xml string
+	:param patternHK: the pattern to search for Hong Kong
+	:param patternMO: the pattern to search for Macao
 	'''
 	result = {}
 	
@@ -85,6 +88,12 @@ def parseAddress(affiliation, root):
 			break
 		else:
 			alpha2 = None
+	
+	# fix the country codes of Hong Kong and Macao
+	if alpha2 == 'CN' and re.search(patternHK, affiliation):
+		alpha2 = 'HK'
+	if alpha2 == 'CN' and re.search(patternMO, affiliation):
+		alpha2 = 'MO'
 	
 	# retrieve the country information corresponding to the country code
 	try:
