@@ -148,6 +148,7 @@ class test_api(unittest.TestCase):
 				'countrySource': 'grobid',
 				'lat': 50.08804,
 				'lon': 14.42076,
+				'locality': 'Prague',
 				'region': 'Prague',
 			},
 		]
@@ -213,6 +214,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 51.50853,
 				'lon': -0.12574,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -220,6 +222,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 42.98339,
 				'lon': -81.23304,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -227,6 +230,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 37.12898,
 				'lon': -84.08326,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -234,6 +238,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 39.88645,
 				'lon': -83.44825,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -241,6 +246,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 51.51279,
 				'lon': -0.09184,
+				'locality': 'City of London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -248,6 +254,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 36.47606,
 				'lon': -119.44318,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -255,6 +262,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 35.32897,
 				'lon': -93.25296,
+				'locality': 'London',
 				'region': 'London',
 			},{
 				'institution': ['University of London',],
@@ -262,6 +270,7 @@ class test_api(unittest.TestCase):
 				'alpha2': None,
 				'lat': 1.98487,
 				'lon': -157.47502,
+				'locality': 'London Village',
 				'region': 'London',
 			},
 		]

@@ -60,7 +60,8 @@ def create_geoindex(procs, multisegment, ixPath):
 			codes[row[0]] = row[4]
 	
 	schema = Schema(
-		name=ID(stored=True),
+		name=STORED,
+		lower=ID,
 		asci=ID,
 		alias=IDLIST(expression=r'[^,]+'),
 		lat=STORED,
@@ -76,7 +77,8 @@ def create_geoindex(procs, multisegment, ixPath):
 		for row in reader:
 			population = int(row[14])
 			writer.add_document(
-				name=row[1].lower(),
+				name=row[1],
+				lower=row[1].lower(),
 				asci=row[2].lower(),
 				alias=row[3].lower(),
 				lat=row[4],

@@ -37,10 +37,10 @@ def geocode(settlement, alpha2, **ignore):
 	if not settlement:
 		return
 	lowerSettlement = settlement.lower()
-	text = "name:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
+	text = "lower:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
 		key=lowerSettlement
 	)
-	text += " OR name:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
+	text += " OR lower:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
 		key=lowerSettlement.replace(' ', '-')
 	)
 	query = parser.parse(text)
@@ -51,4 +51,5 @@ def geocode(settlement, alpha2, **ignore):
 			yield {
 				'lat': float(hit['lat']),
 				'lon': float(hit['lon']),
+				'locality': hit['name'],
 			}
