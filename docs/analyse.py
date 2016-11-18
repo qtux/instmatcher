@@ -79,6 +79,7 @@ def extract(sample, url):
 			'countrySource',
 			'lat',
 			'lon',
+			'locality',
 		])
 		writer.writerow(fieldnames)
 		for row in reader:
@@ -94,6 +95,7 @@ def extract(sample, url):
 				result.get('countrySource'),
 				result.get('lat'),
 				result.get('lon'),
+				result.get('locality'),
 			])
 
 def match(sample, url):
