@@ -81,7 +81,7 @@ class test_geo(unittest.TestCase):
 		]
 		self.assertSequenceEqual(actual, expected)
 	
-	def test_Boston_None(self):
+	def test_Boston_US(self):
 		actual = list(geo.geocode('Boston', 'US'))
 		expected = [
 			{'lat': 42.35843, 'lon': -71.05977,},
