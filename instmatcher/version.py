@@ -14,4 +14,4 @@
 
 '''the library version'''
 
-__version__ = '0.28.0'
+__version__ = '0.28.2'
