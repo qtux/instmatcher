@@ -144,8 +144,8 @@ def find(sample):
 			result = instmatcher.find(
 				json.loads(row['institution']),
 				row['alpha2'],
-				None if row['lat'] == '' else row['lat'],
-				None if row['lon'] == '' else row['lon']
+				None if row['lat'] == '' else float(row['lat']),
+				None if row['lon'] == '' else float(row['lon'])
 			)
 			if result:
 				prefixedResult = {}
