@@ -26,16 +26,20 @@ from setuptools.command.test import test
 def create_index(procs, multisegment, ixPath):
 	from whoosh import index
 	from whoosh.fields import Schema, TEXT, NUMERIC, STORED, ID
+	from whoosh.analysis import CharsetFilter, StemmingAnalyzer, LowercaseFilter
+	from whoosh.support.charset import accent_map
 	
+	ana = StemmingAnalyzer() | CharsetFilter(accent_map) | LowercaseFilter()
 	schema = Schema(
-		name=TEXT(stored=True),
-		alias=TEXT,
+		name=STORED,
+		tokens=TEXT(analyzer=ana),
+		alias=TEXT(analyzer=ana),
 		lat=NUMERIC(numtype=float, stored=True),
 		lon=NUMERIC(numtype=float, stored=True),
 		isni=STORED,
 		country=STORED,
 		alpha2=ID(stored=True),
-		source=TEXT(stored=True),
+		source=STORED,
 		type=STORED,
 	)
 	ix = index.create_in(ixPath, schema)
@@ -44,6 +48,7 @@ def create_index(procs, multisegment, ixPath):
 	with open(institutions) as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
+			row['tokens'] = row['name']
 			writer.add_document(**row)
 	writer.commit()
 

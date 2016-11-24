@@ -34,7 +34,7 @@ with open(source) as csvfile:
 # load the index and create the institution and coordinate query parsers
 ixPath = resource_filename(__name__, 'data/index')
 ix = index.open_dir(ixPath)
-instParser = MultifieldParser(['name', 'alias',], ix.schema)
+instParser = MultifieldParser(['tokens', 'alias',], ix.schema)
 coordParser = MultifieldParser(['lat', 'lon',], ix.schema)
 
 def query(institution, alpha2, lat, lon, offset):
@@ -59,7 +59,7 @@ def query(institution, alpha2, lat, lon, offset):
 		return
 	with ix.searcher() as searcher:
 		# search for the given institution
-		instQuery = instParser.parse(institution)
+		instQuery = instParser.parse(institution.lower())
 		filterTerm = Term('alpha2', alpha2) if alpha2 else None
 		instResults = searcher.search(instQuery, limit=None, filter=filterTerm)
 		# try to enhance the search boosting results in the vicinity of lat/lon
