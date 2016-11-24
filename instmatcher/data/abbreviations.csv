@@ -7,6 +7,7 @@ natl,national
 int,int*
 fed,fed*
 gen,gen*
+med,med*
 # type of institutions
 univ,univ*
 sch,sch*
@@ -22,3 +23,4 @@ sci,sci*
 engn,engineering
 technol,technol*
 ind,ind*
+calif,calif*
