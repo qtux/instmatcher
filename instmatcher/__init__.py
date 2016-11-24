@@ -59,7 +59,7 @@ _find_doc = '''
 '''
 
 @_appendDoc(_find_doc)
-def findAll(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
+def findAll(institution, alpha2=None, lat=None, lon=None, offset=0.4, **ignore):
 	'''
 	Yield all institutions compatible to the search parameters sorted in
 	descending order starting with the most accurate search result.
@@ -72,7 +72,7 @@ def findAll(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
 			yield result[0]
 
 @_appendDoc(_find_doc)
-def find(institution, alpha2=None, lat=None, lon=None, offset=1, **ignore):
+def find(institution, alpha2=None, lat=None, lon=None, offset=0.4, **ignore):
 	'''
 	Find the most accurate institution described by the search parameters.
 	'''
