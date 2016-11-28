@@ -23,7 +23,7 @@ from whoosh.query import Term
 # load the index and create the settlement/alpha2 query parser
 ixPath = resource_filename(__name__, 'data/geoindex')
 ix = index.open_dir(ixPath)
-parser = MultifieldParser(['name', 'asci', 'alias',], ix.schema)
+parser = MultifieldParser(['lower', 'asci', 'alias',], ix.schema)
 
 def geocode(settlement, alpha2, **ignore):
 	'''
@@ -36,13 +36,8 @@ def geocode(settlement, alpha2, **ignore):
 	'''
 	if not settlement:
 		return
-	lowerSettlement = settlement.lower()
-	text = "lower:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
-		key=lowerSettlement
-	)
-	text += " OR lower:'{key}' OR asci:'{key}' OR alias:'{key}'".format(
-		key=lowerSettlement.replace(' ', '-')
-	)
+	lower = settlement.lower()
+	text = "'" + lower + "' OR '" + lower.replace(' ', '-') + "'"
 	query = parser.parse(text)
 	filterTerm = Term('alpha2', alpha2) if alpha2 else None
 	with ix.searcher() as searcher:
