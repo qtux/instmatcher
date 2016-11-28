@@ -136,7 +136,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
-			'settlement': ['institA', 'settlement', 'settlement',],
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -154,7 +154,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'institution': ['institA',],
 			'alpha2': None,
-			'settlement': ['institA', 'settlement', 'settlement',],
+			'settlement': ['settlement',],
 		}
 		self.assertEqual(parser.parse(affiliation), expected)
 	
@@ -538,6 +538,14 @@ class test_parser(unittest.TestCase):
 			et.Element(None)
 		)
 		expected = {'settlement':['one','two',],}
+		self.assertEqual(actual, expected)
+	
+	def test_parseSettlement_capitals(self):
+		actual = parser.parseSettlement(
+			'A BB CCC dD Dd test b Test worD WOrd woRd, Country',
+			et.Element(None)
+		)
+		expected = {'settlement':['A Dd test b Test',],}
 		self.assertEqual(actual, expected)
 	
 	def test_parseSettlement_contain_number_and_node(self):

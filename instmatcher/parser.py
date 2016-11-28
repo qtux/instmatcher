@@ -112,7 +112,7 @@ def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
 	return result
 
 def parseSettlement(affiliation, root,
-		pattern=re.compile(r'\b(?<!\-)[^\d\W]+\b(?!\-)')):
+		pattern=re.compile(r'\b(?<!\-)[A-Za-z][a-z]*\b(?!\-)')):
 	'''
 	Extract every possible settlement starting with the words betweeen
 	the second and third last commas, followed by the words between the
@@ -129,17 +129,21 @@ def parseSettlement(affiliation, root,
 	except AttributeError:
 		return result
 	try:
-		settlement = ' '.join(re.findall(pattern, splitAffi[-3]))
-		result['settlement'].append(settlement)
+		leftmost = ' '.join(re.findall(pattern, splitAffi[-3]))
+		if leftmost != '':
+			result['settlement'].append(leftmost)
 	except IndexError:
-		pass
+		leftmost = None
 	try:
-		settlement = ' '.join(re.findall(pattern, splitAffi[-2]))
-		result['settlement'].append(settlement)
+		rightmost = ' '.join(re.findall(pattern, splitAffi[-2]))
+		if rightmost != '' and leftmost != rightmost:
+			result['settlement'].append(rightmost)
 	except IndexError:
-		pass
+		rightmost = None
 	for addressTag in root.findall('./affiliation/address/settlement'):
-		result['settlement'].append(addressTag.text)
+		grobid = addressTag.text
+		if grobid != leftmost and grobid != rightmost:
+			result['settlement'].append(grobid)
 		break
 	return result
 
