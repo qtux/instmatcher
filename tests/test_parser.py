@@ -23,7 +23,6 @@ class test_parser(unittest.TestCase):
 		host = 'localhost'
 		port = 8081
 		self.url = 'http://' + host + ':' + str(port)
-		parser.init(self.url)
 		self.server = GrobidServer(host, port)
 		self.server.start()
 	
@@ -36,7 +35,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': [],
 		}
-		self.assertEqual(parser.parse(None), expected)
+		self.assertEqual(parser.parse(None, self.url), expected)
 	
 	def test_parse_empty(self):
 		self.server.setResponse(__name__, '')
@@ -45,7 +44,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': [],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_no_institution(self):
 		self.server.setResponse(
@@ -64,7 +63,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_no_alpha2(self):
 		self.server.setResponse(
@@ -82,7 +81,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_no_country(self):
 		self.server.setResponse(
@@ -99,7 +98,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_no_settlement(self):
 		self.server.setResponse(
@@ -118,7 +117,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': [],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_not_regocnised_country(self):
 		affiliation = 'institA, settlement, INDIA'
@@ -138,7 +137,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation, self.url), expected)
 	
 	def test_parse_not_regocnised_bad_country(self):
 		affiliation = 'institA, settlement, Fantasia'
@@ -156,7 +155,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation, self.url), expected)
 	
 	def test_parse_not_recognised_country_no_comma_in_affiliation_string(self):
 		affiliation = 'institA settlement Algeria'
@@ -176,7 +175,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation, self.url), expected)
 	
 	def test_parse_multiple_not_recognised_countries(self):
 		affiliation = 'institA settlement Algeria India'
@@ -196,7 +195,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(affiliation), expected)
+		self.assertEqual(parser.parse(affiliation, self.url), expected)
 	
 	def test_parse_releveant_tags(self):
 		self.server.setResponse(
@@ -216,7 +215,7 @@ class test_parser(unittest.TestCase):
 			'countrySource': 'grobid',
 			'settlement': ['settlement',],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_every_tags(self):
 		self.server.setResponse(
@@ -245,7 +244,7 @@ class test_parser(unittest.TestCase):
 			'region': 'region',
 			'postCode': 'postCode',
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_multiple_institutions(self):
 		self.server.setResponse(
@@ -282,7 +281,7 @@ class test_parser(unittest.TestCase):
 			'region': 'region',
 			'postCode': 'postCode',
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parse_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
@@ -291,7 +290,7 @@ class test_parser(unittest.TestCase):
 			'alpha2': None,
 			'settlement': [],
 		}
-		self.assertEqual(parser.parse(__name__), expected)
+		self.assertEqual(parser.parse(__name__, self.url), expected)
 	
 	def test_parseAddress_Guinea(self):
 		actual = parser.parseAddress('guinea', et.Element(None))

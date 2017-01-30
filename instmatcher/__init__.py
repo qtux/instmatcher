@@ -25,21 +25,13 @@ from .geo import geocode
 from .parser import parse
 from .version import __version__
 
+_grobidURL = 'http://0.0.0.0:8080'
+
 def _appendDoc(docstring):
 	def decorator(function):
 		function.__doc__ += docstring
 		return function
 	return decorator
-
-################################ init function ################################
-
-def init(grobidUrl='http://localhost:8080'):
-	'''
-	Set the URL pointing to the grobid service.
-	
-	:param grobidUrl: the URL to the grobid service
-	'''
-	parser.init(grobidUrl)
 
 ############################### find functions ################################
 _find_doc = '''
@@ -84,18 +76,19 @@ def find(institution, alpha2=None, lat=None, lon=None, offset=0.4, **ignore):
 ############################## extract functions ##############################
 _extract_doc = '''
 	:param string: the affiliation string to be extracted
+	:param url: the URL to the grobid service
 	:param parse: a function to parse the affiliation string
 	:param geocode: a function to retrieve coordinates of a settlement
 '''
 
 @_appendDoc(_extract_doc)
-def extractAll(string, parse=parse, geocode=geocode):
+def extractAll(string, url=_grobidURL, parse=parse, geocode=geocode):
 	'''
 	Yield the data extracted from the affiliation string augmented with
 	each compatible geographical location. The generator is sorted in a
 	descending order starting with the most likely coordinate.
 	'''
-	affiDict = parse(string)
+	affiDict = parse(string, url)
 	emptyGenerator = True
 	for settlement in affiDict['settlement']:
 		for position in geocode(settlement, affiDict['alpha2']):
@@ -107,21 +100,23 @@ def extractAll(string, parse=parse, geocode=geocode):
 		yield affiDict
 
 @_appendDoc(_extract_doc)
-def extract(string, parse=parse, geocode=geocode):
+def extract(string, url=_grobidURL, parse=parse, geocode=geocode):
 	'''
 	Extract the data from the given affiliation string and augment it
 	with the most likely geographical location.
 	'''
-	return next(extractAll(string, parse, geocode))
+	return next(extractAll(string, url, parse, geocode))
 
 ############################### match function ################################
 
-def match(string, parse=parse, geocode=geocode, offset=1):
+def match(string, url=_grobidURL, parse=parse, geocode=geocode, offset=1):
 	'''
 	Find the most accurate institution matching the affiliation string.
 	
 	:param string: the affiliation string to be extracted
+	:param url: the URL to the grobid service
 	:param parse: a function to parse the string into a structure
 	:param geocode: a function to retrieve coordinates of a settlement
+	:param offset: the half-width of the preferred box in degree of arcs
 	'''
-	return find(offset=offset, **extract(string, parse, geocode))
+	return find(offset=offset, **extract(string, url, parse, geocode))

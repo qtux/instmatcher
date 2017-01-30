@@ -20,7 +20,6 @@ import csv
 from pkg_resources import resource_filename
 import re
 
-_url = None
 # generate two dictionaries mapping the ISO 3166-1 alpha-2 country codes to
 # the corresponding country names and to the corresponding population sizes
 countryDict, populationDict = {}, {}
@@ -48,15 +47,6 @@ for i in range(len(countryList)):
 	for j in range(i + 1, len(countryList)):
 		if countryList[i][1] in countryList[j][1]:
 			countryList.insert(i, countryList.pop(j))
-
-def init(url):
-	'''
-	Set the URL pointing to the grobid service.
-	
-	:param url: the URL to the grobid service
-	'''
-	global _url
-	_url = url
 
 def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
 		patternMO=re.compile(r'\b(?i)Macao\b')):
@@ -187,6 +177,7 @@ def queryGrobid(affiliation, url):
 	affiliation string using grobid.
 	
 	:param affiliation: the affiliation string to be sent to grobid
+	:param url: the URL to the grobid service
 	'''
 	try:
 		cmd = 'affiliations=' + affiliation
@@ -195,11 +186,12 @@ def queryGrobid(affiliation, url):
 	r = requests.post(url + '/processAffiliations', data=cmd)
 	return '<results>' + r.content.decode('UTF-8') + '</results>'
 
-def parse(affiliation):
+def parse(affiliation, url):
 	'''
 	Parse the given affiliation string.
 	
 	:param affiliation: the affiliation string to be parsed
+	:param url: the URL to the grobid service
 	'''
 	# required return values
 	result = {
@@ -208,7 +200,7 @@ def parse(affiliation):
 		'settlement': [],
 	}
 	try:
-		root = et.fromstring(queryGrobid(affiliation, _url))
+		root = et.fromstring(queryGrobid(affiliation, url))
 	except et.ParseError:
 		return result
 	result.update(parseOrganisations(affiliation, root))

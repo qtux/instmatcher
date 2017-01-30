@@ -21,8 +21,7 @@ class test_api(unittest.TestCase):
 	def setUp(self):
 		host = 'localhost'
 		port = 8081
-		url = 'http://' + host + ':' + str(port)
-		instmatcher.init(grobidUrl=url)
+		self.url = 'http://' + host + ':' + str(port)
 		self.server = GrobidServer(host, port)
 		self.server.start()
 	
@@ -36,8 +35,8 @@ class test_api(unittest.TestCase):
 	
 	def assert_extract_functions(self, arg, expected):
 		first = expected[0] if expected else None
-		self.assertSequenceEqual(list(instmatcher.extractAll(arg)), expected)
-		self.assertEqual(instmatcher.extract(arg), first)
+		self.assertSequenceEqual(list(instmatcher.extractAll(arg, self.url)), expected)
+		self.assertEqual(instmatcher.extract(arg, self.url), first)
 	
 	def test_find_None(self):
 		self.assert_find_functions(None, [])
@@ -277,7 +276,7 @@ class test_api(unittest.TestCase):
 		self.assert_extract_functions(arg, expected)
 	
 	def test_match_None(self):
-		self.assertEqual(instmatcher.match(''), None)
+		self.assertEqual(instmatcher.match('', self.url), None)
 	
 	def test_match_Unknown(self):
 		arg = 'Unknown'
@@ -290,7 +289,7 @@ class test_api(unittest.TestCase):
 			</affiliation>'''
 		)
 		expected = None
-		self.assertEqual(instmatcher.match(arg), expected)
+		self.assertEqual(instmatcher.match(arg, self.url), expected)
 	
 	def test_match_Known(self):
 		arg = 'University of Oxford, Oxford, UK'
@@ -314,4 +313,4 @@ class test_api(unittest.TestCase):
 			'source': 'http://www.wikidata.org/entity/Q34433',
 			'type': 'university',
 		}
-		self.assertEqual(instmatcher.match(arg), expected)
+		self.assertEqual(instmatcher.match(arg, self.url), expected)

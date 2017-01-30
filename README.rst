@@ -20,14 +20,13 @@ To install instmatcher simply clone the git repository and install it using pip:
 ===================
 Basic Usage Example
 ===================
-The library must be initialised with the ``init`` function before calling any other function.
-Afterwards the ``match`` function may be used to search for a matching institution for a given affiliation string.
+The ``match`` function may be used to search for a matching institution for a given affiliation string.
 
 .. code:: python
 
     import instmatcher
-    instmatcher.init()
-    print(instmatcher.match('TU Berlin, Institute of Mathematics, Berlin, Germany'))
+    response = instmatcher.match('TU Berlin, Institute of Mathematics, Berlin, Germany')
+    print(response)
 
 Depending on how well `grobid`_ is trained, executing the code above will most likely print:
 
