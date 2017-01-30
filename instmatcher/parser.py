@@ -65,7 +65,7 @@ def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
 	# extract the country code
 	for alpha2, country in countryList:
 		try:
-			match = re.search(r'\b(?i){}$'.format(country), affiliation)
+			match = re.search(r'(?i)\b{}$'.format(country), affiliation)
 		except TypeError:
 			return result
 		if match:

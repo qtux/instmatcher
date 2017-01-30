@@ -93,7 +93,7 @@ def expandAbbreviations(text):
 	'''
 	try:
 		for abbrev, expansion in abbreviations.items():
-			text = re.sub(r"\b(?i){}\b".format(abbrev), expansion, text)
+			text = re.sub(r'(?i)\b{}\b'.format(abbrev), expansion, text)
 	except TypeError:
 		pass
 	return text
