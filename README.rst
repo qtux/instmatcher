@@ -21,6 +21,7 @@ To install instmatcher simply clone the git repository and install it using pip:
 Basic Usage Example
 ===================
 The ``match`` function may be used to search for a matching institution for a given affiliation string.
+Note that this example assumes a `grobid`_ server listening on **http://0.0.0.0:8080**.
 
 .. code:: python
 
