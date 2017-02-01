@@ -43,7 +43,7 @@ class test_core(unittest.TestCase):
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
-			"European Organization for Nuclear Research",
+			"CERN",
 		]
 		actualNames = [item[0]['name'] for item in actual]
 		self.assertSequenceEqual(actualNames, expectedNames)
@@ -63,7 +63,7 @@ class test_core(unittest.TestCase):
 			"University of Geneva",
 			"International University in Geneva",
 			"University of Edinburgh",
-			"European Organization for Nuclear Research",
+			"CERN",
 		]
 		actualNames = [item[0]['name'] for item in actual]
 		self.assertSequenceEqual(actualNames, expectedNames)
@@ -83,32 +83,6 @@ class test_core(unittest.TestCase):
 		expectedNames = ["Technical University of Berlin",]
 		actualNames = [item[0]['name'] for item in actual]
 		self.assertSequenceEqual(actualNames, expectedNames)
-	
-	def test_Berlin(self):
-		actual = core.query('Berlin', None, None, None, 1)
-		expectedNames = [
-			"Free University of Berlin",
-			"Technical University of Berlin",
-			"Social Science Research Center Berlin",
-			"Humboldt University of Berlin",
-			"Charité",
-			"Bethanien (Berlin)",
-			"VLB Berlin",
-			"Institute for Advanced Study",
-			"BESSY",
-			"Helmholtz-Zentrum Berlin",
-			"American Academy in Berlin",
-			"Zuse Institute Berlin",
-			"SRH Hochschule Berlin",
-			"Centre for Historical Research in Berlin",
-			"Ferdinand-Braun-Institut",
-			"Children's follow-up Clinic (Kindernachsorgeklinik) Berlin-Brandenburg",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
 	
 	def test_FU_Berlin(self):
 		actual = core.query('FU Berlin', None, None, None, 1)
@@ -185,56 +159,6 @@ class test_core(unittest.TestCase):
 			"Boston Psychopathic Hospital",
 			"Boston Regional Medical Center",
 			"Boston College Law School",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
-	
-	def test_London(self):
-		actual = core.query('London', None, None, None, 1)
-		expectedNames = [
-			"University of London",
-			"University of the Arts London",
-			"City, University of London",
-			"London Metropolitan University",
-			"University of East London",
-			"King's College London",
-			"University of North London",
-			"London School of Hygiene & Tropical Medicine",
-			"London School of Economics",
-			"Queen Mary, University of London",
-			"Royal Holloway, University of London",
-			"Imperial College London",
-			"University of London Institute in Paris",
-			"University of West London",
-			"London Guildhall University",
-			"Birkbeck, University of London",
-			"Diplomatic Academy of London",
-			"Goldsmiths, University of London",
-			"SOAS, University of London",
-			"London School of Theology",
-			"Brunel University London",
-			"London South Bank University",
-			"University of London International Programmes",
-			"Richmond, The American International University in London",
-			"University of East London School of Law and Social Sciences",
-			"Centre for History in Public Health, London School of Hygiene and Tropical Medicine",
-			"University of Western Ontario",
-			"University College Hospital",
-			"London Centre for Nanotechnology",
-			"London Research Institute",
-			"London Chest Hospital",
-			"London Lock Hospital",
-			"Royal London Hospital",
-			"London Bridge Hospital",
-			"Wellington Hospital, London",
-			"St. Mary's Hospital",
-			"London Road Community Hospital",
-			"St. Anthony's Hospital, London",
-			"King George Hospital, London",
-			"Royal London Hospital for Integrated Medicine",
 		]
 		actualNames = [item[0]['name'] for item in actual]
 		try:

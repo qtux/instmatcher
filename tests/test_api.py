@@ -58,15 +58,6 @@ class test_api(unittest.TestCase):
 		arg = ['Univ Boston',]
 		expected = [
 			{
-				'name': 'Boston University',
-				'alpha2': 'US',
-				'country': 'United States',
-				'lat': '42.3496',
-				'lon': '-71.0997',
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q49110',
-				'type': 'university',
-			},{
 				'name': 'University of Massachusetts Boston',
 				'alpha2': 'US',
 				'country': 'United States',
@@ -74,6 +65,15 @@ class test_api(unittest.TestCase):
 				'lon': '-71.038445',
 				'isni': '',
 				'source': 'http://www.wikidata.org/entity/Q15144',
+				'type': 'university',
+			},{
+				'name': 'Boston University',
+				'alpha2': 'US',
+				'country': 'United States',
+				'lat': '42.3496',
+				'lon': '-71.0997',
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q49110',
 				'type': 'university',
 			},{
 				'name': 'Northeastern University',
@@ -158,6 +158,7 @@ class test_api(unittest.TestCase):
 		arg = ['Univ Leuven',]
 		expected = [
 			{
+				# dutch part of the former Catholic University of Leuven
 				'name': 'Katholieke Universiteit Leuven Campus Kortrijk',
 				'alpha2': 'BE',
 				 'country': 'Belgium',
@@ -167,6 +168,7 @@ class test_api(unittest.TestCase):
 				'source': 'http://www.wikidata.org/entity/Q1736308',
 				'type': 'university',
 			},{
+				# Catholic University of Leuven (or Louvain), until 1986
 				'name': 'Catholic University of Leuven',
 				'alpha2': 'BE',
 				 'country': 'Belgium',
@@ -183,6 +185,7 @@ class test_api(unittest.TestCase):
 		arg = ['Univ Louvain',]
 		expected = [
 			{
+				# french part of the former Catholic University of Leuven
 				'name': 'Université catholique de Louvain',
 				'alpha2': 'BE',
 				'country': 'Belgium',
@@ -190,6 +193,16 @@ class test_api(unittest.TestCase):
 				'lon': '4.6122638888889',
 				'isni': '',
 				'source': 'http://www.wikidata.org/entity/Q378134',
+				'type': 'university',
+			},{
+				# Catholic University of Leuven (or Louvain), until 1986
+				'name': 'Catholic University of Leuven',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': '50.669722222222',
+				'lon': '4.6122222222222',
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q5121415',
 				'type': 'university',
 			},
 		]
