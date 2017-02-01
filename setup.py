@@ -39,7 +39,7 @@ def create_index(procs, multisegment, ixPath):
 		isni=STORED,
 		country=STORED,
 		alpha2=ID(stored=True),
-		source=STORED,
+		source=ID(stored=True, unique=True),
 		type=STORED,
 	)
 	ix = index.create_in(ixPath, schema)
