@@ -84,11 +84,26 @@ class test_core(unittest.TestCase):
 		actualNames = [item[0]['name'] for item in actual]
 		self.assertSequenceEqual(actualNames, expectedNames)
 	
-	def test_FU_Berlin(self):
-		actual = core.query('FU Berlin', None, None, None, 1)
-		expectedNames = ["Free University of Berlin",]
+	def test_TU_Berlin_full(self):
+		actual = core.query('TU Berlin', None, None, None, 1)
+		expectedNames = ["Technical University of Berlin",]
 		actualNames = [item[0]['name'] for item in actual]
 		self.assertSequenceEqual(actualNames, expectedNames)
+	
+	def test_TU_Berlin(self):
+		actual = core.query('TU Berlin', None, None, None, 1)
+		expected = [{
+			'alpha2': 'DE',
+			'country': 'Germany',
+			'isni': '0000 0001 2195 9817',
+			'lat': 52.511944444444,
+			'lon': 13.326388888889,
+			'name': 'Technical University of Berlin',
+			'source': 'http://www.wikidata.org/entity/Q51985',
+			'type': 'university',
+		},]
+		actualResults = [item[0] for item in actual]
+		self.assertSequenceEqual(actualResults, expected)
 	
 	def test_Boston_no_coords(self):
 		actual = core.query('Boston', None, None, None, 1)
