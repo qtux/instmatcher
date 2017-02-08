@@ -139,17 +139,33 @@ def parseSettlement(affiliation, root,
 
 def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
 	'''
-	Parse every type of organisation inside the retrieved grobid xml
-	string and try to improve the list of possible institutions using
-	the part of the affiliation string before the first comma.
+	Retrieve groups of organisations consisting of institutions,
+	departments and/or laboratories based on the retrieved grobid xml
+	string. Additionally, try to improve the first institution using the
+	part of the affiliation string before the first comma.
+	
+	Note that if multiple institutions, departments or laboratories are
+	in the same group they are considered identical. Only one of them is
+	taken for the returned data structure.
 	
 	:param affiliation: the affiliation string
 	:param root: the root node of the grobid xml string
 	:param pattern: the pattern for the string before the first comma
 	'''
-	result = {'institution': []}
+	result = []
 	for org in root.findall('./affiliation/orgName'):
-		result.setdefault(org.get('type'), []).append(org.text)
+		# determine index
+		orgKey = org.get('key')
+		try:
+			index = int(re.search(r'\d+', orgKey).group()) - 1
+		except TypeError:
+			index = 0
+		# update or insert item at index
+		item = {org.get('type'): org.text}
+		try:
+			result[index].update(item)
+		except IndexError:
+			result.insert(index, item)
 	
 	try:
 		match = re.search(pattern, affiliation)
@@ -160,14 +176,14 @@ def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
 	except AttributeError:
 		return result
 	
-	if not result['institution']:
-		result['institution'].append(extracted)
-	elif result['institution'][0] in extracted:
-		result['institution'][0] = extracted
-	elif extracted in result['institution'][0]:
-		result['institution'].insert(1, extracted)
+	if not result or not 'institution' in result[0]:
+		result.insert(0, {'institution': extracted})
+	elif result[0]['institution'] in extracted:
+		result[0]['institution'] = extracted
+	elif extracted in result[0]['institution']:
+		result.insert(1, {'institution': extracted})
 	else:
-		result['institution'].insert(0, extracted)
+		result.insert(0, {'institution': extracted})
 	
 	return result
 
@@ -188,22 +204,23 @@ def queryGrobid(affiliation, url):
 
 def parse(affiliation, url):
 	'''
-	Parse the given affiliation string.
+	Parse the given affiliation string using grobid and return a
+	generator of possible institutions along with their corresponding
+	departments and laboratories.
 	
 	:param affiliation: the affiliation string to be parsed
 	:param url: the URL to the grobid service
 	'''
-	# required return values
-	result = {
-		'institution': [],
-		'alpha2': None,
-		'settlement': [],
-	}
 	try:
 		root = et.fromstring(queryGrobid(affiliation, url))
 	except et.ParseError:
-		return result
-	result.update(parseOrganisations(affiliation, root))
-	result.update(parseAddress(affiliation, root))
-	result.update(parseSettlement(affiliation, root))
-	return result
+		return
+	organisations = parseOrganisations(affiliation, root)
+	address = parseAddress(affiliation, root)
+	settlement = parseSettlement(affiliation, root)
+	for organisation in organisations:
+		result = {}
+		result.update(organisation)
+		result.update(address)
+		result.update(settlement)
+		yield result

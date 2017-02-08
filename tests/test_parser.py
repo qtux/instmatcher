@@ -30,21 +30,15 @@ class test_parser(unittest.TestCase):
 		self.server.stop()
 	
 	def test_parse_None(self):
-		expected = {
-			'institution': [],
-			'alpha2': None,
-			'settlement': [],
-		}
-		self.assertEqual(parser.parse(None, self.url), expected)
+		actual = list(parser.parse(None, self.url))
+		expected = []
+		self.assertEqual(actual, expected)
 	
 	def test_parse_empty(self):
 		self.server.setResponse(__name__, '')
-		expected = {
-			'institution': [],
-			'alpha2': None,
-			'settlement': [],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		actual = list(parser.parse(__name__, self.url))
+		expected = []
+		self.assertEqual(actual, expected)
 	
 	def test_parse_no_institution(self):
 		self.server.setResponse(
@@ -56,14 +50,9 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': [],
-			'alpha2': 'AQ',
-			'country': 'Antarctica',
-			'countrySource': 'grobid',
-			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		actual = list(parser.parse(__name__, self.url))
+		expected = []
+		self.assertEqual(actual, expected)
 	
 	def test_parse_no_alpha2(self):
 		self.server.setResponse(
@@ -76,12 +65,12 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institA',],
-			'alpha2': None,
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'institA',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_no_country(self):
 		self.server.setResponse(
@@ -93,12 +82,12 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institB',],
-			'alpha2': None,
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'institB',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_no_settlement(self):
 		self.server.setResponse(
@@ -110,14 +99,15 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institC',],
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'institC',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
-			'settlement': [],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+			'settlement':[],
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_not_regocnised_country(self):
 		affiliation = 'institA, settlement, INDIA'
@@ -130,14 +120,15 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institA',],
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'institA',
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(affiliation, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_not_regocnised_bad_country(self):
 		affiliation = 'institA, settlement, Fantasia'
@@ -150,12 +141,12 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institA',],
-			'alpha2': None,
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'institA',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(affiliation, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_not_recognised_country_no_comma_in_affiliation_string(self):
 		affiliation = 'institA settlement Algeria'
@@ -168,14 +159,15 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institA',],
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'institA',
 			'alpha2': 'DZ',
 			'country': 'Algeria',
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(affiliation, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_multiple_not_recognised_countries(self):
 		affiliation = 'institA settlement Algeria India'
@@ -188,14 +180,15 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institA',],
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'institA',
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(affiliation, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_releveant_tags(self):
 		self.server.setResponse(
@@ -208,14 +201,15 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institD',],
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'institD',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
 			'settlement': ['settlement',],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_every_tags(self):
 		self.server.setResponse(
@@ -233,18 +227,19 @@ class test_parser(unittest.TestCase):
 				</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['institE',],
-			'department': ['dep',],
-			'laboratory': ['lab',],
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'institE',
+			'department': 'dep',
+			'laboratory': 'lab',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
 			'settlement': ['settlement',],
 			'region': 'region',
 			'postCode': 'postCode',
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_multiple_institutions(self):
 		self.server.setResponse(
@@ -270,27 +265,114 @@ class test_parser(unittest.TestCase):
 				</address>
 			</affiliation>'''
 		)
-		expected = {
-			'institution': ['instit1', 'instit2', 'instit3',],
-			'department': ['dep1', 'dep2', 'dep3',],
-			'laboratory': ['lab1', 'lab2', 'lab3',],
+		actual = list(parser.parse(__name__, self.url))
+		expected = [{
+			'institution': 'instit1',
+			'department': 'dep1',
+			'laboratory': 'lab1',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
 			'settlement': ['settlement',],
 			'region': 'region',
 			'postCode': 'postCode',
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		},{
+			'institution': 'instit2',
+			'department': 'dep2',
+			'laboratory': 'lab2',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'countrySource': 'grobid',
+			'settlement': ['settlement',],
+			'region': 'region',
+			'postCode': 'postCode',
+		},{
+			'institution': 'instit3',
+			'department': 'dep3',
+			'laboratory': 'lab3',
+			'alpha2': 'AQ',
+			'country': 'Antarctica',
+			'countrySource': 'grobid',
+			'settlement': ['settlement',],
+			'region': 'region',
+			'postCode': 'postCode',
+		},]
+		self.assertEqual(actual, expected)
+	
+	def test_parse_multiple_institutions_first_missing(self):
+		affiliation = 'first instit,'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+				<orgName type="laboratory" key="lab1">lab1</orgName>
+				<orgName type="laboratory" key="lab2">lab2</orgName>
+				<orgName type="department" key="dep1">dep1</orgName>
+				<orgName type="department" key="dep2">dep2</orgName>
+				<orgName type="institution" key="instit2">instit2</orgName>
+			</affiliation>'''
+		)
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'first instit',
+			'settlement': ['first instit'],
+		},{
+			'department': 'dep1',
+			'laboratory': 'lab1',
+			'settlement': ['first instit'],
+		},{
+			'institution': 'instit2',
+			'department': 'dep2',
+			'laboratory': 'lab2',
+			'settlement': ['first instit'],
+		},]
+		self.assertEqual(actual, expected)
+	
+	def test_parse_institution_partially_recognised(self):
+		affiliation = 'first instit,'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+				<orgName type="laboratory" key="lab1">lab1</orgName>
+				<orgName type="department" key="dep1">dep1</orgName>
+				<orgName type="institution" key="instit1">first</orgName>
+			</affiliation>'''
+		)
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'first instit',
+			'department': 'dep1',
+			'laboratory': 'lab1',
+			'settlement': ['first instit'],
+		},]
+		self.assertEqual(actual, expected)
+	
+	def test_parse_institution_name_with_comma(self):
+		affiliation = 'comma, inst'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+				<orgName type="laboratory" key="lab1">lab1</orgName>
+				<orgName type="department" key="dep1">dep1</orgName>
+				<orgName type="institution" key="instit1">comma, inst</orgName>
+			</affiliation>'''
+		)
+		actual = list(parser.parse(affiliation, self.url))
+		expected = [{
+			'institution': 'comma, inst',
+			'department': 'dep1',
+			'laboratory': 'lab1',
+			'settlement': ['comma'],
+		},{
+			'institution': 'comma',
+			'settlement': ['comma'],
+		},]
+		self.assertEqual(actual, expected)
 	
 	def test_parse_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
-		expected = {
-			'institution': [],
-			'alpha2': None,
-			'settlement': [],
-		}
-		self.assertEqual(parser.parse(__name__, self.url), expected)
+		actual = list(parser.parse(__name__, self.url))
+		expected = []
+		self.assertEqual(actual, expected)
 	
 	def test_parseAddress_Guinea(self):
 		actual = parser.parseAddress('guinea', et.Element(None))
@@ -357,21 +439,21 @@ class test_parser(unittest.TestCase):
 	
 	def test_parseOrganisations_regex_None_Element_args(self):
 		actual = parser.parseOrganisations(None, et.Element(None))
-		expected = {'institution': [],}
+		expected = []
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_empty_list(self):
 		affiliation = 'first words, second part, third word list'
 		root = et.Element(None)
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words',],}
+		expected = [{'institution': 'first words',},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_comma_before_words(self):
 		affiliation = ',comma before any words'
 		root = et.Element(None)
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': [],}
+		expected = []
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_identical(self):
@@ -384,7 +466,7 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words',],}
+		expected = [{'institution': 'first words',},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_left_part(self):
@@ -397,7 +479,7 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words',],}
+		expected = [{'institution': 'first words',},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_middle_part(self):
@@ -410,7 +492,7 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words',],}
+		expected = [{'institution': 'first words',},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_right_part(self):
@@ -423,7 +505,7 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words',],}
+		expected = [{'institution': 'first words',},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_more_on_the_right(self):
@@ -436,7 +518,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words, seco', 'first words',],}
+		expected = [
+			{'institution': 'first words, seco',},
+			{'institution': 'first words',},
+		]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_overlap_on_the_right(self):
@@ -449,7 +534,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words', 'words, second',],}
+		expected = [
+			{'institution': 'first words'},
+			{'institution': 'words, second',},
+		]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_no_overlap(self):
@@ -462,7 +550,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = {'institution': ['first words', 'third word',],}
+		expected = [
+			{'institution': 'first words'},
+			{'institution': 'third word',},
+		]
 		self.assertEqual(actual, expected)
 	
 	def test_queryGrobid_None(self):
@@ -562,3 +653,4 @@ class test_parser(unittest.TestCase):
 		)
 		expected = {'settlement':['one','two','settlement'],}
 		self.assertEqual(actual, expected)
+
