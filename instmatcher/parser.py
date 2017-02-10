@@ -202,11 +202,11 @@ def queryGrobid(affiliation, url):
 	r = requests.post(url + '/processAffiliations', data=cmd)
 	return '<results>' + r.content.decode('UTF-8') + '</results>'
 
-def parse(affiliation, url):
+def parseAll(affiliation, url):
 	'''
-	Parse the given affiliation string using grobid and return a
-	generator of possible institutions along with their corresponding
-	departments and laboratories.
+	Yield all possible institutions along with their corresponding
+	departments, laboratories and address information using grobid and
+	regular expressions to parse the given affiliation string.
 	
 	:param affiliation: the affiliation string to be parsed
 	:param url: the URL to the grobid service
@@ -224,3 +224,17 @@ def parse(affiliation, url):
 		result.update(address)
 		result.update(settlement)
 		yield result
+
+def parse(affiliation, url):
+	'''
+	Get the first institution along with the corresponding
+	department, laboratory and address information using grobid and
+	regular expressions to parse the given affiliation string.
+	
+	:param affiliation: the affiliation string to be parsed
+	:param url: the URL to the grobid service
+	'''
+	try:
+		return next(parseAll(affiliation, url))
+	except StopIteration:
+		return

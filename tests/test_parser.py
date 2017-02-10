@@ -30,13 +30,13 @@ class test_parser(unittest.TestCase):
 		self.server.stop()
 	
 	def test_parse_None(self):
-		actual = list(parser.parse(None, self.url))
+		actual = list(parser.parseAll(None, self.url))
 		expected = []
 		self.assertEqual(actual, expected)
 	
 	def test_parse_empty(self):
 		self.server.setResponse(__name__, '')
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = []
 		self.assertEqual(actual, expected)
 	
@@ -50,7 +50,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = []
 		self.assertEqual(actual, expected)
 	
@@ -65,7 +65,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institA',
 			'settlement': ['settlement',],
@@ -82,7 +82,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institB',
 			'settlement': ['settlement',],
@@ -99,7 +99,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institC',
 			'alpha2': 'AQ',
@@ -120,7 +120,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
 			'alpha2': 'IN',
@@ -141,7 +141,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
 			'settlement': ['settlement',],
@@ -159,7 +159,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
 			'alpha2': 'DZ',
@@ -180,7 +180,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
 			'alpha2': 'IN',
@@ -201,7 +201,7 @@ class test_parser(unittest.TestCase):
 			</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institD',
 			'alpha2': 'AQ',
@@ -227,7 +227,7 @@ class test_parser(unittest.TestCase):
 				</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institE',
 			'department': 'dep',
@@ -265,7 +265,7 @@ class test_parser(unittest.TestCase):
 				</address>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'instit1',
 			'department': 'dep1',
@@ -311,7 +311,7 @@ class test_parser(unittest.TestCase):
 				<orgName type="institution" key="instit2">instit2</orgName>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'first instit',
 			'settlement': ['first instit'],
@@ -337,7 +337,7 @@ class test_parser(unittest.TestCase):
 				<orgName type="institution" key="instit1">first</orgName>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'first instit',
 			'department': 'dep1',
@@ -356,7 +356,7 @@ class test_parser(unittest.TestCase):
 				<orgName type="institution" key="instit1">comma, inst</orgName>
 			</affiliation>'''
 		)
-		actual = list(parser.parse(affiliation, self.url))
+		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'comma, inst',
 			'department': 'dep1',
@@ -370,7 +370,7 @@ class test_parser(unittest.TestCase):
 	
 	def test_parse_invalid_xml(self):
 		self.server.setResponse(__name__, '<broken tag>')
-		actual = list(parser.parse(__name__, self.url))
+		actual = list(parser.parseAll(__name__, self.url))
 		expected = []
 		self.assertEqual(actual, expected)
 	
