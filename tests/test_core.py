@@ -201,3 +201,115 @@ class test_core(unittest.TestCase):
 		actual = core.expandAbbreviations('UNIV_univ chemacad')
 		expected = 'UNIV_univ chemacad'
 		self.assertEqual(actual, expected)
+	
+	def test_find_TU_Berlin(self):
+		arg = 'TU Berlin'
+		expected = [
+			{
+				'name': 'Technical University of Berlin',
+				'alpha2': 'DE',
+				'country': 'Germany',
+				'lat': 52.511944444444,
+				'lon': 13.326388888889,
+				'isni': '0000 0001 2195 9817',
+				'source': 'http://www.wikidata.org/entity/Q51985',
+				'type': 'university',
+			}
+		]
+		first = expected[0]
+		self.assertSequenceEqual(list(core.findAll(arg)), expected)
+		self.assertEqual(core.find(arg), first)
+	
+	def test_find_Univ_Boston(self):
+		arg = 'Univ Boston'
+		expected = [
+			{
+				'name': 'University of Massachusetts Boston',
+				'alpha2': 'US',
+				'country': 'United States',
+				'lat': 42.313432,
+				'lon': -71.038445,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q15144',
+				'type': 'university',
+			},{
+				'name': 'Boston University',
+				'alpha2': 'US',
+				'country': 'United States',
+				'lat': 42.3496,
+				'lon': -71.0997,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q49110',
+				'type': 'university',
+			},{
+				'name': 'Northeastern University',
+				'alpha2': 'US',
+				'country': 'United States',
+				'lat': 42.338888888889,
+				'lon': -71.090277777778,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q37548',
+				'type': 'university',
+			},
+		]
+		first = expected[0]
+		self.assertSequenceEqual(list(core.findAll(arg)), expected)
+		self.assertEqual(core.find(arg), first)
+	
+	def test_find_Univ_Leuven(self):
+		arg = 'Univ Leuven'
+		expected = [
+			{
+				# dutch part of the former Catholic University of Leuven
+				'name': 'Katholieke Universiteit Leuven Campus Kortrijk',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': 50.806139,
+				'lon': 3.291939,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q1736308',
+				'type': 'university',
+			},{
+				# Catholic University of Leuven (or Louvain), until 1986
+				'name': 'Catholic University of Leuven',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': 50.669722222222,
+				'lon': 4.6122222222222,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q5121415',
+				'type': 'university',
+			},
+		]
+		first = expected[0]
+		self.assertSequenceEqual(list(core.findAll(arg)), expected)
+		self.assertEqual(core.find(arg), first)
+	
+	def test_find_Univ_Louvain(self):
+		arg = 'Univ Louvain'
+		expected = [
+			{
+				# french part of the former Catholic University of Leuven
+				'name': 'Université catholique de Louvain',
+				'alpha2': 'BE',
+				'country': 'Belgium',
+				'lat': 50.669611111111,
+				'lon': 4.6122638888889,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q378134',
+				'type': 'university',
+			},{
+				# Catholic University of Leuven (or Louvain), until 1986
+				'name': 'Catholic University of Leuven',
+				'alpha2': 'BE',
+				 'country': 'Belgium',
+				'lat': 50.669722222222,
+				'lon': 4.6122222222222,
+				'isni': '',
+				'source': 'http://www.wikidata.org/entity/Q5121415',
+				'type': 'university',
+			},
+		]
+		first = expected[0]
+		self.assertSequenceEqual(list(core.findAll(arg)), expected)
+		self.assertEqual(core.find(arg), first)

@@ -37,10 +37,26 @@ ix = index.open_dir(ixPath)
 instParser = MultifieldParser(['tokens', 'alias',], ix.schema)
 coordParser = MultifieldParser(['lat', 'lon',], ix.schema)
 
+def _appendDoc(docstring):
+	def decorator(function):
+		function.__doc__ += docstring
+		return function
+	return decorator
+
+_find_query_param_list='''
+	:param institution: the institution name to search for
+	:param alpha2: the country to restrict search results to
+	:param lat: the latitude describing the middle of the preferred box
+	:param lon: the longitude describing the middle of preferred box
+	:param offset: the half-width of the preferred box in degree of arcs
+'''
+
+@_appendDoc(_find_query_param_list)
 def query(institution, alpha2, lat, lon, offset):
 	'''
-	Search for institutions compatible to the search parameters sorted
-	in descending order starting with the most accurate search result.
+	Yield all institutions along with their score compatible with the
+	search parameters. The search results are sorted in descending order
+	starting with the most accurate.
 	
 	Applying the ISO 3166-1 alpha-2 country code will restrict the
 	search results to the given country.
@@ -48,12 +64,6 @@ def query(institution, alpha2, lat, lon, offset):
 	describe a geographical box in which results are preferred. Note that
 	an offset of one degree of arc corresponds to about 111 km: Using an
 	offset of 1 results into a box with a width of approximately 222 km.
-	
-	:param institution: the institution name to search for
-	:param alpha2: the country to restrict search results to
-	:param lat: the latitude describing the middle of the preferred box
-	:param lon: the longitude describing the middle of preferred box
-	:param offset: the half-width of the preferred box in degree of arcs
 	'''
 	if not institution:
 		return
@@ -97,3 +107,26 @@ def expandAbbreviations(text):
 	except TypeError:
 		pass
 	return text
+
+@_appendDoc(_find_query_param_list)
+def findAll(institution, alpha2=None, lat=None, lon=None, offset=0.4):
+	'''
+	Yield all institutions compatible with the search parameters by calling
+	the query function with the given parameters.
+	Known abbreviations inside of the institution string are expanded.
+	'''
+	fullName = expandAbbreviations(institution)
+	for result in query(fullName, alpha2, lat, lon, offset):
+		yield result[0]
+
+@_appendDoc(_find_query_param_list)
+def find(institution, alpha2=None, lat=None, lon=None, offset=0.4):
+	'''
+	Find the most accurate institution compatible with the search
+	parameters by calling the query function with the given parameters.
+	Known abbreviations inside of the institution string are expanded.
+	'''
+	try:
+		return next(findAll(institution, alpha2, lat, lon, offset))
+	except StopIteration:
+		return
