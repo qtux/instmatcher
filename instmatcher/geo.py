@@ -25,14 +25,13 @@ ixPath = resource_filename(__name__, 'data/geoindex')
 ix = index.open_dir(ixPath)
 parser = MultifieldParser(['lower', 'asci', 'alias',], ix.schema)
 
-def geocode(settlement, alpha2, **ignore):
+def geocodeAll(settlement, alpha2=None):
 	'''
-	Search for geographical coordinates of a given settlement name,
+	Yield all geographical coordinates of a given settlement name,
 	optionally restricting search results to a specified country.
 	
 	:param settlement: the settlement name to search for
 	:param alpha2: the country to restrict search results to
-	:param ignore: ignored keyword arguments
 	'''
 	if not settlement:
 		return
@@ -48,3 +47,16 @@ def geocode(settlement, alpha2, **ignore):
 				'lon': float(hit['lon']),
 				'locality': hit['name'],
 			}
+
+def geocode(settlement, alpha2=None):
+	'''
+	Get the most accurate geographical coordinate of a given settlement
+	name, optionally restricting search results to a specified country.
+	
+	:param settlement: the settlement name to search for
+	:param alpha2: the country to restrict search results to
+	'''
+	try:
+		return next(geocodeAll(settlement, alpha2))
+	except StopIteration:
+		return

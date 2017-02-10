@@ -18,17 +18,17 @@ from instmatcher import geo
 class test_geo(unittest.TestCase):
 	
 	def test_None(self):
-		actual = list(geo.geocode(None, None))
+		actual = list(geo.geocodeAll(None, None))
 		expected = []
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Turyan(self):
-		actual = list(geo.geocode('Turyan', None))
+		actual = list(geo.geocodeAll('Turyan', None))
 		expected = []
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Sao(self):
-		actual = list(geo.geocode('Sao Paulo', None))
+		actual = list(geo.geocodeAll('Sao Paulo', None))
 		expected = [
 			{'lat': -23.5475, 'lon': -46.63611, 'locality': 'São Paulo',},
 			{'lat': -10.54944, 'lon': -37.53444, 'locality': 'Frei Paulo',},
@@ -36,7 +36,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Sao_diacritic(self):
-		actual = list(geo.geocode('São Paulo', None))
+		actual = list(geo.geocodeAll('São Paulo', None))
 		expected = [
 			{'lat': -23.5475, 'lon': -46.63611, 'locality': 'São Paulo',},
 			{'lat': -10.54944, 'lon': -37.53444, 'locality': 'Frei Paulo',},
@@ -44,35 +44,35 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Xian_None(self):
-		actual = list(geo.geocode('Xian', None))
+		actual = list(geo.geocodeAll('Xian', None))
 		expected = [
 			{'lat': 34.25833, 'lon': 108.92861, 'locality': 'Xi’an',},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Xian_CN(self):
-		actual = list(geo.geocode('Xian', 'CN'))
+		actual = list(geo.geocodeAll('Xian', 'CN'))
 		expected = [
 			{'lat': 34.25833, 'lon': 108.92861, 'locality': 'Xi’an',},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Gutao_None(self):
-		actual = list(geo.geocode('Gutao', None))
+		actual = list(geo.geocodeAll('Gutao', None))
 		expected = [
 			{'lat': 37.2025, 'lon': 112.17806, 'locality': 'Gutao',},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Gutao_CN(self):
-		actual = list(geo.geocode('Gutao', 'CN'))
+		actual = list(geo.geocodeAll('Gutao', 'CN'))
 		expected = [
 			{'lat': 37.2025, 'lon': 112.17806, 'locality': 'Gutao',},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Boston_None(self):
-		actual = list(geo.geocode('Boston', None))
+		actual = list(geo.geocodeAll('Boston', None))
 		expected = [
 			{'lat': 42.35843, 'lon': -71.05977, 'locality': 'Boston',},
 			{'lat': 52.97633, 'lon': -0.02664, 'locality': 'Boston',},
@@ -82,7 +82,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Boston_US(self):
-		actual = list(geo.geocode('Boston', 'US'))
+		actual = list(geo.geocodeAll('Boston', 'US'))
 		expected = [
 			{'lat': 42.35843, 'lon': -71.05977, 'locality': 'Boston',},
 			{'lat': 30.79186, 'lon': -83.78989, 'locality': 'Boston',},
@@ -90,7 +90,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_London_None(self):
-		actual = list(geo.geocode('London', None))
+		actual = list(geo.geocodeAll('London', None))
 		expected = [
 			{'lat': 51.50853, 'lon': -0.12574, 'locality': 'London',},
 			{'lat': 42.98339, 'lon': -81.23304, 'locality': 'London',},
@@ -104,7 +104,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_London_GB(self):
-		actual = list(geo.geocode('London', 'GB'))
+		actual = list(geo.geocodeAll('London', 'GB'))
 		expected = [
 			{'lat': 51.50853, 'lon': -0.12574, 'locality': 'London',},
 			{'lat': 51.51279, 'lon': -0.09184, 'locality': 'City of London',},
@@ -112,19 +112,19 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_London_CA(self):
-		actual = list(geo.geocode('London', 'CA'))
+		actual = list(geo.geocodeAll('London', 'CA'))
 		expected = [
 			{'lat': 42.98339, 'lon': -81.23304, 'locality': 'London',},
 		]
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_London_IT(self):
-		actual = list(geo.geocode('London', 'IT'))
+		actual = list(geo.geocodeAll('London', 'IT'))
 		expected = []
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_St_Petersburg_RU(self):
-		actual = list(geo.geocode('St Petersburg', 'RU'))
+		actual = list(geo.geocodeAll('St Petersburg', 'RU'))
 		expected = [{
 			'lat': 59.93863,
 			'lon': 30.31413,
@@ -133,7 +133,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_St_Petersburg_RU_wrong_case(self):
-		actual = list(geo.geocode('st peTERSBURg', 'RU'))
+		actual = list(geo.geocodeAll('st peTERSBURg', 'RU'))
 		expected = [{
 			'lat': 59.93863,
 			'lon': 30.31413,
@@ -142,12 +142,12 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_with_comma(self):
-		actual = list(geo.geocode('Pohang, Kyungbuk', 'KR'))
+		actual = list(geo.geocodeAll('Pohang, Kyungbuk', 'KR'))
 		expected = []
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Santiago_De_Compostela(self):
-		actual = list(geo.geocode('Santiago De Compostela', None))
+		actual = list(geo.geocodeAll('Santiago De Compostela', None))
 		expected = [{
 			'lat': 42.88052,
 			'lon': -8.54569,
@@ -156,7 +156,7 @@ class test_geo(unittest.TestCase):
 		self.assertSequenceEqual(actual, expected)
 	
 	def test_Gif_Sur_Yvette_without_hyphens(self):
-		actual = list(geo.geocode('Gif Sur Yvette', None))
+		actual = list(geo.geocodeAll('Gif Sur Yvette', None))
 		expected = [{
 			'lat': 48.68333,
 			'lon': 2.13333,
