@@ -1,0 +1,34 @@
+---
+# place of the affiliation string in the Neo4j database
+affi-label: address
+affi-key: label
+affi-id: id
+
+# label of the processed and newly created nodes
+extract-success-label: affi_extract_success
+extract-failure-label: affi_extract_failure
+find-success-label: affi_find_success
+find-failure-label: affi_find_failure
+location-success-label: affi_location_success
+location-partial-label: affi_location_partial
+location-failure-label: affi_location_failure
+inst-label: affi_institution
+country-label: affi_country
+settlement-label: affi_settlement
+
+# relationships of the processed and newly created nodes
+countryOf: country_of
+settlementOf: settlement_of
+instOf: institution_of
+
+# Neo4j server related configuration
+neo4j:
+  host: 0.0.0.0
+  port: 7473
+  user: neo4j
+  password: neo4j
+
+# grobid related configuration
+grobid:
+  url: http://0.0.0.0:8080
+...

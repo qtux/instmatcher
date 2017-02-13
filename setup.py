@@ -181,7 +181,11 @@ setup(
 		'docs':[
 			'Sphinx>=1.4.5',
 			'sphinx_rtd_theme>=0.1.10a0',
-		]
+		],
+		'neo4j-example':[
+			'PyYAML>=3.11',
+			'py2neo>=3.1.1',
+		],
 	},
 	include_package_data=True,
 	zip_safe=False,
