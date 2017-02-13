@@ -45,11 +45,14 @@ def create_index(procs, multisegment, ixPath):
 	ix = index.create_in(ixPath, schema)
 	writer = ix.writer(procs=procs, multisegment=multisegment)
 	institutions = os.path.join('instmatcher', 'data', 'institutions.csv')
+	visited = set()
 	with open(institutions) as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
-			row['tokens'] = row['name']
-			writer.add_document(**row)
+			if row['source'] not in visited:
+				row['tokens'] = row['name']
+				writer.add_document(**row)
+				visited.add(row['source'])
 	writer.commit()
 
 def create_geoindex(procs, multisegment, ixPath):

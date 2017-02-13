@@ -313,3 +313,13 @@ class test_core(unittest.TestCase):
 		first = expected[0]
 		self.assertSequenceEqual(list(core.findAll(arg)), expected)
 		self.assertEqual(core.find(arg), first)
+	
+	def test_institution_uniqeness(self):
+		visited = set()
+		for item in core.findAll('*'):
+			source = item['source']
+			if source in visited:
+				self.fail('The source column is not unique!')
+				return
+			else:
+				visited.add(source)
