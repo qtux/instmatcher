@@ -263,7 +263,7 @@ class test_core(unittest.TestCase):
 				# dutch part of the former Catholic University of Leuven
 				'name': 'Katholieke Universiteit Leuven Campus Kortrijk',
 				'alpha2': 'BE',
-				 'country': 'Belgium',
+				'country': 'Belgium',
 				'lat': 50.806139,
 				'lon': 3.291939,
 				'isni': '',
@@ -273,7 +273,7 @@ class test_core(unittest.TestCase):
 				# Catholic University of Leuven (or Louvain), until 1986
 				'name': 'Catholic University of Leuven',
 				'alpha2': 'BE',
-				 'country': 'Belgium',
+				'country': 'Belgium',
 				'lat': 50.669722222222,
 				'lon': 4.6122222222222,
 				'isni': '',
@@ -302,7 +302,7 @@ class test_core(unittest.TestCase):
 				# Catholic University of Leuven (or Louvain), until 1986
 				'name': 'Catholic University of Leuven',
 				'alpha2': 'BE',
-				 'country': 'Belgium',
+				'country': 'Belgium',
 				'lat': 50.669722222222,
 				'lon': 4.6122222222222,
 				'isni': '',
