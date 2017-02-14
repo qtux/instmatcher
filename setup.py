@@ -175,14 +175,14 @@ setup(
 		'requests>=2.10.0',
 	],
 	extras_require={
-		'data':[
+		'query':[
 			'reverse-geocoder>=1.5.1',
 		],
 		'docs':[
 			'Sphinx>=1.4.5',
 			'sphinx_rtd_theme>=0.1.10a0',
 		],
-		'neo4j-example':[
+		'examples-neo4j':[
 			'PyYAML>=3.11',
 			'py2neo>=3.1.1',
 		],
