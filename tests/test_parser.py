@@ -68,6 +68,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institA',
+			'institutionSource': 'grobid',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -85,6 +86,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institB',
+			'institutionSource': 'grobid',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -102,6 +104,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institC',
+			'institutionSource': 'grobid',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -123,6 +126,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
+			'institutionSource': 'regexReplace',
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
@@ -144,6 +148,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
+			'institutionSource': 'regexReplace',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -162,6 +167,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
+			'institutionSource': 'grobid',
 			'alpha2': 'DZ',
 			'country': 'Algeria',
 			'countrySource': 'extract',
@@ -183,6 +189,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'institA',
+			'institutionSource': 'grobid',
 			'alpha2': 'IN',
 			'country': 'India',
 			'countrySource': 'extract',
@@ -204,6 +211,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institD',
+			'institutionSource': 'grobid',
 			'alpha2': 'AQ',
 			'country': 'Antarctica',
 			'countrySource': 'grobid',
@@ -230,6 +238,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'institE',
+			'institutionSource': 'grobid',
 			'department': 'dep',
 			'laboratory': 'lab',
 			'alpha2': 'AQ',
@@ -268,6 +277,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(__name__, self.url))
 		expected = [{
 			'institution': 'instit1',
+			'institutionSource': 'grobid',
 			'department': 'dep1',
 			'laboratory': 'lab1',
 			'alpha2': 'AQ',
@@ -278,6 +288,7 @@ class test_parser(unittest.TestCase):
 			'postCode': 'postCode',
 		},{
 			'institution': 'instit2',
+			'institutionSource': 'grobid',
 			'department': 'dep2',
 			'laboratory': 'lab2',
 			'alpha2': 'AQ',
@@ -288,6 +299,7 @@ class test_parser(unittest.TestCase):
 			'postCode': 'postCode',
 		},{
 			'institution': 'instit3',
+			'institutionSource': 'grobid',
 			'department': 'dep3',
 			'laboratory': 'lab3',
 			'alpha2': 'AQ',
@@ -314,13 +326,16 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'first instit',
+			'institutionSource': 'regexInsert',
 			'settlement': ['first instit'],
 		},{
+			'institutionSource': 'grobid',
 			'department': 'dep1',
 			'laboratory': 'lab1',
 			'settlement': ['first instit'],
 		},{
 			'institution': 'instit2',
+			'institutionSource': 'grobid',
 			'department': 'dep2',
 			'laboratory': 'lab2',
 			'settlement': ['first instit'],
@@ -340,6 +355,7 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'first instit',
+			'institutionSource': 'regexReplace',
 			'department': 'dep1',
 			'laboratory': 'lab1',
 			'settlement': ['first instit'],
@@ -359,11 +375,13 @@ class test_parser(unittest.TestCase):
 		actual = list(parser.parseAll(affiliation, self.url))
 		expected = [{
 			'institution': 'comma, inst',
+			'institutionSource': 'grobid',
 			'department': 'dep1',
 			'laboratory': 'lab1',
 			'settlement': ['comma'],
 		},{
 			'institution': 'comma',
+			'institutionSource': 'regexInsertAfter',
 			'settlement': ['comma'],
 		},]
 		self.assertEqual(actual, expected)
@@ -446,7 +464,10 @@ class test_parser(unittest.TestCase):
 		affiliation = 'first words, second part, third word list'
 		root = et.Element(None)
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [{'institution': 'first words',},]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexInsert',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_comma_before_words(self):
@@ -466,7 +487,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [{'institution': 'first words',},]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexReplace',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_left_part(self):
@@ -479,7 +503,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [{'institution': 'first words',},]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexReplace',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_middle_part(self):
@@ -492,7 +519,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [{'institution': 'first words',},]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexReplace',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_right_part(self):
@@ -505,7 +535,10 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [{'institution': 'first words',},]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexReplace',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_more_on_the_right(self):
@@ -518,10 +551,13 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [
-			{'institution': 'first words, seco',},
-			{'institution': 'first words',},
-		]
+		expected = [{
+			'institution': 'first words, seco',
+			'institutionSource': 'grobid',
+		},{
+			'institution': 'first words',
+			'institutionSource': 'regexInsertAfter',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_overlap_on_the_right(self):
@@ -534,10 +570,13 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [
-			{'institution': 'first words'},
-			{'institution': 'words, second',},
-		]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexInsertBefore',
+		},{
+			'institution': 'words, second',
+			'institutionSource': 'grobid',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_parseOrganisations_regex_no_overlap(self):
@@ -550,10 +589,13 @@ class test_parser(unittest.TestCase):
 			</results>
 		''')
 		actual = parser.parseOrganisations(affiliation, root)
-		expected = [
-			{'institution': 'first words'},
-			{'institution': 'third word',},
-		]
+		expected = [{
+			'institution': 'first words',
+			'institutionSource': 'regexInsertBefore',
+		},{
+			'institution': 'third word',
+			'institutionSource': 'grobid',
+		},]
 		self.assertEqual(actual, expected)
 	
 	def test_queryGrobid_None(self):

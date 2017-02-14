@@ -167,6 +167,9 @@ def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
 		except IndexError:
 			result.insert(index, item)
 	
+	for item in result:
+		item.update({'institutionSource': 'grobid'})
+	
 	try:
 		match = re.search(pattern, affiliation)
 	except TypeError:
@@ -177,13 +180,23 @@ def parseOrganisations(affiliation, root, pattern=re.compile(r'^[^,]+(?=,)')):
 		return result
 	
 	if not result or not 'institution' in result[0]:
-		result.insert(0, {'institution': extracted})
+		result.insert(0, {
+			'institution': extracted,
+			'institutionSource':'regexInsert',
+		})
 	elif result[0]['institution'] in extracted:
 		result[0]['institution'] = extracted
+		result[0]['institutionSource'] = 'regexReplace'
 	elif extracted in result[0]['institution']:
-		result.insert(1, {'institution': extracted})
+		result.insert(1, {
+			'institution': extracted,
+			'institutionSource':'regexInsertAfter',
+		})
 	else:
-		result.insert(0, {'institution': extracted})
+		result.insert(0, {
+			'institution': extracted,
+			'institutionSource':'regexInsertBefore',
+		})
 	
 	return result
 
