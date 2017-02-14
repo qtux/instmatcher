@@ -129,7 +129,7 @@ class test_parser(unittest.TestCase):
 			'institutionSource': 'regexReplace',
 			'alpha2': 'IN',
 			'country': 'India',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -170,7 +170,7 @@ class test_parser(unittest.TestCase):
 			'institutionSource': 'grobid',
 			'alpha2': 'DZ',
 			'country': 'Algeria',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -192,7 +192,7 @@ class test_parser(unittest.TestCase):
 			'institutionSource': 'grobid',
 			'alpha2': 'IN',
 			'country': 'India',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 			'settlement': ['settlement',],
 		},]
 		self.assertEqual(actual, expected)
@@ -397,7 +397,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'GN',
 			'country': 'Guinea',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -406,7 +406,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'PG',
 			'country': 'Papua New Guinea',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -425,7 +425,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'ME',
 			'country': 'Montenegro',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -434,7 +434,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'HK',
 			'country': 'Hong Kong',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 		}
 		self.assertEqual(actual, expected)
 	
@@ -443,7 +443,7 @@ class test_parser(unittest.TestCase):
 		expected = {
 			'alpha2': 'MO',
 			'country': 'Macao',
-			'countrySource': 'extract',
+			'countrySource': 'regex',
 		}
 		self.assertEqual(actual, expected)
 	

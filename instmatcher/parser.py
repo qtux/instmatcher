@@ -69,7 +69,7 @@ def parseAddress(affiliation, root, patternHK=re.compile(r'\b(?i)Hong Kong\b'),
 		except TypeError:
 			return result
 		if match:
-			countrySource = 'extract'
+			countrySource = 'regex'
 			break
 	else:
 		for country in root.findall('./affiliation/address/country'):
