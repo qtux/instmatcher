@@ -220,42 +220,6 @@ class test_core(unittest.TestCase):
 		self.assertSequenceEqual(list(core.findAll(arg)), expected)
 		self.assertEqual(core.find(arg), first)
 	
-	def test_find_Univ_Boston(self):
-		arg = 'Univ Boston'
-		expected = [
-			{
-				'name': 'University of Massachusetts Boston',
-				'alpha2': 'US',
-				'country': 'United States',
-				'lat': 42.313432,
-				'lon': -71.038445,
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q15144',
-				'type': 'university',
-			},{
-				'name': 'Boston University',
-				'alpha2': 'US',
-				'country': 'United States',
-				'lat': 42.3496,
-				'lon': -71.0997,
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q49110',
-				'type': 'university',
-			},{
-				'name': 'Northeastern University',
-				'alpha2': 'US',
-				'country': 'United States',
-				'lat': 42.338888888889,
-				'lon': -71.090277777778,
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q37548',
-				'type': 'university',
-			},
-		]
-		first = expected[0]
-		self.assertSequenceEqual(list(core.findAll(arg)), expected)
-		self.assertEqual(core.find(arg), first)
-	
 	def test_find_Univ_Leuven(self):
 		arg = 'Univ Leuven'
 		expected = [
