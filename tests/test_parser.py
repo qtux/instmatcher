@@ -362,6 +362,39 @@ class test_parser(unittest.TestCase):
 		},]
 		self.assertEqual(actual, expected)
 	
+	def test_parse_no_grobid_result(self):
+		affiliation = 'first instit,'
+		self.server.setResponse(affiliation, '')
+		actual = list(parser.parseAll(affiliation, self.url))
+		expected = [{
+			'institution': 'first instit',
+			'institutionSource': 'regexInsert',
+			'settlement': ['first instit'],
+		},]
+		self.assertEqual(actual, expected)
+	
+	def test_parse_institution_not_recognised(self):
+		affiliation = 'first instit,'
+		self.server.setResponse(
+			affiliation,
+			'''<affiliation>
+				<orgName type="laboratory" key="lab1">lab1</orgName>
+				<orgName type="department" key="dep1">dep1</orgName>
+			</affiliation>'''
+		)
+		actual = list(parser.parseAll(affiliation, self.url))
+		expected = [{
+			'institution': 'first instit',
+			'institutionSource': 'regexInsert',
+			'settlement': ['first instit'],
+		},{
+			'institutionSource': 'grobid',
+			'department': 'dep1',
+			'laboratory': 'lab1',
+			'settlement': ['first instit'],
+		},]
+		self.assertEqual(actual, expected)
+	
 	def test_parse_institution_name_with_comma(self):
 		affiliation = 'comma, inst'
 		self.server.setResponse(
