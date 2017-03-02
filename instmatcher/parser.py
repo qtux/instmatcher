@@ -19,6 +19,7 @@ import xml.etree.ElementTree as et
 import csv
 from pkg_resources import resource_filename
 import re
+from urllib.parse import quote_plus
 
 # generate two dictionaries mapping the ISO 3166-1 alpha-2 country codes to
 # the corresponding country names and to the corresponding population sizes
@@ -209,10 +210,11 @@ def queryGrobid(affiliation, url):
 	:param url: the URL to the grobid service
 	'''
 	try:
-		cmd = 'affiliations=' + affiliation
+		cmd = 'affiliations=' + quote_plus(affiliation)
 	except TypeError:
 		return '<results></results>'
-	r = requests.post(url + '/processAffiliations', data=cmd)
+	headers = {'Content-type': 'application/x-www-form-urlencoded'}
+	r = requests.post(url + '/processAffiliations', data=cmd, headers=headers)
 	return '<results>' + r.content.decode('UTF-8') + '</results>'
 
 def parseAll(affiliation, url):

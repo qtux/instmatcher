@@ -15,6 +15,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 import threading
+from urllib.parse import unquote_plus
 
 class GrobidProxy(BaseHTTPRequestHandler):
 	
@@ -27,7 +28,7 @@ class GrobidProxy(BaseHTTPRequestHandler):
 			length = int(self.headers['Content-Length'])
 			data = self.rfile.read(length).decode('utf-8')
 			_, _, tail = data.partition('affiliations=')
-			response = GrobidProxy.responses.get(tail, '')
+			response = GrobidProxy.responses.get(unquote_plus(tail), '')
 		else:
 			response = ''
 		self.wfile.write(bytes(response, 'utf-8'))
