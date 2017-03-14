@@ -105,82 +105,6 @@ class test_core(unittest.TestCase):
 		actualResults = [item[0] for item in actual]
 		self.assertSequenceEqual(actualResults, expected)
 	
-	def test_Boston_no_coords(self):
-		actual = core.query('Boston', None, None, None, 1)
-		expectedNames = [
-			"Boston University",
-			"University of Massachusetts Boston",
-			"Boston Children's Hospital",
-			"New England School of Law",
-			"Northeastern University",
-			"Boston College",
-			"Boston Psychopathic Hospital",
-			"Boston Regional Medical Center",
-			"Boston College Law School",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
-	
-	def test_Boston_USA(self):
-		actual = core.query('Boston', None, 42.358056, -71.063611, 1)
-		expectedNames = [
-			"Boston University",
-			"University of Massachusetts Boston",
-			"Boston Children's Hospital",
-			"New England School of Law",
-			"Northeastern University",
-			"Boston College",
-			"Boston Psychopathic Hospital",
-			"Boston Regional Medical Center",
-			"Boston College Law School",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
-	
-	def test_Boston_Philippines(self):
-		actual = core.query('Boston', None, 7.8689, 126.3734, 1)
-		expectedNames = [
-			"Boston University",
-			"University of Massachusetts Boston",
-			"Boston Children's Hospital",
-			"New England School of Law",
-			"Northeastern University",
-			"Boston College",
-			"Boston Psychopathic Hospital",
-			"Boston Regional Medical Center",
-			"Boston College Law School",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
-	
-	def test_Boston_UK(self):
-		actual = core.query('Boston', None, 52.974, -0.0214, 1)
-		expectedNames = [
-			"Boston University",
-			"University of Massachusetts Boston",
-			"Boston Children's Hospital",
-			"New England School of Law",
-			"Northeastern University",
-			"Boston College",
-			"Boston Psychopathic Hospital",
-			"Boston Regional Medical Center",
-			"Boston College Law School",
-		]
-		actualNames = [item[0]['name'] for item in actual]
-		try:
-			self.assertSequenceEqual(actualNames, expectedNames)
-		except AssertionError:
-			self.assertCountEqual(actualNames, expectedNames)
-	
 	def test_London_CA(self):
 		actual = core.query('London', 'CA', None, None, 1)
 		expectedNames = ["University of Western Ontario",]
@@ -215,35 +139,6 @@ class test_core(unittest.TestCase):
 				'source': 'http://www.wikidata.org/entity/Q51985',
 				'type': 'university',
 			}
-		]
-		first = expected[0]
-		self.assertSequenceEqual(list(core.findAll(arg)), expected)
-		self.assertEqual(core.find(arg), first)
-	
-	def test_find_Univ_Leuven(self):
-		arg = 'Univ Leuven'
-		expected = [
-			{
-				# dutch part of the former Catholic University of Leuven
-				'name': 'Katholieke Universiteit Leuven Campus Kortrijk',
-				'alpha2': 'BE',
-				'country': 'Belgium',
-				'lat': 50.806139,
-				'lon': 3.291939,
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q1736308',
-				'type': 'university',
-			},{
-				# Catholic University of Leuven (or Louvain), until 1986
-				'name': 'Catholic University of Leuven',
-				'alpha2': 'BE',
-				'country': 'Belgium',
-				'lat': 50.669722222222,
-				'lon': 4.6122222222222,
-				'isni': '',
-				'source': 'http://www.wikidata.org/entity/Q5121415',
-				'type': 'university',
-			},
 		]
 		first = expected[0]
 		self.assertSequenceEqual(list(core.findAll(arg)), expected)
