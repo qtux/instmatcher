@@ -18,20 +18,14 @@
 QUERY_URL		:= https://query.wikidata.org/bigdata/namespace/wdq/sparql
 QUERIES			:= $(wildcard query/*.sparql)
 QUERY_RESULTS	:= $(patsubst %.sparql,%.csv, $(QUERIES))
-JOINED_RESULT	:= query/query.csv
 INSTITUTIONS	:= instmatcher/data/institutions.csv
-COUNTRY_INFO	:= instmatcher/data/countryInfo.txt
 
 # create the target file containing a list of institutions
 .PHONY: institutions
 institutions: $(INSTITUTIONS)
 
-# enhance the queried items adding country information
-$(INSTITUTIONS): $(JOINED_RESULT)
-	python3 query/enhance.py --src $< --dest $@ --countries $(COUNTRY_INFO)
-
 # join the retrieved csv files into a single file
-$(JOINED_RESULT): $(QUERY_RESULTS)
+$(INSTITUTIONS): $(QUERY_RESULTS)
 	head -1 $< > $@
 	tail -n +2 -q $+ >> $@
 
@@ -43,7 +37,6 @@ $(JOINED_RESULT): $(QUERY_RESULTS)
 .PHONY: clean
 clean:
 	rm -rf $(QUERY_RESULTS)
-	rm -rf $(JOINED_RESULT)
 
 # remove every created file
 .PHONY: clean-all

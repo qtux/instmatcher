@@ -23,6 +23,14 @@ from setuptools.command.develop import develop
 from setuptools.command.install import install
 from setuptools.command.test import test
 
+codes = {}
+countryInfo = os.path.join('instmatcher', 'data', 'countryInfo.txt')
+with open(countryInfo) as csvfile:
+	data = filter(lambda row: not row[0].startswith('#'), csvfile)
+	reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
+	for row in reader:
+		codes[row[0]] = row[4]
+
 def create_index(procs, multisegment, ixPath):
 	from whoosh import index
 	from whoosh.fields import Schema, TEXT, NUMERIC, STORED, ID
@@ -50,6 +58,12 @@ def create_index(procs, multisegment, ixPath):
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			if row['source'] not in visited:
+				try:
+					row['country'] = codes[row['alpha2']]
+				except KeyError:
+					continue
+				if not row['lat'] or not row['lon']:
+					row['lat'], row['lon'] = float('nan'), float('nan')
 				row['tokens'] = row['name']
 				writer.add_document(**row)
 				visited.add(row['source'])
@@ -58,14 +72,6 @@ def create_index(procs, multisegment, ixPath):
 def create_geoindex(procs, multisegment, ixPath):
 	from whoosh import index
 	from whoosh.fields import Schema, STORED, ID, IDLIST
-	
-	codes = {}
-	countryInfo = os.path.join('instmatcher', 'data', 'countryInfo.txt')
-	with open(countryInfo) as csvfile:
-		data = filter(lambda row: not row[0].startswith('#'), csvfile)
-		reader = csv.reader(data, delimiter='\t', quoting=csv.QUOTE_NONE)
-		for row in reader:
-			codes[row[0]] = row[4]
 	
 	schema = Schema(
 		name=STORED,
@@ -175,9 +181,6 @@ setup(
 		'requests>=2.10.0',
 	],
 	extras_require={
-		'query':[
-			'reverse-geocoder>=1.5.1',
-		],
 		'docs':[
 			'Sphinx>=1.4.5',
 			'sphinx_rtd_theme>=0.1.10a0',
