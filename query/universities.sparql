@@ -8,15 +8,13 @@ SELECT
   (SAMPLE(?lon) AS ?lon)
   (SAMPLE(?alpha2) AS ?alpha2)
 WHERE {
-  ?item (wdt:P31/wdt:P279*) wd:Q3918.
+  ?item (wdt:P31/wdt:P279*) wd:Q3918 .
   ?item rdfs:label ?name FILTER (lang(?name) = 'en')
   ?item p:P17 ?country .
   ?country ps:P17 ?country_node .
   ?country_node wdt:P297 ?alpha2 .
   OPTIONAL {
-    ?item skos:altLabel ?altLabel
-  }
-  OPTIONAL {
+    ?item skos:altLabel ?altLabel .
     ?item wdt:P213 ?insi.
     ?item p:P625 ?coordinate .
     ?coordinate psv:P625 ?coordinate_node .
